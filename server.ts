@@ -15,9 +15,14 @@ app.use("/", (req, res) => {
   }
   const pathToFile = path.join("src", name);
   console.log(`Read file: ${pathToFile}`);
-  const fileContent = fs.readFileSync(pathToFile, "utf8");
+  let fileContent: string;
+  try {
+    fileContent = fs.readFileSync(pathToFile, "utf8");
+  } catch {
+    res.status(404) //TODO чекать, не директория ли - запрашиваемый ресурс
+  }
   if (!fs.existsSync(pathToFile)) {
-    res.status(404).send("File not found");
+    res.status(404)
     return;
   }
   if (name.endsWith(".css")) {
@@ -25,8 +30,9 @@ app.use("/", (req, res) => {
   } else if (name.endsWith(".js")) {
     res.type("text/javascript");
   } else if (name.endsWith(".ts")) {
-    const result = compileTs(pathToFile, {});
+    const result = compileTs(pathToFile);
     if (result.status === "ok") {
+      console.log("here")
       res.type("text/javascript");
       res.send(result.result);
       return;

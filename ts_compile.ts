@@ -16,15 +16,38 @@ interface ErrorCompilationResult {
   errors: string[];
 }
 
-export const compileTs = (
-  fileName: string,
-  options: ts.CompilerOptions
-): CompilationResult => {
-  const CompilerOptions: ts.CompilerOptions = {
-    ...options,
-  };
+export function compileTs(tsFileToCompile: string): CompilationResult {
+  const cwd = process.cwd();
+  const configPath = ts.findConfigFile(cwd, ts.sys.fileExists, "tsconfig.json");
 
-  console.log("FILE NAME: ", fileName);
+  if (!configPath) {
+    throw new Error("Не найден файл tsconfig.json в текущей директории.");
+  }
+
+  const configFile = ts.readConfigFile(configPath, ts.sys.readFile);
+  if (configFile.error) {
+    const errorMessage = ts.flattenDiagnosticMessageText(
+      configFile.error.messageText,
+      "\n"
+    );
+    throw new Error(`Ошибка при чтении tsconfig.json: ${errorMessage}`);
+  }
+
+  const parsedCommandLine = ts.parseJsonConfigFileContent(
+    configFile.config,
+    ts.sys,
+    path.dirname(configPath)
+  );
+
+  if (parsedCommandLine.errors.length > 0) {
+    const errorMessages = parsedCommandLine.errors
+      .map((diag) => ts.flattenDiagnosticMessageText(diag.messageText, "\n"))
+      .join("\n");
+    throw new Error(`Ошибки при парсинге tsconfig.json:\n${errorMessages}`);
+  }
+
+  const compilerOptions = parsedCommandLine.options;
+
   const host: ts.CompilerHost = {
     getSourceFile: (fileName, languageVersion) => {
       const fullPath = path.resolve(cwd, fileName);
@@ -48,60 +71,67 @@ export const compileTs = (
     directoryExists: ts.sys.directoryExists,
     getDirectories: ts.sys.getDirectories,
   };
-  let program = ts.createProgram([fileName], options, host); // создаем экземпляр программы
-  let emit_program = program.emit(); // генерирует Js и объявленные файлы, т.к. функция не принимает аргументы, то js генерится для всех файлов программы
-  console.log("EMITTED PROGRAM: ", emit_program);
 
-  let Diagnostics = ts
+  const program = ts.createProgram([tsFileToCompile], compilerOptions, host);
+  const emitResult = program.emit();
+
+  const allDiagnostics = ts
     .getPreEmitDiagnostics(program)
-    .concat(emit_program.diagnostics); // getPreEmitDiagnostics - все диагностические сообщения до генерации js,
-  // emit_programm.diagnostics - послу и все это конкатим в один массив
+    .concat(emitResult.diagnostics);
 
-  Diagnostics.forEach((diagnostic) => {
-    if (diagnostic.file) {
-      let { line, character } = ts.getLineAndCharacterOfPosition(
-        diagnostic.file,
-        diagnostic.start!
-      );
-      let message = ts.flattenDiagnosticMessageText(
-        diagnostic.messageText,
-        "\n"
-      );
-
-      return {
-        status: "error",
-        result: [
-          `${diagnostic.file.fileName} ${line + 1}, ${
+  if (allDiagnostics.length > 0) {
+    const errorMessages = allDiagnostics
+      .map((diagnostic) => {
+        if (diagnostic.file) {
+          const { line, character } =
+            diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start!);
+          const message = ts.flattenDiagnosticMessageText(
+            diagnostic.messageText,
+            "\n"
+          );
+          return `${diagnostic.file.fileName} (${line + 1},${
             character + 1
-          }: ${message}`,
-        ],
-      };
-    } else {
-      let message = ts.flattenDiagnosticMessageText(
-        diagnostic.messageText,
-        "\n"
-      );
-      console.log(`${message}`);
-    }
-  });
-  const output: string[] = [];
-
-  if (emit_program.emittedFiles.length > 0) {
-    emit_program.emittedFiles.forEach((file) => {
-      const content = fs.readFileSync(file, "utf-8");
-      output.push(content);
-    });
+          }): ${message}`;
+        } else {
+          return ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n");
+        }
+      })
+      .join("\n");
+    throw new Error(`Ошибка при компиляции:\n${errorMessages}`);
   }
 
-  const compiledJsFile = fileName.replace(/\.ts$/, ".js");
-  const compiledJs = output[0]; //TODO checkout
+  const sourceFile = program.getSourceFile(tsFileToCompile);
+  if (!sourceFile) {
+    throw new Error(`Не удалось найти исходный файл: ${tsFileToCompile}`);
+  }
+
+  const output: { [fileName: string]: string } = {};
+
+  const emitHost: ts.CompilerHost = {
+    ...host,
+    writeFile: (fileName, contents) => {
+      output[fileName] = contents;
+    },
+  };
+
+  program.emit(undefined, (fileName, contents) => {
+    output[fileName] = contents;
+  });
+
+  const jsFileName = tsFileToCompile
+    .replace(/\.ts$/, ".js")
+    .replace("\\", "/")
+    .replace("\\", "/")
+    .replace("\\", "/")
+    .replace("\\", "/")
+    .replace("\\", "/");
+  console.log("### OUTPUT ", output);
+  console.log("### OUTPUT ", jsFileName);
+  const compiledJs = output[jsFileName];
 
   if (!compiledJs) {
     throw new Error("Не удалось найти скомпилированный файл.");
   }
 
-  return {
-    status: "ok",
-    result: compiledJs,
-  };
-};
+  return { status: "ok", result: compiledJs };
+}
