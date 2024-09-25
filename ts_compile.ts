@@ -17,8 +17,11 @@ interface ErrorCompilationResult {
 }
 
 export function compileTs(tsFileToCompile: string): CompilationResult {
-  const cwd = process.cwd();
-  const configPath = ts.findConfigFile(cwd, ts.sys.fileExists, "tsconfig.json");
+  const configPath = ts.findConfigFile(
+    "src",
+    ts.sys.fileExists,
+    "tsconfig.json"
+  );
 
   if (!configPath) {
     throw new Error("Не найден файл tsconfig.json в текущей директории.");
@@ -124,13 +127,17 @@ export function compileTs(tsFileToCompile: string): CompilationResult {
     .replace("\\", "/")
     .replace("\\", "/")
     .replace("\\", "/")
-    .replace("\\", "/");
-  console.log("### OUTPUT ", output);
-  console.log("### OUTPUT ", jsFileName);
+    .replace("\\", "/")
+    .replace("\\", "/")
+    .replace("\\", "/"); //TODO убрать это позорище
+
   const compiledJs = output[jsFileName];
 
   if (!compiledJs) {
-    throw new Error("Не удалось найти скомпилированный файл.");
+    return {
+      status: "error",
+      errors: ["Internal error #4343"], // Компилятор не писал в файл, в который должен был
+    };
   }
 
   return { status: "ok", result: compiledJs };

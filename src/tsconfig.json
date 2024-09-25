@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "rootDir": ".",
+    "esModuleInterop": true,
+    "strict": true,
+    "jsx": "preserve",
+    "jsxFactory": "my_jsx",
+    "jsxImportSource": "/core"
+  }
+}

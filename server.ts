@@ -19,20 +19,20 @@ app.use("/", (req, res) => {
   try {
     fileContent = fs.readFileSync(pathToFile, "utf8");
   } catch {
-    res.status(404) //TODO чекать, не директория ли - запрашиваемый ресурс
+    res.status(404); //TODO чекать, не директория ли - запрашиваемый ресурс
   }
   if (!fs.existsSync(pathToFile)) {
-    res.status(404)
+    res.status(404);
     return;
   }
   if (name.endsWith(".css")) {
     res.type("text/css");
   } else if (name.endsWith(".js")) {
     res.type("text/javascript");
-  } else if (name.endsWith(".ts")) {
+  } else if (name.endsWith(".ts") || name.endsWith(".tsx")) {
     const result = compileTs(pathToFile);
     if (result.status === "ok") {
-      console.log("here")
+      console.log("here");
       res.type("text/javascript");
       res.send(result.result);
       return;
