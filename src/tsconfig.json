@@ -1,10 +1,17 @@
 {
   "compilerOptions": {
     "rootDir": ".",
+    "baseUrl": ".",
+    "target": "ES5",
+    "importHelpers": true,
+    "module": "ES6",
+    "moduleResolution": "Bundler",
+    "typeRoots": ["node_modules/@types/web"],
+    "lib": ["es5", "es6", "es2017", "dom"],
     "esModuleInterop": true,
     "strict": true,
-    "jsx": "preserve",
-    "jsxFactory": "my_jsx",
-    "jsxImportSource": "/core"
+    "jsx": "react-jsx",
+    "jsxImportSource": "/jsx_core",
+    "paths": { "/jsx_core/*": ["./jsx_core/*"] }
   }
 }
