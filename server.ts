@@ -39,9 +39,9 @@ const devServer = (req: express.Request, res: express.Response) => {
     res.status(400).send();
     return;
   }
-  let fileContent: string;
+  let fileContent: Buffer;
   try {
-    fileContent = fs.readFileSync(pathToFile, "utf8");
+    fileContent = fs.readFileSync(pathToFile);
   } catch {
     res.status(500);
     return;
@@ -53,6 +53,14 @@ const devServer = (req: express.Request, res: express.Response) => {
     res.type("text/html");
   } else if (name.endsWith(".js")) {
     res.type("text/javascript");
+  } else if (name.endsWith(".woff")) {
+    res.type("font/woff");
+  } else if (name.endsWith(".ttf")) {
+    res.type("font/ttf");
+  } else if (name.endsWith(".svg")) {
+    res.type("image/svg+xml");
+  } else if (name.endsWith(".woff2")) {
+    res.type("font/woff2");
   } else if (name.endsWith(".ts") || name.endsWith(".tsx")) {
     res.status(500);
     return;

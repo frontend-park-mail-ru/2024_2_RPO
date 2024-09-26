@@ -5,13 +5,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Server</title>
-    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="/index.css">
+    <link rel="stylesheet" href="static/bootstrap-icons/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="/fonts.css">
 </head>
 
 <body>
-    <div id="root"></div>
-    <script>var exports = {};</script>
-    <script src="index.js" type="module"></script>
+    <header>
+        <nav class="navbar">
+            <div class="leftElements">
+                <i class="bi bi-list" style="font-size: 30px;cursor:pointer"></i>
+
+                <div class="logo" style="user-select: none;">
+                    <img draggable="false" src="/static/logo.svg" alt="Logo">
+                    <h1>Pumpkin</h1>
+                </div>
+            </div>
+
+            <div class="currentMode">
+                <div class="mode"><i class="bi bi-kanban"></i></div>
+                <div style="padding-left: 5px;flex-grow:1">Канбан</div>
+                <div><i class="bi bi-chevron-down"></i></div>
+            </div>
+
+            <div class="borderNameWithGear">
+                <div style="font-size: 18px">
+                    Моя доска
+                </div>
+                <div class="gear">
+                    <i class="bi-gear " style="font-size: 30px;cursor:pointer"></i>
+                </div>
+            </div>
+
+
+            <div class="search">
+                <input class="searchInput" type="text">
+                <i class="bi bi-bell-fill" style="font-size: 30px;cursor:pointer"></i>
+            </div>
+
+        </nav>
+    </header>
 </body>
 
 </html>
