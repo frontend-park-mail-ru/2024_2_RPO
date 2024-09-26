@@ -9,11 +9,25 @@ const app = express();
 app.use(nocache());
 const port = 3000;
 
+const mimeTypeMap: any = {
+  css: "text/css",
+  html: "text/html",
+  js: "text/javascript",
+  woff: "font/woff",
+  woff2: "font/woff2",
+  ttf: "font/ttf",
+  svg: "image/svg+xml",
+};
+
 console.log("Заводим сервак...");
 
 const devServer = (req: express.Request, res: express.Response) => {
   let name = req.url;
   if (name == "" || name == "/") name = "index.html";
+  if (name.endsWith(".ts") || name.endsWith(".tsx")) {
+    res.status(500);
+    return;
+  }
   const method = req.method;
   console.log(`${method} ${name}`);
   if (method !== "GET") {
@@ -47,23 +61,10 @@ const devServer = (req: express.Request, res: express.Response) => {
     return;
   }
 
-  if (name.endsWith(".css")) {
-    res.type("text/css");
-  } else if (name.endsWith(".html")) {
-    res.type("text/html");
-  } else if (name.endsWith(".js")) {
-    res.type("text/javascript");
-  } else if (name.endsWith(".woff")) {
-    res.type("font/woff");
-  } else if (name.endsWith(".ttf")) {
-    res.type("font/ttf");
-  } else if (name.endsWith(".svg")) {
-    res.type("image/svg+xml");
-  } else if (name.endsWith(".woff2")) {
-    res.type("font/woff2");
-  } else if (name.endsWith(".ts") || name.endsWith(".tsx")) {
-    res.status(500);
-    return;
+  const nameSplitted = name.split(".");
+  const nameExtension = nameSplitted[nameSplitted.length - 1];
+  if (mimeTypeMap[nameExtension] !== undefined) {
+    res.type(mimeTypeMap[nameExtension]);
   }
   res.send(fileContent);
   return;
@@ -86,5 +87,5 @@ if (result === false) {
 }
 
 app.listen(3000, () => {
-  console.log(`Сервак принимает запросы на порту ${port}`);
+  console.log(`Сервак принимает запросы на http://localhost:${port}`);
 });
