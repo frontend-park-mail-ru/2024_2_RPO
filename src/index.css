@@ -73,7 +73,17 @@
   align-items: center;
   height: 32px;
   width: 191px;
-  border: 1px solid #f6f5fa;
+  padding-left: 5px;
+  flex-grow: 1;
+}
+
+.borderName:hover {
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 32px;
+  width: 191px;
   background-color: #f6f5fa;
   opacity: 50%;
   border-radius: 3px;
