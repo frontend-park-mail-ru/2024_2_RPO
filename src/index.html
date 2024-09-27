@@ -12,13 +12,12 @@
 
 <body>
     <header>
-        <nav class="navbar">
-            <div class="leftElements">
+        <nav class="navbar" style="position: fixed; border:#000000">
+            <div class=" leftElements">
                 <i class="bi bi-list" style="font-size: 30px;cursor:pointer"></i>
-
                 <div class="logo" style="user-select: none;">
                     <img draggable="false" src="/static/logo.svg" alt="Logo">
-                    <h1>Pumpkin</h1>
+                    <div draggable="false" class="name" style="font-size: 24px; font-weight: bold">Pumpkin</div>
                 </div>
             </div>
 
@@ -29,22 +28,107 @@
             </div>
 
             <div class="borderNameWithGear">
-                <div class="borderName" style="font-size: 18px ;font-weight: bold">
+                <div class="borderName" style="font-size: 18px ;font-weight: 600">
                     Моя доска
                 </div>
-                <div class="gear">
-                    <i class="bi-gear " style="font-size: 30px;cursor:pointer"></i>
+                <div class="gear" style="cursor:pointer ">
+                    <i class="bi-gear "
+                        style="margin-right: auto; margin-left: auto;height: 16px; margin-bottom: 7px;"></i>
+                </div>
+            </div>
+            <div class="search">
+                <input class="searchInput" type="text" placeholder="Поиск" style="padding-left: 30px">
+                <i class="bi-search" style="position: absolute;"></i>
+                <i class="bi-bell-fill" style="font-size: 32px;cursor:pointer; position: relative;"></i>
+            </div>
+
+            <div class="profilePicture" style="height: 40; width: 40;">
+                <img draggable="false" src="/static/avatar.svg" alt="ProfilePicture">
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <img src="/static/backgroundPicture.png" class="backgroundPicture"
+            style="width: 100vw; height: 100vh; position: fixed; top: 0; left: 0; z-index: -1;" alt="">
+
+        <div class="left__menu" style="width: 243px; position: fixed; background-color:#E2E2E2; height: 100vh">
+            <div class="left__menu__header"
+                style="width: 100%; height: 58px; display: flex;  align-items: center; gap: 10px;">
+                <i class="bi bi-x-lg" style="font-size: 30px; cursor:pointer"></i>
+                <div class="logo__left__menu_header"
+                    style="user-select: none; display: flex; align-items: center; gap: 10px;">
+                    <img draggable="false" src="/static/logo.svg" alt="Logo">
+                    <div draggable="false" class="left__menu__header__name" style="font-size: 24px; font-weight: bold">
+                        Pumpkin
+                    </div>
+                </div>
+            </div>
+            <div class="left__menu__body">
+                <div class="first-level"
+                    style="display: flex; align-items:center; gap: 50px; margin-left: 14px; margin-top: 30px">
+                    <div class="left__menu__body__name" style="font-size: 22px; font-weight: 600">Мои доски</div>
+                    <div class="star">
+                        <div class="bi-star"
+                            style="margin-right: auto; margin-left: auto;height: 16px; margin-bottom: 7px"></div>
+                    </div>
+                </div>
+                <div class="cards" style="flex-direction: column;">
+                    <div class="left__menu__card__1"
+                        style="display: flex; flex-direction: column; height: 177px; width: 195px;margin-left: 14px; margin-top: 30px;">
+                        <div class="left__menu__card__picture" style="position: relative;">
+                            <div class="star-fill"
+                                style="position: absolute; display: flex; justify-content: flex-end; top: 10px; right: 10px;">
+                                <div class="bi-star-fill"></div>
+                            </div>
+                            <img src="/static/backgroundPicture.png" alt=""
+                                style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                        </div>
+                        <div class=" left__menu__card__info">
+                            <div class="left__menu__card__name__title" style="font-size: 18px; font-weight: bold">
+                                Communism
+                                Enjoyers</div>
+                            <div class="left__menu__card__name__text" style="font-size:12px;">Последнее
+                                посещение: 10 ч
+                            </div>
+                            <div class="left__menu__card__name__subtext" style="font-size:12px;">Последнее
+                                обновление: 1 ч
+                            </div>
+                        </div>
+                    </div>
+                    <div class="left__menu__card__2"
+                        style="display: flex; flex-direction: column; height: 177px; width: 195px;margin-left: 14px; margin-top: 30px;">
+                        <div class="left__menu__card__picture" style="position: relative;">
+                            <div class="star-fill"
+                                style="position: absolute; display: flex; justify-content: flex-end; top: 10px; right: 10px;">
+                                <div class="bi-star-fill"></div>
+                            </div>
+                            <img src="/static/backgroundPicture.png" alt=""
+                                style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                        </div>
+                        <div class=" left__menu__card__info">
+                            <div class="left__menu__card__name__title" style="font-size: 18px; font-weight: bold">
+                                Communism
+                                Enjoyers</div>
+                            <div class="left__menu__card__name__text" style="font-size:12px;">Последнее
+                                посещение: 10 ч
+                            </div>
+                            <div class="left__menu__card__name__subtext" style="font-size:12px;">Последнее
+                                обновление: 1 ч
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
+        </div>
 
-            <div class="search">
-                <input class="searchInput" type="text">
-                <i class="bi bi-bell-fill" style="font-size: 30px;cursor:pointer"></i>
-            </div>
+        </div>
 
-        </nav>
-    </header>
+        <div class="board" style="top: 0; left: 0; right: 0; bottom: 0;"></div>
+
+        </div>
+    </main>
 </body>
 
 </html>

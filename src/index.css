@@ -43,6 +43,7 @@
 }
 
 .search {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -53,6 +54,13 @@
   border: #f5f6fa;
   border-radius: 3px;
   height: 32px;
+}
+
+.search .bi-search {
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  pointer-events: none;
 }
 
 .logo img {
@@ -97,8 +105,37 @@
 .mode {
   margin-right: -10px;
 }
-/* не получилось подвинуть ((( */
 
 .bi-gear:hover {
   cursor: pointer;
+}
+
+.gear {
+  background-color: #f5f6fa;
+  border: 1px solid #f5f6fa;
+  border-radius: 3px;
+  height: 32px;
+  width: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.star {
+  background-color: #f5f6fa;
+  border: 1px solid #f5f6fa;
+  border-radius: 3px;
+  height: 32px;
+  width: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.left__menu__card__picture {
+  border-radius: 8px;
+  border: 1px solid #000000;
+  height: 114px;
+  width: 195px;
+  background-color: #ffffff;
 }
