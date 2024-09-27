@@ -31,17 +31,20 @@
                 <div class="borderName" style="font-size: 18px ;font-weight: 600">
                     Моя доска
                 </div>
-                <div class="gear" style="cursor:pointer ">
+                <div class="gear" style="cursor:pointer">
                     <i class="bi-gear "
                         style="margin-right: auto; margin-left: auto;height: 16px; margin-bottom: 7px;"></i>
                 </div>
             </div>
             <div class="search">
-                <input class="searchInput" type="text" placeholder="Поиск" style="padding-left: 30px">
+                <input class="searchInput" type="text" placeholder="Поиск" style="padding-left: 36px">
                 <i class="bi-search" style="position: absolute;"></i>
-                <i class="bi-bell-fill" style="font-size: 32px;cursor:pointer; position: relative;"></i>
-            </div>
+                <div class="bell" style="cursor:pointer; position: relative;">
+                    <i class="bi-bell"
+                        style="margin-right: auto; margin-left: auto;height: 16px; margin-bottom: 7px;"></i>
+                </div>
 
+            </div>
             <div class="profilePicture" style="height: 40; width: 40;">
                 <img draggable="false" src="/static/avatar.svg" alt="ProfilePicture">
             </div>
@@ -120,13 +123,9 @@
                     </div>
                 </div>
             </div>
-
-        </div>
-
-        </div>
-
-        <div class="board" style="top: 0; left: 0; right: 0; bottom: 0;"></div>
-
+            <button class="button__add__board"><i class="bi-plus-square" style="font-size: 20px;"></i>
+                <div style="font-size: 18px;">Добавить доску</div>
+            </button>
         </div>
     </main>
 </body>
