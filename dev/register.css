@@ -31,6 +31,7 @@ body {
     justify-content: center;
     width: 740px; 
     height: 640px; 
+}
 
 .icon1 {
     position: absolute;
@@ -94,7 +95,7 @@ form {
     cursor: pointer;
     z-index: 20;
     background-color: white;
-    shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .header {
