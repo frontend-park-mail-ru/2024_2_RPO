@@ -1,4 +1,5 @@
 export interface Card {
+  id: number
   title: string;
-  cover_url?: string;
+  coverUrl?: string;
 }
