@@ -3,7 +3,7 @@ import { ButtonComponent } from '/components/button.js';
 export const NavBar = () => {
   return (
     <nav class="navbar" style="position: fixed; border:#000000">
-      <div class="leftElements">
+      <div class="navbar__logo">
         <div class="list">
           <i class="bi bi-list" style="cursor:pointer"></i>
         </div>
@@ -42,12 +42,7 @@ export const NavBar = () => {
         <div class="borderName" style="font-size: 18px ;font-weight: 600">
           Моя доска
         </div>
-        <div class="gear" style="cursor:pointer">
-          <i
-            class="bi-gear "
-            style="margin-right: auto; margin-left: auto;height: 16px; margin-bottom: 7px;"
-          ></i>
-        </div>
+        {ButtonComponent({ icon: 'bi-gear' })}
       </div>
       <div class="search">
         <input
