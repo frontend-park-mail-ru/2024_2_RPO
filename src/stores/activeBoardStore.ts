@@ -1,4 +1,4 @@
-import { ActiveBoard, Column } from "models/active_board.js";
+import { ActiveBoard, BoardColumn } from "models/active_board.js";
 import { Card } from "models/card.js";
 
 class ActiveBoardStore {
@@ -24,7 +24,7 @@ class ActiveBoardStore {
     };
   }
 
-  addCard(card: Card, column: Column) {
+  addCard(card: Card, column: BoardColumn) {
     column.cards.push(card);
     //TODO сходить в базу
     //TODO перерисовка
