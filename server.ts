@@ -70,12 +70,6 @@ const devServer = (req: express.Request, res: express.Response) => {
   return;
 };
 
-function sleep(ms: number) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
-}
-
 const result = compileTs();
 if (result === false) {
   app.use("/", (req, res) => {
