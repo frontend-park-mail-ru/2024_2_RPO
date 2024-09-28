@@ -1,4 +1,5 @@
-import { ActiveBoard } from "models/active_board";
+import { ActiveBoard, Column } from "models/active_board.js";
+import { Card } from "models/card.js";
 
 const activeBoard: ActiveBoard = {
   meta: {
@@ -19,6 +20,20 @@ const activeBoard: ActiveBoard = {
   ],
 };
 
-export const getActiveBoard = (): ActiveBoard => {
+export const activeBoardStore_get = (): ActiveBoard => {
   return activeBoard;
+};
+
+export const activeBoardStore_addCard = (card: Card, column: Column) => {
+  column.cards.push(card);
+  //TODO сходить в базу
+  //TODO перерисовка
+};
+
+export const activeBoardStore_removeCard = (cardToRemove: Card) => {
+  activeBoard.columns.forEach((column) => {
+    column.cards = column.cards.filter((card) => card != cardToRemove);
+  });
+  //TODO сходить в базу
+  //TODO перерисовка
 };
