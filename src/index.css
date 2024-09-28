@@ -194,3 +194,10 @@
   width: 195px;
   background-color: #ffffff;
 }
+.left_menu {
+  width: 243px;
+  position: fixed;
+  background-color: #e2e2e2;
+  height: 100vh;
+  padding: 0px 10px;
+}

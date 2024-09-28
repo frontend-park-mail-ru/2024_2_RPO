@@ -1,9 +1,13 @@
-import { NavBar } from '/chunks/navbar.js';
+import { LeftPanel } from '/chunks/LeftPanel.js';
+import { NavBar } from '/chunks/NavBar.js';
+import { getAppISS } from '/stores/interfaceStateStore.js';
 
 export const MainApp = () => {
   return (
     <>
       <header>{NavBar()}</header>
+
+      {getAppISS().isLeftPanelOpened?LeftPanel():undefined}
 
       <main>
         <img

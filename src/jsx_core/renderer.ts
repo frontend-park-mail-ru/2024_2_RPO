@@ -1,9 +1,10 @@
 import { JSXChildType } from '/jsx_core/jsx-runtime';
 
 export function RenderJSX(root: Element, fragment: JSXChildType[]): void {
-  root.childNodes.forEach((child) => {
-    root.removeChild(child);
-  });
+  while (root.lastChild !== null) {
+    root.removeChild(root.lastChild);
+  }
+  console.log(root);
   fragment.forEach((child) => {
     if (child === undefined) return;
     let newNode: Node;
@@ -27,7 +28,15 @@ export function RenderJSX(root: Element, fragment: JSXChildType[]): void {
             }
             break;
           default:
-            newElement.setAttribute(attrName, attrValue.toString());
+            if (attrName.startsWith('ON_')) {
+              if (typeof attrValue !== 'function') {
+                throw new Error('Event cb should be func');
+              }
+              const eventName = attrName.slice(3);
+              newElement.addEventListener(eventName, attrValue);
+            } else {
+              newElement.setAttribute(attrName, attrValue.toString());
+            }
             break;
         }
       });

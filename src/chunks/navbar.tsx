@@ -1,13 +1,22 @@
-import { ButtonComponent } from '/components/button.js';
+import { ButtonComponent } from '/components/Button.js';
+import { getAppISS, interfaceStateStore } from '/stores/interfaceStateStore.js';
 
 export const NavBar = () => {
+  const openMenuBtn = (
+    <div
+      class="button"
+      ON_click={() => {
+        getAppISS().isLeftPanelOpened = true;
+        interfaceStateStore?.update();
+      }}
+    >
+      <i class="bi bi-list"></i>
+    </div>
+  );
   return (
     <nav class="navbar" style="position: fixed; border:#000000">
       <div class="navbar__logo">
-        <div class="list">
-          <i class="bi bi-list" style="cursor:pointer"></i>
-        </div>
-
+        {openMenuBtn}
         <div
           class="logo"
           style="user-select: none; display: flex; align-items: center;"
