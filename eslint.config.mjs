@@ -11,6 +11,7 @@ export default [
     rules: {
       'nonblock-statement-body-position': 'error',
       '@typescript-eslint/no-explicit-any': 'off',
+      eqeqeq: 'error',
     },
   },
 ];

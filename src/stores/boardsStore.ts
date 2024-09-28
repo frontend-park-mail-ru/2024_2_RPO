@@ -12,3 +12,5 @@ class BoardsStore {
     return this.boards;
   }
 }
+
+export const boardsStore = new BoardsStore();

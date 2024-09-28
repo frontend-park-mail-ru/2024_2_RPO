@@ -31,7 +31,7 @@ class ActiveBoardStore {
   }
   removeCard(cardToRemove: Card) {
     this.activeBoard.columns.forEach((column) => {
-      column.cards = column.cards.filter((card) => card != cardToRemove);
+      column.cards = column.cards.filter((card) => card !== cardToRemove);
     });
     //TODO сходить в базу
     //TODO перерисовка

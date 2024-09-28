@@ -1,7 +1,7 @@
 interface ButtonProps {
   text?: string;
   icon?: string;
-  callback?: Function;
+  callback?: () => void;
 }
 
 export const ButtonComponent = (props?: ButtonProps) => {

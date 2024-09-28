@@ -1,4 +1,3 @@
-import { ButtonComponent } from '/components/button.js';
 import { RenderJSX } from './jsx_core/renderer.js';
 import { MainApp } from './screens/MainApp.js';
 

@@ -1,4 +1,4 @@
-import { JSXChildType, JSXNode } from '/jsx_core/jsx-runtime';
+import { JSXChildType } from '/jsx_core/jsx-runtime';
 
 export function RenderJSX(root: Element, fragment: JSXChildType[]): void {
   root.childNodes.forEach((child) => {
@@ -7,7 +7,7 @@ export function RenderJSX(root: Element, fragment: JSXChildType[]): void {
   fragment.forEach((child) => {
     if (child === undefined) return;
     let newNode: Node;
-    if (typeof child == 'string') {
+    if (typeof child === 'string') {
       newNode = document.createTextNode(child);
     } else {
       const newElement = document.createElement(child.type);
@@ -25,6 +25,7 @@ export function RenderJSX(root: Element, fragment: JSXChildType[]): void {
             } else {
               newElement.setAttribute(attrName, attrValue.toString());
             }
+            break;
           default:
             newElement.setAttribute(attrName, attrValue.toString());
             break;
