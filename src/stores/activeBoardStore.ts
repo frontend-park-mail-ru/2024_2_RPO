@@ -19,6 +19,6 @@ const activeBoard: ActiveBoard = {
   ],
 };
 
-export const getActiveBoard = () => {
+export const getActiveBoard = (): ActiveBoard => {
   return activeBoard;
 };
