@@ -1,5 +1,5 @@
-import { ActiveBoard, BoardColumn } from 'models/active_board.js';
-import { Card } from 'models/card.js';
+import { ActiveBoard, BoardColumn } from 'types/active_board.js';
+import { Card } from 'types/card.js';
 
 class ActiveBoardStore {
   activeBoard: ActiveBoard; // TODO рассмотреть возможность установки private
@@ -16,7 +16,7 @@ class ActiveBoardStore {
             {
               id: 1337,
               title: 'Пример задачи, для которой задана обложка',
-              coverUrl: '/static/image/lada_vesta.png',
+              coverImageUrl: '/static/image/lada_vesta.png',
             },
           ],
         },

@@ -1,4 +1,4 @@
-import { Board } from 'models/board';
+import { Board } from 'types/board';
 
 class BoardsStore {
   boards: Board[]; // TODO рассмотреть возможность установки private
