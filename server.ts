@@ -1,7 +1,7 @@
 import express from "express";
 import fs from "fs";
 import path from "path";
-import { compileTs } from "./ts_compile";
+import { compileTs } from "./dev_server/ts_compile";
 import { exit } from "process";
 import nocache from "nocache";
 
@@ -74,7 +74,7 @@ const result = compileTs();
 if (result === false) {
   app.use("/", (req, res) => {
     res.type("text/html");
-    res.send(fs.readFileSync("error_message.html", "utf8"));
+    res.send(fs.readFileSync("dev_server/error_message.html", "utf8"));
   });
 } else {
   app.use("/", devServer);
