@@ -25,7 +25,8 @@ const devServer = (req: express.Request, res: express.Response) => {
   let name = req.url;
   if (name == "" || name == "/") name = "index.html";
   if (name.endsWith(".ts") || name.endsWith(".tsx")) {
-    res.status(500);
+    res.status(400);
+    res.send();
     return;
   }
   const method = req.method;

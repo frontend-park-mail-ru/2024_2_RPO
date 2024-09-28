@@ -12,6 +12,6 @@
     "strict": true,
     "jsx": "react-jsx",
     "jsxImportSource": "/jsx_core",
-    "paths": { "/jsx_core/*": ["./jsx_core/*"] }
+    "paths": { "/jsx_core/*": ["./jsx_core/*"], "/*": ["./*"] }
   }
 }
