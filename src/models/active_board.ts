@@ -1,5 +1,5 @@
-import { Board } from "./board";
-import { Card } from "./card";
+import { Board } from './board';
+import { Card } from './card';
 
 export interface BoardColumn {
   id: number;

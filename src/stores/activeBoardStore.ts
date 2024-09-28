@@ -1,22 +1,22 @@
-import { ActiveBoard, BoardColumn } from "models/active_board.js";
-import { Card } from "models/card.js";
+import { ActiveBoard, BoardColumn } from 'models/active_board.js';
+import { Card } from 'models/card.js';
 
 class ActiveBoardStore {
   activeBoard: ActiveBoard; // TODO рассмотреть возможность установки private
   constructor() {
     this.activeBoard = {
       id: 0,
-      title: "Моя любимая доска",
+      title: 'Моя любимая доска',
       columns: [
         {
           id: 1,
-          title: "Задачи",
+          title: 'Задачи',
           cards: [
-            { id: 228, title: "Пример задачи, для которой не задана обложка" },
+            { id: 228, title: 'Пример задачи, для которой не задана обложка' },
             {
               id: 1337,
-              title: "Пример задачи, для которой задана обложка",
-              coverUrl: "/static/image/lada_vesta.png",
+              title: 'Пример задачи, для которой задана обложка',
+              coverUrl: '/static/image/lada_vesta.png',
             },
           ],
         },
