@@ -1,4 +1,4 @@
-import { RenderJSX } from '/jsx_core/renderer.js';
+import { RenderJSX } from '/jsxCore/renderer.js';
 import { MainApp } from '/screens/MainApp.js';
 
 class InterfaceStateStore {

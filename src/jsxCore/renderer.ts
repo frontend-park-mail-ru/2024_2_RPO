@@ -1,4 +1,4 @@
-import { JSXChildType } from '/jsx_core/jsx-runtime';
+import { JSXChildType } from '/jsxCore/jsx-runtime';
 
 export function RenderJSX(root: Element, fragment: JSXChildType[]): void {
   while (root.lastChild !== null) {
