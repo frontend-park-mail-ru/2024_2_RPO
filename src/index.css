@@ -133,7 +133,7 @@
   width: max-content;
 }
 
-.board_delete_link {
+.board-delete-link {
   color: red;
   cursor: pointer;
 }
@@ -350,4 +350,9 @@ left-menu__first-level {
 
 .left-menu__card-name__subtext {
   font-size: 12px;
+}
+
+.left-menu__card-name__title {
+  font-size: 18px;
+  font-weight: bold;
 }

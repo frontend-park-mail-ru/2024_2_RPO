@@ -10,18 +10,17 @@ interface BoardCardProps {
 
 export const BoardCardComponent = (props: BoardCardProps) => {
   return (
-    <div class="left__menu__card__info">
+    <div class="left-menu__card__info">
       {props.title !== undefined ? (
         <div
-          class="left__menu__card__name__title"
-          style="font-size: 18px; font-weight: bold"
+          class="left-menu__card-name__title"
         >
           {props.title}
         </div>
       ) : undefined}
 
       <span
-        class="board_delete_link"
+        class="board-delete-link"
         ON_click={() => {
           getAppISS().isBoardDeleteDialogOpened = true;
           getAppISS().boardDeleteDialogCallback = () => {

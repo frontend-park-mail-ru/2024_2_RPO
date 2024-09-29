@@ -4,6 +4,11 @@ import { MainApp } from '/screens/MainApp.js';
 import { AppState } from '/types/appState.js';
 import { HomePageState } from '/types/homePageState.js';
 
+const modeToView = {
+  app: MainApp,
+  homePage: HomePage,
+};
+
 class InterfaceStateStore {
   mode: 'homePage' | 'app' = 'homePage';
   state: HomePageState | AppState = new HomePageState();
@@ -12,7 +17,6 @@ class InterfaceStateStore {
     this.appRoot = appRoot;
   }
   update() {
-    let app;
     if (document.location.href.match(/app$/)) {
       if (this.mode !== 'app') {
         this.mode = 'app';
@@ -24,11 +28,7 @@ class InterfaceStateStore {
         this.state = new HomePageState();
       }
     }
-    if (this.mode === 'app') {
-      app = MainApp();
-    } else {
-      app = HomePage();
-    }
+    const app = modeToView[this.mode]();
     RenderJSX(this.appRoot, app);
   }
 }
