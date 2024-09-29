@@ -22,8 +22,10 @@ class InterfaceStateStore {
 class LandingState {}
 class AppState {
   isLeftPanelOpened: boolean;
+  isNewBoardDialogOpened: boolean;
   constructor() {
     this.isLeftPanelOpened = false;
+    this.isNewBoardDialogOpened = false;
   }
 }
 

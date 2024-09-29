@@ -4,7 +4,6 @@ export function RenderJSX(root: Element, fragment: JSXChildType[]): void {
   while (root.lastChild !== null) {
     root.removeChild(root.lastChild);
   }
-  console.log(root);
   fragment.forEach((child) => {
     if (child === undefined) return;
     let newNode: Node;

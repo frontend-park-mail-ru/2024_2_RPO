@@ -1,13 +1,38 @@
 import { LeftPanel } from '/chunks/LeftPanel.js';
 import { NavBar } from '/chunks/NavBar.js';
-import { getAppISS } from '/stores/interfaceStateStore.js';
+import { ModalDialog } from '/components/ModalDialog.js';
+import { boardsStore } from '/stores/boardsStore.js';
+import { getAppISS, interfaceStateStore } from '/stores/interfaceStateStore.js';
 
 export const MainApp = () => {
   return (
     <>
+      {getAppISS().isNewBoardDialogOpened
+        ? ModalDialog({
+            title: 'Название новой доски',
+            content: (
+              <div>
+                <input
+                  ON_keydown={(event: KeyboardEvent) => {
+                    if (event.key === 'Enter') {
+                      const src = event.target;
+
+                      if (src instanceof HTMLInputElement) {
+                        console.log(src.value);
+                        boardsStore.addBoard(src.value);
+                        getAppISS().isNewBoardDialogOpened = false;
+                        interfaceStateStore?.update();
+                      }
+                    }
+                  }}
+                ></input>
+              </div>
+            ),
+          })
+        : undefined}
       <header>{NavBar()}</header>
 
-      {getAppISS().isLeftPanelOpened?LeftPanel():undefined}
+      {getAppISS().isLeftPanelOpened ? LeftPanel() : undefined}
 
       <main>
         <img

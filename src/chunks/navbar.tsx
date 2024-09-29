@@ -1,5 +1,6 @@
 import { ButtonComponent } from '/components/Button.js';
 import { getAppISS, interfaceStateStore } from '/stores/interfaceStateStore.js';
+import { ModeSelect } from '/components/ModeSelect.js';
 
 export const NavBar = () => {
   const openMenuBtn = (
@@ -10,7 +11,7 @@ export const NavBar = () => {
         interfaceStateStore?.update();
       }}
     >
-      <i class="bi bi-list"></i>
+      <i class="bi bi-list" style="font-size: 22px"></i>
     </div>
   );
   return (
@@ -36,35 +37,33 @@ export const NavBar = () => {
           </div>
         </div>
       </div>
+      <div class="navbar__rest">
+        <div class="borderNameWithGear">
+          {ModeSelect()}
 
-      <div class="currentMode">
-        <div class="mode">
-          <i class="bi bi-kanban"></i>
+          <div class="borderName" style="font-size: 18px ;font-weight: 600">
+            Моя доска
+          </div>
+          {ButtonComponent({ icon: 'bi-gear' })}
         </div>
-        <div style="padding-left: 5px;flex-grow:1">Канбан</div>
-        <div>
-          <i class="bi bi-chevron-down"></i>
+        <div class="flex-grow"></div>
+        <div class="search">
+          <input
+            class="searchInput"
+            type="text"
+            placeholder="Поиск"
+            style="padding-left: 36px"
+          />
+          <i class="bi-search" style="position: absolute;"></i>
+          {ButtonComponent({ icon: 'bi-bell' })}
+          <div class="profilePicture" style="height: 40px; width: 40px;">
+            <img
+              draggable="false"
+              src="/static/avatar.svg"
+              alt="ProfilePicture"
+            />
+          </div>
         </div>
-      </div>
-
-      <div class="borderNameWithGear">
-        <div class="borderName" style="font-size: 18px ;font-weight: 600">
-          Моя доска
-        </div>
-        {ButtonComponent({ icon: 'bi-gear' })}
-      </div>
-      <div class="search">
-        <input
-          class="searchInput"
-          type="text"
-          placeholder="Поиск"
-          style="padding-left: 36px"
-        />
-        <i class="bi-search" style="position: absolute;"></i>
-        {ButtonComponent({ icon: 'bi-bell' })}
-      </div>
-      <div class="profilePicture" style="height: 40px; width: 40px;">
-        <img draggable="false" src="/static/avatar.svg" alt="ProfilePicture" />
       </div>
     </nav>
   );

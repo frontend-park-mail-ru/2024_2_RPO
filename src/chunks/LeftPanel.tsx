@@ -1,10 +1,9 @@
+import { ButtonComponent } from '/components/Button.js';
 import { getAppISS, interfaceStateStore } from '/stores/interfaceStateStore.js';
 
 export const LeftPanel = () => {
   return (
-    <div
-      class="left_menu"
-    >
+    <div class="left_menu">
       <div
         class="left__menu__header"
         style="width: 100%; height: 58px; display: flex;  align-items: center; gap: 10px;"
@@ -135,10 +134,14 @@ export const LeftPanel = () => {
             </div>
           </div>
         </div>
-        <button class="button__add__board">
-          <i class="bi-plus-square" style="font-size: 20px;"></i>
-          <div style="font-size: 18px;">Добавить доску</div>
-        </button>
+        {ButtonComponent({
+          icon: 'bi-plus-square',
+          text: 'Добавить доску',
+          callback: () => {
+            getAppISS().isNewBoardDialogOpened = true;
+            interfaceStateStore?.update();
+          },
+        })}
       </div>
     </div>
   );
