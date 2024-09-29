@@ -5,13 +5,13 @@ import { ModeSelect } from '/components/ModeSelect.js';
 export const NavBar = () => {
   const openMenuBtn = (
     <div
-      class="button"
+      class="button" style="padding-top:0"
       ON_click={() => {
-        getAppISS().isLeftPanelOpened = true;
+        getAppISS().isLeftPanelOpened = !getAppISS().isLeftPanelOpened;
         interfaceStateStore?.update();
       }}
     >
-      <i class="bi bi-list" style="font-size: 22px"></i>
+      <i class={[getAppISS().isLeftPanelOpened?"bi-x-lg":"bi-list"]} style="font-size: 22px"></i>
     </div>
   );
   return (

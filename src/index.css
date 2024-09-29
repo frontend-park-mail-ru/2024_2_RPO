@@ -13,8 +13,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #d3d3d3;
+  background: rgba(200,200,200,0.5);
   z-index: 10;
+}
+
+.logo__left__menu_header{
+  width:243px;
+  height: 58px;
 }
 
 .navbar__logo {

@@ -24,21 +24,7 @@ export const LeftPanel = () => {
           <div
             class="logo__left__menu_header"
             style="user-select: none; display: flex; align-items: center; gap: 10px;"
-          >
-            <img
-              draggable="false"
-              src="/static/logo.svg"
-              alt="Logo"
-              style="margin-bottom: 8px; height: 40px; width: 40px;"
-            />
-            <div
-              draggable="false"
-              class="left__menu__header__name"
-              style="font-size: 24px; font-weight: bold"
-            >
-              Pumpkin
-            </div>
-          </div>
+          ></div>
         </div>
       </div>
       <div
