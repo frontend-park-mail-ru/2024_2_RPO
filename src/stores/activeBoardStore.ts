@@ -1,4 +1,4 @@
-import { ActiveBoard, BoardColumn } from 'types/active_board.js';
+import { ActiveBoard, BoardColumn } from 'types/activeBoard.js';
 import { Card } from 'types/card.js';
 
 class ActiveBoardStore {

@@ -12,7 +12,7 @@ export const ButtonComponent = (props: ButtonProps = {}) => {
       <div class="button" ON_click={props.callback ?? noop}>
         {props.icon !== undefined ? <i class={[props.icon]}></i> : undefined}
         {props.icon !== undefined && props.text !== undefined ? (
-          <div style="width:8px"></div>
+          <div class="w-8px"></div>
         ) : undefined}
         {props.text !== undefined ? props.text : undefined}
       </div>

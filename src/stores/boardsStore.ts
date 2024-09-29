@@ -1,4 +1,6 @@
-import { Board } from 'types/board';
+import { Board } from 'types/board.js';
+import { getApiUrl } from '/apiHelper.js';
+import { interfaceStateStore } from './interfaceStateStore.js';
 
 class BoardsStore {
   boards: Board[]; // TODO рассмотреть возможность установки private
@@ -20,10 +22,16 @@ class BoardsStore {
     this.boards.push({ title, id: 5 });
   }
   deleteBoard(boardToDeleteId: number) {
-    //TODO сходить в базу
-    this.boards = this.boards.filter((board) => {
-      return board.id !== boardToDeleteId;
-    });
+    fetch(getApiUrl(`/boards/board_${boardToDeleteId}`), {
+      method: 'DELETE',
+      credentials: 'include',
+    })
+      .then(() => {
+        interfaceStateStore?.updateRegAndApp();
+      })
+      .catch(() => {
+        alert('Error on backend');
+      });
   }
 }
 

@@ -8,14 +8,14 @@
 
 Менторы:
 
-* [Сергей Щербаков](https://github.com/f4lkr4m)
-* Ирина Кабаева
+- [Сергей Щербаков](https://github.com/f4lkr4m)
+- Ирина Кабаева
 
 Студенты:
 
-* [Георгий Жуков](https://github.com/dedxyk594)
-* [Константин Сафронов](https://github.com/kosafronov)
-* [Валентин Стремин](https://github.com/supchaser)
+- [Георгий Жуков](https://github.com/dedxyk594)
+- [Константин Сафронов](https://github.com/kosafronov)
+- [Валентин Стремин](https://github.com/supchaser)
 
 ### Ресурсы
 
@@ -24,6 +24,15 @@
 <a href="https://github.com/go-park-mail-ru/2024_2_RPO/blob/swagger_dev/openapi.yaml">Swagger (описание API)</a>
 
 ### Запуск Development Server
+
+Надо составить файл `serverConfig.json` в корне репозитория со следующим содержанием:
+
+```json
+{
+  "serverPort": 3000,
+  "apiUrl": "http://localhost:8800"
+}
+```
 
 `npm i` - установить все зависимости
 

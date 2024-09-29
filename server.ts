@@ -8,7 +8,6 @@ console.log('Заводим сервак...');
 
 const app = express();
 app.use(nocache());
-const port = 3000;
 
 const HTTP_STATUS_NOT_FOUND = 404;
 const HTTP_STATUS_METHOD_NOT_ALLOWED = 405;
@@ -26,10 +25,31 @@ const mimeTypeMap: any = {
   png: 'image/png',
 };
 
+let serverConfig: any;
+try {
+  serverConfig = JSON.parse(fs.readFileSync('serverConfig.json', 'utf8'));
+} catch {
+  throw new Error(
+    'You should provide serverConfig.json file to make server working, check README.md'
+  );
+}
+
+const port = serverConfig.serverPort;
+
+if (
+  typeof serverConfig.serverPort !== 'number' ||
+  typeof serverConfig.apiUrl !== 'string'
+) {
+  throw new Error('serverConfig.json should be valid, check README.md');
+}
+
 const devServer = (req: express.Request, res: express.Response) => {
   let name = req.url;
   if (name === '' || name === '/' || name === '/app' || name === 'app') {
     name = '/index.html';
+  }
+  if (name === 'apiUrl' || name === '/apiUrl') {
+    res.send(serverConfig.apiUrl);
   }
   const method = req.method;
   console.log(`${method} ${name}`);

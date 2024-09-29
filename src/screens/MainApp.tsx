@@ -2,8 +2,8 @@ import { LeftPanel } from '/containers/LeftPanel.js';
 import { NavBar } from '/containers/NavBar.js';
 import { ButtonComponent } from '/components/Button.js';
 import { ModalDialog } from '/components/ModalDialog.js';
-import { boardsStore } from '/stores/boardsStore.js';
 import { getAppISS, interfaceStateStore } from '/stores/interfaceStateStore.js';
+import { getApiUrl } from '/apiHelper.js';
 
 export const MainApp = () => {
   return (
@@ -19,9 +19,23 @@ export const MainApp = () => {
                       const src = event.target;
 
                       if (src instanceof HTMLInputElement) {
-                        boardsStore.addBoard(src.value);
-                        getAppISS().isNewBoardDialogOpened = false;
-                        interfaceStateStore?.update();
+                        fetch(getApiUrl('/boards'), {
+                          method: 'POST',
+                          credentials: 'include',
+                          body: JSON.stringify({
+                            name: src.value,
+                            description: 'Generic desc',
+                          }),
+                          headers: { 'Content-Type': 'application/json' },
+                        })
+                          .then(() => {
+                            interfaceStateStore?.updateRegAndApp();
+                            getAppISS().isNewBoardDialogOpened = false;
+                          })
+                          .catch(() => {
+                            alert('Неизвестная ошибка на бэке');
+                            getAppISS().isNewBoardDialogOpened = false;
+                          });
                       }
                     }
                   }}

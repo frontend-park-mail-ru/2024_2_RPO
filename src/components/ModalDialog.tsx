@@ -19,7 +19,7 @@ export const ModalDialog = (props: ModalDialogProps = {}) => {
             callback: props.closeCallback ?? noop,
           })}
         </div>
-        <hr style="margin-bottom:15px" />
+        <hr class="mb-16px" />
         {props.content}
       </div>
     </div>

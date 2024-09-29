@@ -1,5 +1,6 @@
 import { ButtonComponent } from '/components/Button.js';
-import { ModalDialog } from '/components/ModalDialog.js';
+import { LoginDialog } from '/containers/LoginDialog.js';
+import { RegistrationDialog } from '/containers/RegistrationDialog.js';
 import {
   getHomePageISS,
   interfaceStateStore,
@@ -14,7 +15,7 @@ export const HomePage = () => {
       </div>
       <div class="landing_contents">
         <img src="/static/logo.svg" class="logo_image" />
-        <h1 class="landing_title">Pumpkin</h1>
+        <h1 class="homepage__pumpkin">Pumpkin</h1>
         <span style="margin-bottom: 30px">
           Облачный канбан со сверхспособностями
         </span>
@@ -36,65 +37,9 @@ export const HomePage = () => {
       </div>
 
       {getHomePageISS().isRegistrationDialogOpened
-        ? ModalDialog({
-            title: 'Добро пожаловать в Pumpkin!',
-            content: (
-              <form>
-                <div class="form-field">
-                  <label for="nickname">Никнейм:</label>
-                  <input
-                    type="text"
-                    id="nickname"
-                    name="nickname"
-                    placeholder="Ваш никнейм"
-                  />
-                </div>
-                <div class="form-field">
-                  <label for="email">Email:</label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    placeholder="Email"
-                  />
-                </div>
-                <div class="form-field">
-                  <label for="password">Пароль:</label>
-                  <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    placeholder="Самый надежный пароль"
-                  />
-                </div>
-                <div class="form-field">
-                  <label for="confirm-password">Повторите пароль:</label>
-                  <input
-                    type="password"
-                    id="confirm-password"
-                    name="confirm-password"
-                    placeholder="Самый надежный пароль"
-                  />
-                </div>
-                <div class="form-field">
-                  <label for="description">Описание пользователя:</label>
-                  <textarea
-                    id="description"
-                    name="description"
-                    placeholder="Расскажите о себе"
-                  ></textarea>
-                </div>
-                <button type="submit" class="submit-btn">
-                  Зарегистрироваться!
-                </button>
-              </form>
-            ),
-            closeCallback: () => {
-              getHomePageISS().isRegistrationDialogOpened = false;
-              interfaceStateStore?.update();
-            },
-          })
+        ? RegistrationDialog()
         : undefined}
+      {getHomePageISS().isLoginDialogOpened ? LoginDialog() : undefined}
     </>
   );
 };

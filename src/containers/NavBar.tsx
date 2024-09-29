@@ -9,8 +9,7 @@ import { ModeSelect } from '/components/ModeSelect.js';
 export const NavBar = () => {
   const openMenuBtn = (
     <div
-      class="button"
-      style="padding-top:0"
+      class="button pt-0"
       ON_click={() => {
         getAppISS().isLeftPanelOpened = !getAppISS().isLeftPanelOpened;
         interfaceStateStore?.update();
@@ -36,8 +35,7 @@ export const NavBar = () => {
             />
             <div
               draggable="false"
-              class="name"
-              style="font-size: 24px; font-weight: bold"
+              class="navbar__logo__pumpkin"
             >
               Pumpkin
             </div>
@@ -67,9 +65,9 @@ export const NavBar = () => {
             icon: 'bi-box-arrow-right',
             callback: () => {
               logout();
-              interfaceStateStore?.update();
             },
           })}
+          {interfaceStateStore?.me?.name}
           <div class="profilePicture">
             <img
               draggable="false"

@@ -1,21 +1,19 @@
 import { initISS, interfaceStateStore } from './stores/interfaceStateStore.js';
-
 import { setApiUrl } from './apiHelper.js';
-
 fetch('/apiUrl')
-  .then((resp) => {
+    .then(function (resp) {
     resp
-      .text()
-      .then((res) => {
+        .text()
+        .then(function (res) {
         setApiUrl(res);
-        console.log(`API url: ${res}`);
+        console.log("API url: ".concat(res));
         initISS();
-        interfaceStateStore?.updateRegAndApp();
-      })
-      .catch(() => {
+        interfaceStateStore === null || interfaceStateStore === void 0 ? void 0 : interfaceStateStore.updateRegAndApp();
+    })
+        .catch(function () {
         console.log('Не получается получить apiUrl');
-      });
-  })
-  .catch(() => {
+    });
+})
+    .catch(function () {
     alert('Не получается получить apiUrl');
-  });
+});
