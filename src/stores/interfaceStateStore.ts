@@ -1,5 +1,5 @@
 import { RenderJSX } from '/jsxCore/renderer.js';
-import { Landing } from '/screens/Landing.js';
+import { HomePage } from '/screens/HomePage.js';
 import { MainApp } from '/screens/MainApp.js';
 import { AppState } from '/types/appState.js';
 import { HomePageState } from '/types/homePageState';
@@ -30,7 +30,7 @@ class InterfaceStateStore {
     if (this.mode === 'app') {
       app = MainApp();
     } else {
-      app = Landing();
+      app = HomePage();
     }
     RenderJSX(this.appRoot, app);
   }

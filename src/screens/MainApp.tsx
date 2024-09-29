@@ -1,5 +1,5 @@
-import { LeftPanel } from '/chunks/LeftPanel.js';
-import { NavBar } from '/chunks/NavBar.js';
+import { LeftPanel } from '/containers/LeftPanel.js';
+import { NavBar } from '/containers/NavBar.js';
 import { ButtonComponent } from '/components/Button.js';
 import { ModalDialog } from '/components/ModalDialog.js';
 import { boardsStore } from '/stores/boardsStore.js';
