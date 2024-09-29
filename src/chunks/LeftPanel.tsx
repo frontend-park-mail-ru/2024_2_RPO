@@ -18,9 +18,7 @@ export const LeftPanel = () => {
               getAppISS().isLeftPanelOpened = false;
               interfaceStateStore?.update();
             }}
-          >
-            <i class="bi bi-x-lg" style="cursor:pointer"></i>
-          </div>
+          ></div>
           <div
             class="logo__left__menu_header"
             style="user-select: none; display: flex; align-items: center; gap: 10px;"
@@ -29,7 +27,7 @@ export const LeftPanel = () => {
       </div>
       <div
         class="left__menu__body"
-        style="overflow-y: auto; max-height: 500px; padding-bottom: 80px;"
+        style="overflow-y: auto; padding-bottom: 80px;"
       >
         <div
           class="first-level"

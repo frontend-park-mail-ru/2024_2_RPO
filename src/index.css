@@ -268,3 +268,6 @@
   margin-right: 30px;
   font-weight: 600;
 }
+.backgroundPicture{
+  object-fit: cover;
+}
