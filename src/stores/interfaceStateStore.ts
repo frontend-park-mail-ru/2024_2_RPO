@@ -8,10 +8,8 @@ class InterfaceStateStore {
   mode: 'homePage' | 'app' = 'homePage';
   state: HomePageState | AppState = new HomePageState();
   appRoot: Element;
-  constructor(appRoot: Element | null) {
-    if (appRoot === null) {
-      throw new Error('appRoot is null');
-    } else this.appRoot = appRoot;
+  constructor(appRoot: Element) {
+    this.appRoot = appRoot;
   }
   update() {
     let app;
@@ -39,7 +37,11 @@ const appRoot = document.getElementById('app_root');
 export let interfaceStateStore: InterfaceStateStore | undefined = undefined;
 
 export const initISS = () => {
-  interfaceStateStore = new InterfaceStateStore(appRoot);
+  if (appRoot !== null) {
+    interfaceStateStore = new InterfaceStateStore(appRoot);
+  } else {
+    throw new Error('App root is null');
+  }
 };
 
 export const getAppISS = (): AppState => {

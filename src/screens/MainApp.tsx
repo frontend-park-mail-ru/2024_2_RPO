@@ -19,7 +19,6 @@ export const MainApp = () => {
                       const src = event.target;
 
                       if (src instanceof HTMLInputElement) {
-                        console.log(src.value);
                         boardsStore.addBoard(src.value);
                         getAppISS().isNewBoardDialogOpened = false;
                         interfaceStateStore?.update();

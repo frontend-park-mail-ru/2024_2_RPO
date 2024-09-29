@@ -5,7 +5,7 @@ import { getAppISS, interfaceStateStore } from '/stores/interfaceStateStore.js';
 
 export const LeftPanel = () => {
   return (
-    <div class="left_menu">
+    <div class="left-menu">
       <div class="left-menu__header">
         <div class="left-menu__left-elements">
           <div

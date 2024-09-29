@@ -4,6 +4,8 @@ import path from 'path';
 import { compileTs } from './dev_server/ts_compile';
 import nocache from 'nocache';
 
+console.log('Заводим сервак...');
+
 const app = express();
 app.use(nocache());
 const port = 3000;
@@ -21,9 +23,8 @@ const mimeTypeMap: any = {
   woff2: 'font/woff2',
   ttf: 'font/ttf',
   svg: 'image/svg+xml',
+  png: 'image/png',
 };
-
-console.log('Заводим сервак...');
 
 const devServer = (req: express.Request, res: express.Response) => {
   let name = req.url;
