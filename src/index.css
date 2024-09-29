@@ -121,7 +121,7 @@
 }
 
 .button {
-  background-color: #f5f6fa;
+  background-color:rgb(245, 246, 250);
   border: 1px solid #f5f6fa;
   border-radius: 3px;
   height: 32px;
@@ -129,6 +129,12 @@
   padding-left: 8px;
   padding-top: 5px;
   cursor: pointer;
+  display: flex;
+  flex-direction: row;
+}
+
+.button:hover{
+  background-color:rgba(245, 246, 250,0.5);
 }
 
 .star {
