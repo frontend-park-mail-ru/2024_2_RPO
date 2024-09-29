@@ -48,7 +48,7 @@ export const NavBar = () => {
         <div class="borderNameWithGear">
           {ModeSelect()}
 
-          <div class="borderName" style="font-size: 18px ;font-weight: 600">
+          <div class="borderName" style="font-size: 18px; font-weight: 600">
             Моя доска
           </div>
           {ButtonComponent({ icon: 'bi-gear' })}

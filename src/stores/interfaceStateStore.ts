@@ -2,7 +2,7 @@ import { RenderJSX } from '/jsxCore/renderer.js';
 import { HomePage } from '/screens/HomePage.js';
 import { MainApp } from '/screens/MainApp.js';
 import { AppState } from '/types/appState.js';
-import { HomePageState } from '/types/homePageState';
+import { HomePageState } from '/types/homePageState.js';
 
 class InterfaceStateStore {
   mode: 'homePage' | 'app';
@@ -12,7 +12,7 @@ class InterfaceStateStore {
     if (appRoot === null) throw new Error('appRoot is null');
     else this.appRoot = appRoot;
     this.mode = 'homePage';
-    this.state = new AppState();
+    this.state = new HomePageState();
   }
   update() {
     let app;
@@ -52,7 +52,7 @@ export const getAppISS = (): AppState => {
   throw new Error('You are on another screen');
 };
 
-export const getLandingISS = (): HomePageState => {
+export const getHomePageISS = (): HomePageState => {
   console.log(interfaceStateStore?.state);
   if (interfaceStateStore?.mode === 'homePage') {
     if (interfaceStateStore.state instanceof HomePageState) {

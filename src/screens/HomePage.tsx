@@ -1,7 +1,7 @@
 import { ButtonComponent } from '/components/Button.js';
 import { ModalDialog } from '/components/ModalDialog.js';
 import {
-  getLandingISS,
+  getHomePageISS,
   interfaceStateStore,
 } from '/stores/interfaceStateStore.js';
 
@@ -22,20 +22,20 @@ export const HomePage = () => {
         {ButtonComponent({
           text: 'Зарегистрироваться',
           callback: () => {
-            getLandingISS().isRegistrationDialogOpened = true;
+            getHomePageISS().isRegistrationDialogOpened = true;
             interfaceStateStore?.update();
           },
         })}
         {ButtonComponent({
           text: 'Войти',
           callback: () => {
-            getLandingISS().isLoginDialogOpened = true;
+            getHomePageISS().isLoginDialogOpened = true;
             interfaceStateStore?.update();
           },
         })}
       </div>
 
-      {getLandingISS().isRegistrationDialogOpened
+      {getHomePageISS().isRegistrationDialogOpened
         ? ModalDialog({
             title: 'Добро пожаловать в Pumpkin!',
             content: (
@@ -90,7 +90,7 @@ export const HomePage = () => {
               </form>
             ),
             closeCallback: () => {
-              getLandingISS().isRegistrationDialogOpened = false;
+              getHomePageISS().isRegistrationDialogOpened = false;
               interfaceStateStore?.update();
             },
           })

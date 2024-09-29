@@ -34,13 +34,13 @@ export const BoardCardComponent = (props: BoardCardProps) => {
       </span>
 
       {props.lastVisit !== undefined ? (
-        <div class="left__menu__card__name__text" style="font-size:12px;">
+        <div class="left-menu__card-name__subtext">
           Последнее посещение: {props.lastVisit}
         </div>
       ) : undefined}
 
       {props.lastUpdate !== undefined ? (
-        <div class="left__menu__card__name__subtext" style="font-size:12px;">
+        <div class="left-menu__card-name__subtext">
           Последнее обновление: {props.lastUpdate}
         </div>
       ) : undefined}
