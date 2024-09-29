@@ -5,17 +5,19 @@ import {
   interfaceStateStore,
 } from '/stores/interfaceStateStore.js';
 
-export const Landing = () => {
+export const HomePage = () => {
   return (
     <>
       <div class="background">
-        <i class="bi bi-kanban icon1"></i>
-        <i class="bi bi-kanban icon2"></i>
+        <i class="bi-kanban icon1"></i>
+        <i class="bi-kanban icon2"></i>
       </div>
       <div class="landing_contents">
         <img src="/static/logo.svg" class="logo_image" />
         <h1 class="landing_title">Pumpkin</h1>
-        <span style="margin-bottom: 30px">Облачный канбан со сверхспособностями</span>
+        <span style="margin-bottom: 30px">
+          Облачный канбан со сверхспособностями
+        </span>
 
         {ButtonComponent({
           text: 'Зарегистрироваться',
