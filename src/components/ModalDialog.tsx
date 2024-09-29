@@ -10,7 +10,7 @@ interface ModalDialogProps {
 
 export const ModalDialog = (props: ModalDialogProps = {}) => {
   return (
-    <div class="modal-dialog__back">
+    <div class="modal-dialog__container">
       <div class="modal-dialog">
         <div class="modal-dialog__header-block">
           <span class="modal-dialog__title">{props.title}</span>

@@ -207,13 +207,7 @@
   flex-grow: 1;
 }
 
-.modal-dialog__back {
-  min-width: 300px;
-  min-height: 200px;
-  background-color: white;
-  position: fixed;
-  z-index: 100;
-  position: absolute;
+.modal-dialog__container {
   top: 0;
   left: 0;
   width: 100vw;
