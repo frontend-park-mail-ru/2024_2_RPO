@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="register.css">
+</head>
+<body>
+    <div class="background">
+        <i class="bi bi-kanban icon1"></i>
+        <i class="bi bi-kanban icon2"></i>
+    </div>
+
+    <div class="register-popup">    
+        <button class="close-btn"></button>
+
+        <div class="header">
+            Добро пожаловать в Pumpkin!
+        </div>
+        <form>
+            <div class="form-field">
+                <label for="nickname">Никнейм:</label>
+                <input type="text" id="nickname" name="nickname" placeholder="Ваш никнейм">
+            </div>
+            <div class="form-field">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" placeholder="Email">
+            </div>
+            <div class="form-field">
+                <label for="password">Пароль:</label>
+                <input type="password" id="password" name="password" placeholder="Самый надежный пароль">
+            </div>
+            <div class="form-field">
+                <label for="confirm-password">Повторите пароль:</label>
+                <input type="password" id="confirm-password" name="confirm-password" placeholder="Самый надежный пароль">
+            </div>
+            <div class="form-field">
+                <label for="description">Описание пользователя:</label>
+                <textarea id="description" name="description" placeholder="Расскажите о себе"></textarea>
+            </div>
+            <button type="submit" class="submit-btn">Зарегистрироваться!</button>
+        </form>
+    </div>
+</body>
+</html>
