@@ -9,8 +9,7 @@ export const LeftPanel = () => {
         style="width: 100%; height: 58px; display: flex;  align-items: center; gap: 10px;"
       >
         <div
-          class="left__menu__left__elements"
-          style="display: flex; align-items: center; justify-content: center; gap: 10px;"
+          class="left_menu__left_elements"
         >
           <div
             class="x-lg"

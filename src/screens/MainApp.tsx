@@ -38,7 +38,6 @@ export const MainApp = () => {
         <img
           src="/static/backgroundPicture.png"
           class="backgroundPicture"
-          style="width: 100vw; height: 100vh; position: fixed; top: 0; left: 0; z-index: -1;"
           alt=""
         />
 
