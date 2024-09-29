@@ -1,41 +1,51 @@
 import { ButtonComponent } from '/components/Button.js';
-import { getAppISS, interfaceStateStore } from '/stores/interfaceStateStore.js';
+import {
+  getAppISS,
+  interfaceStateStore,
+  logout,
+} from '/stores/interfaceStateStore.js';
 import { ModeSelect } from '/components/ModeSelect.js';
 
 export const NavBar = () => {
   const openMenuBtn = (
     <div
-      class="button" style="padding-top:0"
+      class="button"
+      style="padding-top:0"
       ON_click={() => {
         getAppISS().isLeftPanelOpened = !getAppISS().isLeftPanelOpened;
         interfaceStateStore?.update();
       }}
     >
-      <i class={[getAppISS().isLeftPanelOpened?"bi-x-lg":"bi-list"]} style="font-size: 22px"></i>
+      <i
+        class={[getAppISS().isLeftPanelOpened ? 'bi-x-lg' : 'bi-list']}
+        style="font-size: 22px"
+      ></i>
     </div>
   );
   return (
     <nav class="navbar" style="position: fixed; border:#000000">
       <div class="navbar__logo">
         {openMenuBtn}
-        <div
-          class="logo"
-          style="user-select: none; display: flex; align-items: center;"
-        >
-          <img
-            draggable="false"
-            src="/static/logo.svg"
-            alt="Logo"
-            style="margin-bottom: 8px;"
-          />
+        <a class="logo__link" href="/">
           <div
-            draggable="false"
-            class="name"
-            style="font-size: 24px; font-weight: bold"
+            class="logo"
+            style="user-select: none; display: flex; align-items: center;"
           >
-            Pumpkin
+            <img
+              draggable="false"
+              src="/static/logo.svg"
+              alt="Logo"
+              style="margin-bottom: 8px;"
+            />
+            <div
+              draggable="false"
+              class="name"
+              style="font-size: 24px; font-weight: bold"
+            >
+              Pumpkin
+            </div>
           </div>
-        </div>
+        </a>
       </div>
       <div class="navbar__rest">
         <div class="borderNameWithGear">
@@ -56,6 +66,13 @@ export const NavBar = () => {
           />
           <i class="bi-search" style="position: absolute;"></i>
           {ButtonComponent({ icon: 'bi-bell' })}
+          {ButtonComponent({
+            icon: 'bi-box-arrow-right',
+            callback: () => {
+              logout();
+              interfaceStateStore?.update();
+            },
+          })}
           <div class="profilePicture" style="height: 40px; width: 40px;">
             <img
               draggable="false"

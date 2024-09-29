@@ -14,6 +14,17 @@ class InterfaceStateStore {
   }
   update() {
     let app;
+    if (document.location.href.endsWith('app')) {
+      if (this.mode !== 'app') {
+        this.mode = 'app';
+        this.state = new AppState();
+      }
+    } else {
+      if (this.mode !== 'landing') {
+        this.mode = 'landing';
+        this.state = new LandingState();
+      }
+    }
     if (this.mode === 'app') {
       app = MainApp();
     } else {
@@ -60,10 +71,16 @@ export const getAppISS = (): AppState => {
 };
 
 export const getLandingISS = (): LandingState => {
+  console.log(interfaceStateStore?.state);
   if (interfaceStateStore?.mode === 'landing') {
     if (interfaceStateStore.state instanceof LandingState) {
       return interfaceStateStore.state;
     }
   }
   throw new Error('You are on another screen');
+};
+
+export const logout = () => {
+  //TODO выход
+  history.pushState(null, '', '/');
 };
