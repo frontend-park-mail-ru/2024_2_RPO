@@ -4,6 +4,19 @@
 
 В этом репозитории находится фронтовая часть проекта. Фронт сделан на pure js (+jsx +ts).
 
+### Участники проекта
+
+Менторы:
+
+* [Сергей Щербаков](https://github.com/f4lkr4m)
+* Ирина Кабаева
+
+Студенты:
+
+* [Георгий Жуков](https://github.com/dedxyk594)
+* [Константин Сафронов](https://github.com/kosafronov)
+* [Валентин Стремин](https://github.com/supchaser)
+
 ### Ресурсы
 
 <a href="https://www.figma.com/design/ItV72t8ctm64h9y5KBSGrt/Pumpkin?m=auto&t=lbxUX0Ehi3psw172-1">Макеты интерфейса (Figma)</a>

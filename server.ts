@@ -70,10 +70,11 @@ const devServer = (req: express.Request, res: express.Response) => {
   }
 
   const nameSplitted = name.split('.');
-  const nameExtension = nameSplitted[nameSplitted.length - 1];
-  if (mimeTypeMap[nameExtension] !== undefined) {
+  const nameExtension = nameSplitted.at(-1);
+  if (nameExtension !== undefined && mimeTypeMap[nameExtension] !== undefined) {
     res.type(mimeTypeMap[nameExtension]);
   }
+
   res.send(fileContent);
   return;
 };
@@ -88,6 +89,6 @@ if (result === false) {
   app.use('/', devServer);
 }
 
-app.listen(3000, () => {
+app.listen(port, () => {
   console.log(`Сервак принимает запросы на http://localhost:${port}`);
 });

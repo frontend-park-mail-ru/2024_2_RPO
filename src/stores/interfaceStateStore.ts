@@ -1,15 +1,17 @@
 import { RenderJSX } from '/jsxCore/renderer.js';
 import { Landing } from '/screens/Landing.js';
 import { MainApp } from '/screens/MainApp.js';
+import { AppState } from '/types/appState.js';
+import { HomePageState } from '/types/homePageState';
 
 class InterfaceStateStore {
-  mode: 'landing' | 'app';
-  state: LandingState | AppState;
+  mode: 'homePage' | 'app';
+  state: HomePageState | AppState;
   appRoot: Element;
   constructor(appRoot: Element | null) {
     if (appRoot === null) throw new Error('appRoot is null');
     else this.appRoot = appRoot;
-    this.mode = 'app'; //todo роутер
+    this.mode = 'homePage';
     this.state = new AppState();
   }
   update() {
@@ -20,9 +22,9 @@ class InterfaceStateStore {
         this.state = new AppState();
       }
     } else {
-      if (this.mode !== 'landing') {
-        this.mode = 'landing';
-        this.state = new LandingState();
+      if (this.mode !== 'homePage') {
+        this.mode = 'homePage';
+        this.state = new HomePageState();
       }
     }
     if (this.mode === 'app') {
@@ -31,26 +33,6 @@ class InterfaceStateStore {
       app = Landing();
     }
     RenderJSX(this.appRoot, app);
-  }
-}
-class LandingState {
-  isRegistrationDialogOpened: boolean;
-  isLoginDialogOpened: boolean;
-  constructor() {
-    this.isRegistrationDialogOpened = false;
-    this.isLoginDialogOpened = false;
-  }
-}
-class AppState {
-  isBoardDeleteDialogOpened: boolean;
-  isLeftPanelOpened: boolean;
-  isNewBoardDialogOpened: boolean;
-  boardDeleteDialogCallback: (() => void) | undefined;
-  constructor() {
-    this.isBoardDeleteDialogOpened = false;
-    this.isLeftPanelOpened = false;
-    this.isNewBoardDialogOpened = false;
-    this.boardDeleteDialogCallback = undefined;
   }
 }
 
@@ -70,10 +52,10 @@ export const getAppISS = (): AppState => {
   throw new Error('You are on another screen');
 };
 
-export const getLandingISS = (): LandingState => {
+export const getLandingISS = (): HomePageState => {
   console.log(interfaceStateStore?.state);
-  if (interfaceStateStore?.mode === 'landing') {
-    if (interfaceStateStore.state instanceof LandingState) {
+  if (interfaceStateStore?.mode === 'homePage') {
+    if (interfaceStateStore.state instanceof HomePageState) {
       return interfaceStateStore.state;
     }
   }
@@ -83,4 +65,11 @@ export const getLandingISS = (): LandingState => {
 export const logout = () => {
   //TODO выход
   history.pushState(null, '', '/');
+  interfaceStateStore?.update();
+};
+
+export const goToApp = () => {
+  //TODO проверка логина
+  history.pushState(null, '', '/app');
+  interfaceStateStore?.update();
 };
