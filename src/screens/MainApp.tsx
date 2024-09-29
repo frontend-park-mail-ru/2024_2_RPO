@@ -1,5 +1,6 @@
 import { LeftPanel } from '/chunks/LeftPanel.js';
 import { NavBar } from '/chunks/NavBar.js';
+import { ButtonComponent } from '/components/Button.js';
 import { ModalDialog } from '/components/ModalDialog.js';
 import { boardsStore } from '/stores/boardsStore.js';
 import { getAppISS, interfaceStateStore } from '/stores/interfaceStateStore.js';
@@ -26,6 +27,31 @@ export const MainApp = () => {
                     }
                   }}
                 ></input>
+              </div>
+            ),
+          })
+        : undefined}
+      {getAppISS().isBoardDeleteDialogOpened
+        ? ModalDialog({
+            title: 'Вы точно хотите удалить доску?',
+            content: (
+              <div>
+                {ButtonComponent({
+                  text: 'Да',
+                  callback: () => {
+                    const cb = getAppISS().boardDeleteDialogCallback;
+                    if (cb !== undefined) cb();
+                    getAppISS().isBoardDeleteDialogOpened = false;
+                    interfaceStateStore?.update();
+                  },
+                })}
+                {ButtonComponent({
+                  text: 'Нет',
+                  callback: () => {
+                    getAppISS().isBoardDeleteDialogOpened = false;
+                    interfaceStateStore?.update();
+                  },
+                })}
               </div>
             ),
           })

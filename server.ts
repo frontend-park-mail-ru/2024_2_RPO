@@ -27,7 +27,7 @@ console.log('Заводим сервак...');
 
 const devServer = (req: express.Request, res: express.Response) => {
   let name = req.url;
-  if (name === '' || name === '/') name = 'index.html';
+  if (name === '' || name === '/') name = '/index.html';
   const method = req.method;
   console.log(`${method} ${name}`);
   if (method !== 'GET') {

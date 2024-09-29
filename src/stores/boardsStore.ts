@@ -19,6 +19,12 @@ class BoardsStore {
     //TODO сходить в базу
     this.boards.push({ title, id: 5 });
   }
+  deleteBoard(boardToDeleteId: number) {
+    //TODO сходить в базу
+    this.boards = this.boards.filter((board) => {
+      return board.id !== boardToDeleteId;
+    });
+  }
 }
 
 export const boardsStore = new BoardsStore();

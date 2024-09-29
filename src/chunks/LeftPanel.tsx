@@ -1,4 +1,6 @@
+import { BoardCardComponent } from '/components/BoardCard.js';
 import { ButtonComponent } from '/components/Button.js';
+import { boardsStore } from '/stores/boardsStore.js';
 import { getAppISS, interfaceStateStore } from '/stores/interfaceStateStore.js';
 
 export const LeftPanel = () => {
@@ -8,9 +10,7 @@ export const LeftPanel = () => {
         class="left__menu__header"
         style="width: 100%; height: 58px; display: flex;  align-items: center; gap: 10px;"
       >
-        <div
-          class="left_menu__left_elements"
-        >
+        <div class="left_menu__left_elements">
           <div
             class="x-lg"
             ON_click={() => {
@@ -46,76 +46,14 @@ export const LeftPanel = () => {
           </div>
         </div>
         <div class="cards" style="flex-direction: column;">
-          <div
-            class="left__menu__card__1"
-            style="display: flex; flex-direction: column; height: 177px; width: 195px;margin-left: 14px; margin-top: 30px;"
-          >
-            <div class="left__menu__card__picture" style="position: relative;">
-              <div
-                class="star-fill"
-                style="position: absolute; display: flex; justify-content: flex-end; top: 10px; right: 10px;"
-              >
-                <div class="bi-star-fill"></div>
-              </div>
-              <img
-                src="/static/backgroundPicture.png"
-                alt=""
-                style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;"
-              />
-            </div>
-            <div class=" left__menu__card__info">
-              <div
-                class="left__menu__card__name__title"
-                style="font-size: 18px; font-weight: bold"
-              >
-                Communism Enjoyers
-              </div>
-              <div class="left__menu__card__name__text" style="font-size:12px;">
-                Последнее посещение: 10 ч
-              </div>
-              <div
-                class="left__menu__card__name__subtext"
-                style="font-size:12px;"
-              >
-                Последнее обновление: 1 ч
-              </div>
-            </div>
-          </div>
-          <div
-            class="left__menu__card__2"
-            style="display: flex; flex-direction: column; height: 177px; width: 195px;margin-left: 14px; margin-top: 30px;"
-          >
-            <div class="left__menu__card__picture" style="position: relative;">
-              <div
-                class="star-fill"
-                style="position: absolute; display: flex; justify-content: flex-end; top: 10px; right: 10px;"
-              >
-                <div class="bi-star-fill"></div>
-              </div>
-              <img
-                src="/static/backgroundPicture.png"
-                alt=""
-                style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;"
-              />
-            </div>
-            <div class=" left__menu__card__info">
-              <div
-                class="left__menu__card__name__title"
-                style="font-size: 18px; font-weight: bold"
-              >
-                Communism Enjoyers
-              </div>
-              <div class="left__menu__card__name__text" style="font-size:12px;">
-                Последнее посещение: 10 ч
-              </div>
-              <div
-                class="left__menu__card__name__subtext"
-                style="font-size:12px;"
-              >
-                Последнее обновление: 1 ч
-              </div>
-            </div>
-          </div>
+          {boardsStore.getWithFilters().map((board) => {
+            return BoardCardComponent({
+              title: board.title,
+              lastUpdate: 'N/A',
+              lastVisit: 'N/A',
+              boardId: board.id,
+            });
+          })}
         </div>
         {ButtonComponent({
           icon: 'bi-plus-square',

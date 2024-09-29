@@ -1,4 +1,5 @@
 import { RenderJSX } from '/jsxCore/renderer.js';
+import { Landing } from '/screens/Landing.js';
 import { MainApp } from '/screens/MainApp.js';
 
 class InterfaceStateStore {
@@ -15,17 +16,30 @@ class InterfaceStateStore {
     let app;
     if (this.mode === 'app') {
       app = MainApp();
-    } else throw new Error('Not implemented');
+    } else {
+      app = Landing();
+    }
     RenderJSX(this.appRoot, app);
   }
 }
-class LandingState {}
+class LandingState {
+  isRegistrationDialogOpened: boolean;
+  isLoginDialogOpened: boolean;
+  constructor() {
+    this.isRegistrationDialogOpened = false;
+    this.isLoginDialogOpened = false;
+  }
+}
 class AppState {
+  isBoardDeleteDialogOpened: boolean;
   isLeftPanelOpened: boolean;
   isNewBoardDialogOpened: boolean;
+  boardDeleteDialogCallback: (() => void) | undefined;
   constructor() {
+    this.isBoardDeleteDialogOpened = false;
     this.isLeftPanelOpened = false;
     this.isNewBoardDialogOpened = false;
+    this.boardDeleteDialogCallback = undefined;
   }
 }
 
@@ -39,6 +53,15 @@ export const initISS = () => {
 export const getAppISS = (): AppState => {
   if (interfaceStateStore?.mode === 'app') {
     if (interfaceStateStore.state instanceof AppState) {
+      return interfaceStateStore.state;
+    }
+  }
+  throw new Error('You are on another screen');
+};
+
+export const getLandingISS = (): LandingState => {
+  if (interfaceStateStore?.mode === 'landing') {
+    if (interfaceStateStore.state instanceof LandingState) {
       return interfaceStateStore.state;
     }
   }
