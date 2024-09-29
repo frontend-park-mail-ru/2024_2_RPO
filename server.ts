@@ -36,10 +36,7 @@ try {
 
 const port = serverConfig.serverPort;
 
-if (
-  typeof serverConfig.serverPort !== 'number' ||
-  typeof serverConfig.apiUrl !== 'string'
-) {
+if (typeof serverConfig.serverPort !== 'number') {
   throw new Error('serverConfig.json should be valid, check README.md');
 }
 
@@ -47,9 +44,6 @@ const devServer = (req: express.Request, res: express.Response) => {
   let name = req.url;
   if (name === '' || name === '/' || name === '/app' || name === 'app') {
     name = '/index.html';
-  }
-  if (name === 'apiUrl' || name === '/apiUrl') {
-    res.send(serverConfig.apiUrl);
   }
   const method = req.method;
   console.log(`${method} ${name}`);

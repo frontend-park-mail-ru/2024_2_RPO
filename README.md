@@ -29,8 +29,7 @@
 
 ```json
 {
-  "serverPort": 3000,
-  "apiUrl": "http://localhost:8800"
+  "serverPort": 3000
 }
 ```
 
