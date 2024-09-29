@@ -5,18 +5,17 @@ import { AppState } from '/types/appState.js';
 import { HomePageState } from '/types/homePageState.js';
 
 class InterfaceStateStore {
-  mode: 'homePage' | 'app';
-  state: HomePageState | AppState;
+  mode: 'homePage' | 'app' = 'homePage';
+  state: HomePageState | AppState = new HomePageState();
   appRoot: Element;
   constructor(appRoot: Element | null) {
-    if (appRoot === null) throw new Error('appRoot is null');
-    else this.appRoot = appRoot;
-    this.mode = 'homePage';
-    this.state = new HomePageState();
+    if (appRoot === null) {
+      throw new Error('appRoot is null');
+    } else this.appRoot = appRoot;
   }
   update() {
     let app;
-    if (document.location.href.endsWith('app')) {
+    if (document.location.href.match(/app$/)) {
       if (this.mode !== 'app') {
         this.mode = 'app';
         this.state = new AppState();
@@ -53,7 +52,6 @@ export const getAppISS = (): AppState => {
 };
 
 export const getHomePageISS = (): HomePageState => {
-  console.log(interfaceStateStore?.state);
   if (interfaceStateStore?.mode === 'homePage') {
     if (interfaceStateStore.state instanceof HomePageState) {
       return interfaceStateStore.state;

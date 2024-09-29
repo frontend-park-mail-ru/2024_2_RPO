@@ -43,10 +43,10 @@ const devServer = (req: express.Request, res: express.Response) => {
     return;
   }
 
-  let pathToFile: string;
   const pathToBuild = path.join('build', name);
-  if (name.endsWith('.js')) pathToFile = pathToBuild;
-  else pathToFile = path.join('src', name);
+  const pathToFile: string = name.endsWith('.js')
+    ? pathToBuild
+    : path.join('src', name);
 
   console.log(`Read file: ${pathToFile}`);
   if (!fs.existsSync(pathToFile)) {
