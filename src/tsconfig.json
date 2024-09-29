@@ -11,7 +11,7 @@
     "esModuleInterop": true,
     "strict": true,
     "jsx": "react-jsx",
-    "jsxImportSource": "/jsx_core",
-    "paths": { "/jsx_core/*": ["./jsx_core/*"] }
+    "jsxImportSource": "/jsxCore",
+    "paths": { "/jsx_core/*": ["./jsxCore/*"], "/*": ["./*"] }
   }
 }
