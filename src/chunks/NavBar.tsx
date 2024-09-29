@@ -23,14 +23,11 @@ export const NavBar = () => {
     </div>
   );
   return (
-    <nav class="navbar" style="position: fixed; border:#000000">
+    <nav class="navbar">
       <div class="navbar__logo">
         {openMenuBtn}
         <a class="logo__link" href="/">
-          <div
-            class="logo"
-            style="user-select: none; display: flex; align-items: center;"
-          >
+          <div class="logo">
             <img
               draggable="false"
               src="/static/logo.svg"
@@ -73,7 +70,7 @@ export const NavBar = () => {
               interfaceStateStore?.update();
             },
           })}
-          <div class="profilePicture" style="height: 40px; width: 40px;">
+          <div class="profilePicture">
             <img
               draggable="false"
               src="/static/avatar.svg"

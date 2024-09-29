@@ -15,6 +15,7 @@
   align-items: center;
   background: rgba(200, 200, 200, 0.5);
   z-index: 10;
+  position: fixed;
 }
 
 .logo__left__menu_header {
@@ -54,6 +55,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  user-select: none;
 }
 
 .search {
@@ -302,6 +304,8 @@
 }
 
 .profilePicture {
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   overflow: hidden;
 }
