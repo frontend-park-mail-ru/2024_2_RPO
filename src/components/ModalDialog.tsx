@@ -10,10 +10,10 @@ interface ModalDialogProps {
 
 export const ModalDialog = (props: ModalDialogProps = {}) => {
   return (
-    <div class="modal_dialog__back">
-      <div class="modal_dialog">
-        <div class="modal_dialog__title_block">
-          <span class="modal_dialog__title">{props.title}</span>
+    <div class="modal-dialog__back">
+      <div class="modal-dialog">
+        <div class="modal-dialog__header-block">
+          <span class="modal-dialog__title">{props.title}</span>
           {ButtonComponent({
             icon: 'bi-x',
             callback: props.closeCallback ?? noop,
