@@ -1,4 +1,8 @@
-import { getApiUrl } from './apiHelper.js';
+import {
+  getApiUrl,
+  HTTP_STATUS_OK,
+  HTTP_STATUS_INTERNAL_ERROR,
+} from './apiHelper.js';
 import { User } from '/types/user.js';
 import { interfaceStateStore } from '/stores/interfaceStateStore.js';
 
@@ -11,7 +15,7 @@ export const getUserMe = (): Promise<User | undefined> => {
     credentials: 'include',
   })
     .then((response): Promise<User | undefined> => {
-      if (response.status === 200) {
+      if (response.status === HTTP_STATUS_OK) {
         return response.json().then((json): User => {
           return { name: json.name, id: json.id };
         });
@@ -47,9 +51,9 @@ export const registerUser = (
       body: JSON.stringify({ name: nickname, email, password }),
     })
       .then((res) => {
-        if (res.status === 200) {
+        if (res.status === HTTP_STATUS_OK) {
           resolve('Успешная регистрация');
-        } else if (res.status === 500) {
+        } else if (res.status === HTTP_STATUS_INTERNAL_ERROR) {
           alert('Ошибка на бэке');
           reject('Ошибка на бэке');
         } else {
@@ -95,7 +99,7 @@ export const loginUser = (nickname: string, password: strong) => {
       body: JSON.stringify({ email: nickname, password }),
     })
       .then((res) => {
-        if (res.status !== 200) {
+        if (res.status !== HTTP_STATUS_OK) {
           reject('Неверные учетные данные');
         } else {
           resolve('Успешный вход');

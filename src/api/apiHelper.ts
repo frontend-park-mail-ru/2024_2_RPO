@@ -14,3 +14,6 @@ export const getApiUrl = (addr: string): string => {
 export const setApiUrl = (apiRoot_: string) => {
   apiRoot = apiRoot_;
 };
+
+export const HTTP_STATUS_OK = 200;
+export const HTTP_STATUS_INTERNAL_ERROR = 500;
