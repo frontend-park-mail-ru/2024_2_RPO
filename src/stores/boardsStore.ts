@@ -1,5 +1,5 @@
 import { Board } from 'types/board.js';
-import { getApiUrl } from '/apiHelper.js';
+import { getApiUrl } from '../api/apiHelper.js';
 import { interfaceStateStore } from './interfaceStateStore.js';
 
 class BoardsStore {

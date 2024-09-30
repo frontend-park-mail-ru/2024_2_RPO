@@ -1,5 +1,5 @@
 import { boardsStore } from './boardsStore.js';
-import { getApiUrl } from '/apiHelper.js';
+import { getApiUrl } from '../api/apiHelper.js';
 import { RenderJSX } from '/jsxCore/renderer.js';
 import { HomePage } from '/screens/HomePage.js';
 import { MainApp } from '/screens/MainApp.js';
@@ -7,6 +7,8 @@ import { AppState } from '/types/appState.js';
 import { HomePageState } from '/types/homePageState.js';
 import { User } from '/types/user.js';
 import { Board } from '/types/board.js';
+import { getBoards } from '/api/boards.js';
+import { getUserMe } from '/api/users.js';
 
 const modeToView = {
   app: MainApp,
@@ -42,45 +44,31 @@ class InterfaceStateStore {
     RenderJSX(this.appRoot, app);
   }
   updateRegAndApp() {
-    fetch(getApiUrl('/users/me'), {
-      credentials: 'include',
-    })
-      .then((res) => {
-        if (res.status === 200) {
-          res
-            .json()
-            .then((userData) => {
-              this.me = userData;
-              this.mode = 'app';
-              this.state = new AppState();
-              history.pushState(null, '', '/app');
-
-              fetch(getApiUrl('/boards/my'), {
-                credentials: 'include',
-              }).then((resp) => {
-                resp.json().then((json) => {
-                  boardsStore.boards = json.map((el: any): Board => {
-                    return { id: el.id, title: el.name };
-                  });
-                });
-              });
-
+    getUserMe()
+      .then((user) => {
+        this.me = user;
+        if (this.me === undefined) {
+          this.mode = 'homePage';
+          this.state = new HomePageState();
+          history.pushState(null, '', '/');
+        } else {
+          this.mode = 'app';
+          this.state = new AppState();
+          history.pushState(null, '', '/app');
+          getBoards()
+            .then((boards: Board[]) => {
+              boardsStore.boards = boards;
               this.update();
             })
-            .catch((err) => {
-              console.log(err);
+            .catch(() => {
+              alert('Скорее всего, лежит бэк');
               this.update();
             });
-        } else if (res.status === 401) {
-          history.pushState(null, '', '/');
-          this.update();
         }
       })
-      .catch((err) => {
-        console.log(err);
-        alert(
-          'Скорее всего, отвалился backend. Перезагрузите страницу, мб поможет'
-        );
+      .catch(() => {
+        alert('Скорее всего, лежит бэк');
+        this.update();
       });
   }
 }

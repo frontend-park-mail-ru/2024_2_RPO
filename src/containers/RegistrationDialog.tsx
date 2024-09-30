@@ -1,4 +1,4 @@
-import { getApiUrl } from '/apiHelper.js';
+import { getApiUrl } from '../api/apiHelper.js';
 import { ModalDialog } from '/components/ModalDialog.js';
 import {
   getHomePageISS,

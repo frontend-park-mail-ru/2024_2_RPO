@@ -3,7 +3,7 @@ import { NavBar } from '/containers/NavBar.js';
 import { ButtonComponent } from '/components/Button.js';
 import { ModalDialog } from '/components/ModalDialog.js';
 import { getAppISS, interfaceStateStore } from '/stores/interfaceStateStore.js';
-import { getApiUrl } from '/apiHelper.js';
+import { getApiUrl } from '../api/apiHelper.js';
 
 export const MainApp = () => {
   return (
