@@ -5,6 +5,7 @@ import {
   interfaceStateStore,
 } from '/stores/interfaceStateStore.js';
 import { AppState } from '/types/appState.js';
+import { getInputElementById } from '/utils/domHelper';
 
 export const LoginDialog = () => {
   return ModalDialog({
@@ -34,12 +35,8 @@ export const LoginDialog = () => {
         <button
           class="submit-btn"
           ON_click={() => {
-            const nicknameElem = document.getElementById(
-              'nickname'
-            ) as HTMLInputElement;
-            const passwordElem = document.getElementById(
-              'password'
-            ) as HTMLInputElement;
+            const nicknameElem = getInputElementById('nickname');
+            const passwordElem = getInputElementById('password');
 
             let failFlag = false;
 
@@ -64,8 +61,11 @@ export const LoginDialog = () => {
                     interfaceStateStore.updateRegAndApp();
                   }
                 },
-                () => {
-                  alert('Неправильные учётные данные');
+                (reason) => {
+                  passwordElem.setCustomValidity(reason);
+                  passwordElem.reportValidity();
+                  nicknameElem.style.borderColor = 'red';
+                  passwordElem.style.borderColor = 'red';
                 }
               );
             }

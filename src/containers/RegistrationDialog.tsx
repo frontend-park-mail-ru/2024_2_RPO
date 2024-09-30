@@ -5,6 +5,7 @@ import {
   interfaceStateStore,
 } from '/stores/interfaceStateStore.js';
 import { AppState } from '/types/appState.js';
+import { getInputElementById } from '/utils/domHelper.js';
 
 export const RegistrationDialog = () => {
   return ModalDialog({
@@ -49,22 +50,15 @@ export const RegistrationDialog = () => {
         <button
           class="submit-btn"
           ON_click={() => {
-            const nicknameElem = document.getElementById(
-              'nickname'
-            ) as HTMLInputElement;
-            const emailElem = document.getElementById(
-              'email'
-            ) as HTMLInputElement;
-            const passwordElem = document.getElementById(
-              'password'
-            ) as HTMLInputElement;
-            const confirmPasswordElem = document.getElementById(
-              'confirm-password'
-            ) as HTMLInputElement;
+            const nicknameElem = getInputElementById('nickname');
+            const emailElem = getInputElementById('email');
+            const passwordElem = getInputElementById('password');
+            const confirmPasswordElem = getInputElementById('confirm-password');
 
             const allErrors = document.getElementById(
               'allErrors'
             ) as HTMLSpanElement;
+
             allErrors.innerText = '';
 
             let failFlag = false;
