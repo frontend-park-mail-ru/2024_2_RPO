@@ -5,7 +5,7 @@ import {
   interfaceStateStore,
 } from '/stores/interfaceStateStore.js';
 import { AppState } from '/types/appState.js';
-import { getInputElementById } from '/utils/domHelper';
+import { getInputElementById } from '/utils/domHelper.js';
 
 export const LoginDialog = () => {
   return ModalDialog({
