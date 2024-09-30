@@ -1,3 +1,8 @@
+
+/**
+ * Компонент выбора режима отображения доски
+ * @returns JSX выбора режима отображения доски
+ */
 export const ModeSelect = () => {
   return (
     <div class="currentMode">

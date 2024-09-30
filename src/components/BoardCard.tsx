@@ -8,15 +8,16 @@ interface BoardCardProps {
   boardId: number;
 }
 
+/**
+ * Компонент карточки доски для левого меню
+ * @param props Пропсы карточки доски для левого меню
+ * @returns JSX карточки доски для левого меню
+ */
 export const BoardCardComponent = (props: BoardCardProps) => {
   return (
     <div class="left-menu__card__info">
       {props.title !== undefined ? (
-        <div
-          class="left-menu__board-card__title"
-        >
-          {props.title}
-        </div>
+        <div class="left-menu__board-card__title">{props.title}</div>
       ) : undefined}
 
       <span

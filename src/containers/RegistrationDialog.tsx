@@ -1,4 +1,4 @@
-import { getApiUrl } from '../api/apiHelper.js';
+import { registerUser } from '/api/users.js';
 import { ModalDialog } from '/components/ModalDialog.js';
 import {
   getHomePageISS,
@@ -31,7 +31,7 @@ export const RegistrationDialog = () => {
               type="password"
               id="password"
               name="password"
-              placeholder="Самый надежный пароль"
+              placeholder="Пароль"
             />
           </div>
           <div class="form-field">
@@ -40,9 +40,11 @@ export const RegistrationDialog = () => {
               type="password"
               id="confirm-password"
               name="confirm-password"
-              placeholder="Самый надежный пароль"
+              placeholder="Пароль"
             />
           </div>
+          <span id="allErrors"></span>
+          <div style="height:50px;"></div>;
         </form>
         <button
           class="submit-btn"
@@ -60,6 +62,11 @@ export const RegistrationDialog = () => {
               'confirm-password'
             ) as HTMLInputElement;
 
+            const allErrors = document.getElementById(
+              'allErrors'
+            ) as HTMLSpanElement;
+            allErrors.innerText = '';
+
             let failFlag = false;
 
             const nickname = nicknameElem.value;
@@ -70,60 +77,73 @@ export const RegistrationDialog = () => {
             if (!nickname) {
               failFlag = true;
               nicknameElem.style.borderColor = 'red';
+              allErrors.innerText += 'Пустой ник\n';
+            } else if (nickname.length > 30) {
+              failFlag = true;
+              nicknameElem.style.borderColor = 'red';
+              allErrors.innerText += 'Слишком длинное имя\n';
             } else {
               nicknameElem.style.borderColor = 'gray';
+              nicknameElem.setCustomValidity('');
             }
+            allErrors.style.color = 'red';
 
-            if (
-              !email ||
-              !email.match(
-                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-              )
-            ) {
+            const emailRegex =
+              /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+            if (!email) {
               failFlag = true;
               emailElem.style.borderColor = 'red';
+              allErrors.innerText += 'Пустой email\n';
+            } else if (!email.match(emailRegex)) {
+              failFlag = true;
+              emailElem.style.borderColor = 'red';
+              allErrors.innerText += 'Инвалидный email\n';
+            } else if (email.length > 60) {
+              failFlag = true;
+              emailElem.style.borderColor = 'red';
+              allErrors.innerText += 'Слишком длинный email\n';
             } else {
               emailElem.style.borderColor = 'gray';
             }
 
             if (!password || password.length < 8) {
               failFlag = true;
-
+              allErrors.innerText += 'Пароль должен быть не менее 8 символов\n';
+              passwordElem.style.borderColor = 'red';
+            } else if (password.length > 60) {
+              failFlag = true;
+              allErrors.innerText +=
+                'Слишком длинный пароль, bcrypt не сможет его хешировать\n';
               passwordElem.style.borderColor = 'red';
             } else {
               passwordElem.style.borderColor = 'gray';
+              allErrors.innerText += '';
             }
 
             if (password !== confirmPassword) {
               failFlag = true;
+              allErrors.innerText += 'Пароли должны совпадать\n';
               confirmPasswordElem.style.borderColor = 'red';
             } else {
               confirmPasswordElem.style.borderColor = 'gray';
             }
             if (!failFlag) {
               // Если валидация прошла, отправляем данные на сервер
-              fetch(getApiUrl('/auth/register'), {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                credentials: 'include',
-                body: JSON.stringify({ name: nickname, email, password }),
-              })
-                .then((res) => {
-                  if (res.status !== 200) {
-                    alert('Логин или email заняты, попробуйте другие креды');
-                  } else {
-                    if (interfaceStateStore !== undefined) {
-                      interfaceStateStore.mode = 'app';
-                      interfaceStateStore.state = new AppState();
-                    }
-                    interfaceStateStore?.updateRegAndApp();
+              registerUser(nickname, email, password).then(
+                () => {
+                  if (typeof interfaceStateStore !== 'undefined') {
+                    interfaceStateStore.mode = 'app';
+                    interfaceStateStore.state = new AppState();
+                    interfaceStateStore.updateRegAndApp();
                   }
-                })
-                .catch(() => {
-                  alert('Отвалился бэк, попробуйте перезагрузиться');
-                });
+                },
+                (reason: string) => {
+                  allErrors.innerText += reason + '\n';
+                  allErrors.innerText +=
+                    'Попробуйте другие email и логин взять';
+                }
+              );
             }
           }}
         >

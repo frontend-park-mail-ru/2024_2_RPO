@@ -1,5 +1,4 @@
-import { ActiveBoard, BoardColumn } from 'types/activeBoard.js';
-import { Card } from 'types/card.js';
+import { ActiveBoard } from 'types/activeBoard.js';
 
 class ActiveBoardStore {
   activeBoard: ActiveBoard; // TODO рассмотреть возможность установки private
@@ -22,19 +21,6 @@ class ActiveBoardStore {
         },
       ],
     };
-  }
-
-  addCard(card: Card, column: BoardColumn) {
-    column.cards.push(card);
-    //TODO сходить в базу
-    //TODO перерисовка
-  }
-  removeCard(cardToRemove: Card) {
-    this.activeBoard.columns.forEach((column) => {
-      column.cards = column.cards.filter((card) => card !== cardToRemove);
-    });
-    //TODO сходить в базу
-    //TODO перерисовка
   }
 }
 

@@ -8,6 +8,11 @@ interface ModalDialogProps {
   closeCallback?: () => void;
 }
 
+/**
+ * Компонент модального диалога
+ * @param props Пропсы модального диалога
+ * @returns JSX модального диалога
+ */
 export const ModalDialog = (props: ModalDialogProps = {}) => {
   return (
     <div class="modal-dialog__container">

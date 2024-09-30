@@ -1,5 +1,4 @@
 import { boardsStore } from './boardsStore.js';
-import { getApiUrl } from '../api/apiHelper.js';
 import { RenderJSX } from '/jsxCore/renderer.js';
 import { HomePage } from '/screens/HomePage.js';
 import { MainApp } from '/screens/MainApp.js';
@@ -23,6 +22,7 @@ class InterfaceStateStore {
   constructor(appRoot: Element) {
     this.appRoot = appRoot;
   }
+  /** Перерисовать приложение */
   update() {
     if (document.location.href.match(/app$/)) {
       if (this.mode !== 'app') {
@@ -43,6 +43,9 @@ class InterfaceStateStore {
     const app = modeToView[this.mode]();
     RenderJSX(this.appRoot, app);
   }
+  /**
+   * Обновить информацию о текущем пользователе и о его доступных досках, затем перерисовать
+   */
   updateRegAndApp() {
     getUserMe()
       .then((user) => {
@@ -77,7 +80,10 @@ class InterfaceStateStore {
 const appRoot = document.getElementById('app_root');
 export let interfaceStateStore: InterfaceStateStore | undefined = undefined;
 
-export const initISS = () => {
+/**
+ * Инициализировать Interface State Store
+ */
+export const initISS = ():void => {
   if (appRoot !== null) {
     interfaceStateStore = new InterfaceStateStore(appRoot);
   } else {
@@ -85,6 +91,10 @@ export const initISS = () => {
   }
 };
 
+/**
+ * Получить состояние канбана
+ * @returns Состояние приложения для экрана канбана
+ */
 export const getAppISS = (): AppState => {
   if (interfaceStateStore?.mode === 'app') {
     if (interfaceStateStore.state instanceof AppState) {
@@ -94,6 +104,10 @@ export const getAppISS = (): AppState => {
   throw new Error('You are on another screen');
 };
 
+/**
+ * Получить состояние домашней страницы
+ * @returns Состояние приложения для экрана домашней страницы
+ */
 export const getHomePageISS = (): HomePageState => {
   if (interfaceStateStore?.mode === 'homePage') {
     if (interfaceStateStore.state instanceof HomePageState) {
@@ -103,18 +117,8 @@ export const getHomePageISS = (): HomePageState => {
   throw new Error('You are on another screen');
 };
 
-export const logout = () => {
-  fetch(getApiUrl('/auth/logout'), {
-    method: 'POST',
-    credentials: 'include',
-  }).then(() => {
-    history.pushState(null, '', '/');
-    interfaceStateStore?.update();
-  });
-};
 
 export const goToApp = () => {
-  //TODO проверка логина
   history.pushState(null, '', '/app');
   interfaceStateStore?.update();
 };

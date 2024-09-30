@@ -3,6 +3,11 @@ import { ButtonComponent } from '/components/Button.js';
 import { boardsStore } from '/stores/boardsStore.js';
 import { getAppISS, interfaceStateStore } from '/stores/interfaceStateStore.js';
 
+/**
+ * Компонент левой панели
+ * @param props Пропсы левой панели
+ * @returns JSX левой панели
+ */
 export const LeftPanel = () => {
   return (
     <div class="left-menu">

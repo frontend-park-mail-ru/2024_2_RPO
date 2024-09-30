@@ -6,6 +6,11 @@ interface ButtonProps {
   callback?: (event: PointerEvent) => void;
 }
 
+/**
+ * Компонент кнопки
+ * @param props Пропсы кнопки
+ * @returns JSX кнопки
+ */
 export const ButtonComponent = (props: ButtonProps = {}) => {
   return (
     <div>

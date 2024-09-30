@@ -1,6 +1,10 @@
 import { Board } from '/types/board.js';
 import { getApiUrl } from './apiHelper.js';
 
+/**
+ * Получить все доступные пользователю доски
+ * @returns Промис, который сходит на бэк и получит список доступных пользователю досок и вернёт их массивом
+ */
 export const getBoards = (): Promise<Board[]> => {
   return fetch(getApiUrl('/boards/my'), {
     credentials: 'include',
@@ -21,6 +25,8 @@ export const getBoards = (): Promise<Board[]> => {
       }
     })
     .then((data) => {
-      return data as Board[];
+      if (Array.isArray(data)) {
+        return data as Board[];
+      } else return [];
     });
 };
