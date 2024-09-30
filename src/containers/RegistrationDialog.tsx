@@ -69,6 +69,9 @@ export const RegistrationDialog = () => {
 
             let failFlag = false;
 
+            const MIN_PASSWD_LENGTH = 8;
+            const MAX_LENGTH = 60;
+
             const nickname = nicknameElem.value;
             const email = emailElem.value;
             const password = passwordElem.value;
@@ -78,7 +81,7 @@ export const RegistrationDialog = () => {
               failFlag = true;
               nicknameElem.style.borderColor = 'red';
               allErrors.innerText += 'Пустой ник\n';
-            } else if (nickname.length > 30) {
+            } else if (nickname.length > MAX_LENGTH) {
               failFlag = true;
               nicknameElem.style.borderColor = 'red';
               allErrors.innerText += 'Слишком длинное имя\n';
@@ -99,7 +102,7 @@ export const RegistrationDialog = () => {
               failFlag = true;
               emailElem.style.borderColor = 'red';
               allErrors.innerText += 'Инвалидный email\n';
-            } else if (email.length > 60) {
+            } else if (email.length > MAX_LENGTH) {
               failFlag = true;
               emailElem.style.borderColor = 'red';
               allErrors.innerText += 'Слишком длинный email\n';
@@ -107,11 +110,11 @@ export const RegistrationDialog = () => {
               emailElem.style.borderColor = 'gray';
             }
 
-            if (!password || password.length < 8) {
+            if (!password || password.length < MIN_PASSWD_LENGTH) {
               failFlag = true;
               allErrors.innerText += 'Пароль должен быть не менее 8 символов\n';
               passwordElem.style.borderColor = 'red';
-            } else if (password.length > 60) {
+            } else if (password.length > MAX_LENGTH) {
               failFlag = true;
               allErrors.innerText +=
                 'Слишком длинный пароль, bcrypt не сможет его хешировать\n';
