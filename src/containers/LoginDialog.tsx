@@ -1,4 +1,4 @@
-import { getApiUrl } from '../api/apiHelper.js';
+import { loginUser } from '/api/users.js';
 import { ModalDialog } from '/components/ModalDialog.js';
 import {
   getHomePageISS,
@@ -56,29 +56,18 @@ export const LoginDialog = () => {
 
             if (!failFlag) {
               // Если валидация прошла, отправляем данные на сервер
-              fetch(getApiUrl('/auth/login'), {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                credentials: 'include',
-                body: JSON.stringify({ email: nickname, password }),
-              })
-                .then((res) => {
-                  if (res.status !== 200) {
-                    nicknameElem.style.borderColor = 'red';
-                    passwordElem.style.borderColor = 'red';
-                  } else {
-                    if (interfaceStateStore !== undefined) {
-                      interfaceStateStore.mode = 'app';
-                      interfaceStateStore.state = new AppState();
-                    }
-                    interfaceStateStore?.updateRegAndApp();
+              loginUser(nickname, password).then(
+                () => {
+                  if (typeof interfaceStateStore !== 'undefined') {
+                    interfaceStateStore.mode = 'app';
+                    interfaceStateStore.state = new AppState();
+                    interfaceStateStore.updateRegAndApp();
                   }
-                })
-                .catch(() => {
-                  alert('Отвалился бэк, попробуйте перезагрузиться');
-                });
+                },
+                () => {
+                  alert('Неправильные учётные данные');
+                }
+              );
             }
           }}
         >

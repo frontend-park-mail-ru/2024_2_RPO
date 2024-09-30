@@ -11,6 +11,10 @@ export const MainApp = () => {
       {getAppISS().isNewBoardDialogOpened
         ? ModalDialog({
             title: 'Название новой доски',
+            closeCallback: () => {
+              getAppISS().isNewBoardDialogOpened = false;
+              interfaceStateStore?.update();
+            },
             content: (
               <div>
                 <input

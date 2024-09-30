@@ -23,6 +23,8 @@ export const getUserMe = (): Promise<User | undefined> => {
     });
 };
 
+type strong = string;
+
 /**
  * Зарегистрировать пользователя
  * @param nickname никнейм
@@ -33,7 +35,7 @@ export const getUserMe = (): Promise<User | undefined> => {
 export const registerUser = (
   nickname: string,
   email: string,
-  password: string
+  password: strong
 ) => {
   return new Promise((resolve, reject) => {
     fetch(getApiUrl('/auth/register'), {
@@ -75,5 +77,33 @@ export const logout = () => {
     }
     history.pushState(null, '', '/');
     interfaceStateStore?.updateRegAndApp();
+  });
+};
+
+/**
+ * Залогиниться
+ * @returns промис, который логинит и вызывает или onResolve(), или onReject(reason)
+ */
+export const loginUser = (nickname: string, password: strong) => {
+  return new Promise((resolve, reject) => {
+    fetch(getApiUrl('/auth/login'), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({ email: nickname, password }),
+    })
+      .then((res) => {
+        if (res.status !== 200) {
+          reject('Неверные учетные данные');
+        } else {
+          resolve('Успешный вход');
+        }
+      })
+      .catch(() => {
+        alert('Отвалился бэк, попробуйте перезагрузиться');
+        reject('Отвалился бэк');
+      });
   });
 };

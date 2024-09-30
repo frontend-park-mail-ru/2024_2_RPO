@@ -1,9 +1,6 @@
 import { ButtonComponent } from '/components/Button.js';
-import {
-  getAppISS,
-  interfaceStateStore,
-  logout,
-} from '/stores/interfaceStateStore.js';
+import { getAppISS, interfaceStateStore } from '/stores/interfaceStateStore.js';
+import { logout } from '/api/users.js';
 import { ModeSelect } from '/components/ModeSelect.js';
 
 export const NavBar = () => {
@@ -33,10 +30,7 @@ export const NavBar = () => {
               alt="Logo"
               style="margin-bottom: 8px;"
             />
-            <div
-              draggable="false"
-              class="navbar__logo__pumpkin"
-            >
+            <div draggable="false" class="navbar__logo__pumpkin">
               Pumpkin
             </div>
           </div>
