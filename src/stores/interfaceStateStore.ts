@@ -51,6 +51,7 @@ class InterfaceStateStore {
           this.mode = 'homePage';
           this.state = new HomePageState();
           history.pushState(null, '', '/');
+          this.update();
         } else {
           this.mode = 'app';
           this.state = new AppState();

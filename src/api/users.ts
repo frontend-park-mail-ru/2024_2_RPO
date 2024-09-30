@@ -5,23 +5,15 @@ export const getUserMe = (): Promise<User | undefined> => {
   return fetch(getApiUrl('/users/me'), {
     credentials: 'include',
   })
-    .then((response): Promise<User | string | undefined> => {
+    .then((response): Promise<User | undefined> => {
       if (response.status === 200) {
         return response.json().then((json): User => {
           return { name: json.name, id: json.id };
         });
-      } else if (response.status === 401) {
-        return new Promise(() => {
-          return undefined;
-        });
-      } else {
-        alert('Get boards: Unexpected error');
-        return new Promise(() => {
-            return "Unexpected error";
-          });
       }
+      return Promise.resolve(undefined);
     })
-    .then((data) => {
-      return data as User | undefined;
+    .catch(() => {
+      return undefined;
     });
 };
