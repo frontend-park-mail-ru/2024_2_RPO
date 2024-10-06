@@ -1,16 +1,14 @@
 import { JSXInternal as _JSX } from './jsx';
-
-export interface JSXNode {
-  type: string;
-  props: object;
-  children: JSXChildType[];
-  key?: string;
-}
-
-export type JSXChildType = JSXNode | string;
-
-type propsType = _JSX.HTMLAttributes &
-  _JSX.SVGAttributes & { children?: JSXChildType | JSXChildType[] | undefined };
+import {
+  JSXElement,
+  JSXTextNode,
+  JSXChildrenType,
+  JSXChildType,
+  ComponentFunction,
+  NormalizedChildren,
+  IComponentElement,
+  IAbstractElement,
+} from '../types/elementTypes';
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 namespace JSX {
@@ -18,41 +16,52 @@ namespace JSX {
   export interface IntrinsicElements extends _JSX.IntrinsicElements {}
 }
 
-const Fragment = '';
+const Fragment = 'fragment';
 
-const normalizeChildren = (
-  children: JSXChildType | JSXChildType[] | undefined
-): JSXChildType[] => {
+const normalizeChildren = (children: JSXChildrenType): NormalizedChildren => {
   if (Array.isArray(children)) return children;
   if (children === undefined) return [];
   return [children];
 };
 
 function jsx(
-  type: string,
-  props: propsType,
+  type: string | ComponentFunction | 'fragment',
+  props: any,
   key?: string
-): JSXNode | JSXChildType[] {
-  if (key !== undefined) {
-    console.log("jsx argument 'key' was provided with value: ", key);
-    throw new Error('not implemented');
-  }
+): IAbstractElement | NormalizedChildren {
   const children = normalizeChildren(props.children);
+  props.children = children;
+
   if (type === Fragment) {
+    if (key !== undefined) {
+      throw new Error('Key should be used for components only');
+    }
     return children;
+  } else if (typeof type === 'function') {
+    const ret: IComponentElement = {
+      func: type,
+      instance: null,
+      children,
+      props,
+      key,
+    };
+    return ret;
   } else {
-    const ret: JSXNode = { type, props, children };
+    if (key !== undefined) {
+      throw new Error('Key should be used for components only');
+    }
+    const ret: JSXElement = { tagName: type, props, children };
     return ret;
   }
 }
 function jsxTemplate(): void {
-  throw new Error('Not implemented');
+  throw new Error('jsxTemplate(): Not implemented');
 }
 function jsxAttr(): void {
-  throw new Error('Not implemented');
+  throw new Error('jsxAttr(): Not implemented');
 }
 function jsxEscape(): void {
-  throw new Error('Not implemented');
+  throw new Error('jsxEscape(): Not implemented');
 }
 
 export {
