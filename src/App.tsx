@@ -1,6 +1,5 @@
-import { initISS, interfaceStateStore } from './stores/interfaceStateStore.js';
-
-import { setApiUrl } from './api/apiHelper.js';
+import { initISS, interfaceStateStore } from '@/stores/interfaceStateStore';
+import { setApiUrl } from '@/api/apiHelper';
 
 setApiUrl('http://localhost:8800'); //TODO вынести из хардкода
 initISS();

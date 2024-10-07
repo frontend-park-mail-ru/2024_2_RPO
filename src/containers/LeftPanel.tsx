@@ -1,7 +1,7 @@
-import { BoardCardComponent } from '/components/BoardCard.js';
-import { ButtonComponent } from '/components/Button.js';
-import { boardsStore } from '/stores/boardsStore.js';
-import { getAppISS, interfaceStateStore } from '/stores/interfaceStateStore.js';
+import { BoardCardComponent } from '@/components/BoardCard';
+import { ButtonComponent } from '@/components/Button';
+import { boardsStore } from '@/stores/boardsStore';
+import { getAppISS, interfaceStateStore } from '@/stores/interfaceStateStore';
 
 /**
  * Компонент левой панели

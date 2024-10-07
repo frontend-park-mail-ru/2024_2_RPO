@@ -1,10 +1,10 @@
-import { ButtonComponent } from '/components/Button.js';
-import { LoginDialog } from '/containers/LoginDialog.js';
-import { RegistrationDialog } from '/containers/RegistrationDialog.js';
+import { ButtonComponent } from '@/components/Button';
+import { LoginDialog } from '@/containers/LoginDialog';
+import { RegistrationDialog } from '@/containers/RegistrationDialog';
 import {
   getHomePageISS,
   interfaceStateStore,
-} from '/stores/interfaceStateStore.js';
+} from '@/stores/interfaceStateStore';
 
 export const HomePage = () => {
   return (

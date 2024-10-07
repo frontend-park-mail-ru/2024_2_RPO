@@ -1,4 +1,4 @@
-import { noop } from '/utils/noop.js';
+import { noop } from '@/utils/noop';
 
 interface ButtonProps {
   text?: string;

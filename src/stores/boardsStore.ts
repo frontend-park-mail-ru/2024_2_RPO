@@ -1,6 +1,6 @@
-import { Board } from 'types/board.js';
-import { getApiUrl } from '../api/apiHelper.js';
-import { interfaceStateStore } from './interfaceStateStore.js';
+import { Board } from '@/types/board';
+import { getApiUrl } from '@/api/apiHelper';
+import { interfaceStateStore } from '@/stores/interfaceStateStore';
 
 class BoardsStore {
   boards: Board[]; // TODO рассмотреть возможность установки private
