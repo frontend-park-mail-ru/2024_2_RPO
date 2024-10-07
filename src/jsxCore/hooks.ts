@@ -1,10 +1,10 @@
-import { IComponentInstance } from './types/instanceTypes';
+import { ComponentInstance } from './core.js';
 import { markDirty } from './updateQueue';
 
 let stateNum: number = 0;
-let activeInstance: IComponentInstance | undefined;
+let activeInstance: ComponentInstance | undefined;
 
-export function _setUpdatedInstance(instance: IComponentInstance) {
+export function _setUpdatedInstance(instance: ComponentInstance) {
   stateNum = 0;
   activeInstance = instance;
 }
@@ -20,7 +20,7 @@ export function useState<S>(
       'Active instance is undefined; maybe wrongly used useState'
     );
   }
-  const currentInstance = activeInstance as IComponentInstance;
+  const currentInstance = activeInstance as ComponentInstance;
   const idx = stateNum;
   const setState = (newState: S): void => {
     currentInstance.state[idx] = newState;

@@ -1,24 +1,25 @@
-import { IComponentInstance } from "./instanceTypes";
-
 export type JSXTextNode = string;
 
-export type ComponentFunction = (props?: object) => JSXChildrenType;
+export type IComponentFunction = (props?: object) => NormalizedChildren;
 
-export interface IAbstractElement {
-  props: object;
-  children: JSXChildType[];
-}
-
-export interface JSXElement extends IAbstractElement {
+export interface JSXElement {
+  elementType: 'JSXElement';
   tagName: string;
+  props: Map<string, string>;
+  children: NormalizedChildren;
 }
 
-export interface IComponentElement extends IAbstractElement {
-  func: ComponentFunction;
-  instance: null | IComponentInstance;
-  key?: string;
+export interface IComponentElement {
+  elementType: 'ComponentElement';
+  func: IComponentFunction;
+  key: string;
+  props: Map<string, any>;
+  children: NormalizedChildren;
 }
 
-export type JSXChildType = JSXElement | JSXTextNode | IComponentElement;
-export type JSXChildrenType = JSXChildType | JSXChildType[] | undefined;
+export type JSXChildType = JSXElement | IComponentElement | JSXTextNode;
+export type JSXChildrenType =
+  | JSXChildType
+  | (JSXChildType | undefined)[]
+  | undefined;
 export type NormalizedChildren = JSXChildType[];

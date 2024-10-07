@@ -1,24 +1,71 @@
 import { _setUpdatedInstance, _unsetUpdatedInstance } from './hooks';
-import { ComponentFunction, NormalizedChildren } from './types/elementTypes';
-import { IComponentInstance } from './types/instanceTypes';
+import { IComponentFunction, NormalizedChildren } from './types/elementTypes';
 
-export class ComponentInstance implements IComponentInstance {
-  func: ComponentFunction;
+export class ComponentInstance {
+  func: IComponentFunction;
   depth: number;
   props: object = {};
   state: any[] = [];
+  private instanceMap: Map<string, ComponentInstance> = new Map(); // Карта для хранения инстансов
   vTree: NormalizedChildren = [];
-  parent: IComponentInstance;
-  domNodes: Node[] = [];
+  parent?: ComponentInstance;
+  domNodes: Node[] = []; // Только те DOM-узлы, которые принадлежат этому компоненту; узлы подкомпонентов не включаются
   constructor(
-    func: ComponentFunction,
-    parent: IComponentInstance,
+    func: IComponentFunction,
+    parent: ComponentInstance | undefined,
     props: object
   ) {
     this.parent = parent;
-    this.depth = parent.depth + 1;
+    this.depth = parent !== undefined ? parent.depth + 1 : 0;
     this.func = func;
     this.props = props;
+  }
+  /**
+   * Получить список узлов верхнего уровня (в список включены узлы, созданные подкомпонентами)
+   */
+  getMountNodes(): Node[] {
+    const ret: Node[] = [];
+    let i: number = 0;
+    this.vTree.forEach((vNode) => {
+      if (vNode instanceof ComponentInstance) {
+        vNode.getMountNodes().forEach((node) => {
+          ret.push(node);
+        });
+      } else {
+        ret.push(this.domNodes[i]);
+        i++;
+      }
+    });
+    return ret;
+  }
+  /**
+   * Создать DOM-узлы, соответствующие vTree (для нового Instance компонента)
+   */
+  private createDomNodes() {}
+  private createChildDomNodes(
+    parent: Element,
+    vTree: NormalizedChildren
+  ): void {
+    const newChildren: Node[] = [];
+    vTree.forEach((vNode) => {
+      if (typeof vNode === 'string') {
+        newChildren.push(document.createTextNode(vNode));
+      } else if (vNode.elementType === 'ComponentElement') {
+        const instance = this.instanceMap.get(vNode.key);
+        if (instance === undefined) {
+          throw new Error(`Instance with key ${vNode.key} was not created`);
+        } else {
+          newChildren.push(...instance.getMountNodes());
+        }
+      } else if (vNode.elementType === 'JSXElement') {
+        const newElement = document.createElement(vNode.tagName);
+        // Передаём аттрибуты
+
+        // Рекурсивно продолжаем создание
+        newChildren.push(newElement);
+      }
+    });
+    parent.replaceChildren(...newChildren);
   }
   private updateVTree() {
     _setUpdatedInstance(this);
@@ -56,4 +103,13 @@ export class ComponentInstance implements IComponentInstance {
       }
     }
   }
+}
+
+let mainFunc: IComponentFunction | undefined = undefined;
+
+export function createApp(func: IComponentFunction, mountTo: Element) {
+  mainFunc = func;
+  const mainInstance = new ComponentInstance(mainFunc, undefined, {});
+  mainInstance.create();
+  mountTo.replaceChildren(...mainInstance.getMountNodes());
 }

@@ -1,13 +1,10 @@
 import { JSXInternal as _JSX } from './jsx';
 import {
   JSXElement,
-  JSXTextNode,
   JSXChildrenType,
-  JSXChildType,
-  ComponentFunction,
+  IComponentFunction,
   NormalizedChildren,
   IComponentElement,
-  IAbstractElement,
 } from '../types/elementTypes';
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -19,16 +16,22 @@ namespace JSX {
 const Fragment = 'fragment';
 
 const normalizeChildren = (children: JSXChildrenType): NormalizedChildren => {
-  if (Array.isArray(children)) return children;
-  if (children === undefined) return [];
+  if (Array.isArray(children)) {
+    return children.filter((el) => {
+      return el !== undefined;
+    });
+  }
+  if (children === undefined) {
+    return [];
+  }
   return [children];
 };
 
 function jsx(
-  type: string | ComponentFunction | 'fragment',
+  type: string | IComponentFunction | 'fragment',
   props: any,
   key?: string
-): IAbstractElement | NormalizedChildren {
+): NormalizedChildren | IComponentElement | JSXElement {
   const children = normalizeChildren(props.children);
   props.children = children;
 
@@ -42,20 +45,26 @@ function jsx(
       throw new Error('Every component should have a key');
     }
     const ret: IComponentElement = {
+      elementType: 'ComponentElement',
       func: type,
-      instance: null,
       children,
       props,
       key,
     };
     return ret;
-  } else {
+  } else if (typeof type === 'string') {
     if (key !== undefined) {
       throw new Error('Key should be used for components only');
     }
-    const ret: JSXElement = { tagName: type, props, children };
+    const ret: JSXElement = {
+      elementType: 'JSXElement',
+      tagName: type,
+      props,
+      children,
+    };
     return ret;
   }
+  throw new Error('Error in JSX function: type is used wrong');
 }
 function jsxTemplate(): void {
   throw new Error('jsxTemplate(): Not implemented');
