@@ -38,6 +38,9 @@ function jsx(
     }
     return children;
   } else if (typeof type === 'function') {
+    if (key === undefined) {
+      throw new Error('Every component should have a key');
+    }
     const ret: IComponentElement = {
       func: type,
       instance: null,
