@@ -1,6 +1,7 @@
-import { ComponentInstance } from '/jsx_core/core.js';
+import { ComponentInstance } from '@/jsxCore/core.js';
 
 const queue: Set<ComponentInstance>[] = [];
+let isUpdateTaskExists: boolean = false;
 
 /**
  * Пометить инстанс как требующий обновления
@@ -11,6 +12,27 @@ export function markDirty(instance: ComponentInstance) {
     queue.push(new Set());
   }
   queue[instance.depth].add(instance);
+}
+
+function updateNow() {
+  const updatee = popDirty();
+  console.log('Updating ', updatee);
+  if (updatee !== null) {
+    updatee.update();
+  }
+}
+
+/**
+ * Создать задачу по обновлению
+ */
+export function scheduleUpdate() {
+  if (isUpdateTaskExists === false) {
+    isUpdateTaskExists = true;
+    window.requestIdleCallback(() => {
+      isUpdateTaskExists = false;
+      updateNow();
+    });
+  }
 }
 
 /**

@@ -5,7 +5,7 @@ import {
   IComponentFunction,
   NormalizedChildren,
   IComponentElement,
-} from '../types/elementTypes';
+} from '../types';
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 namespace JSX {
@@ -36,11 +36,13 @@ function jsx(
   props.children = children;
 
   if (type === Fragment) {
+    // Фрагмент (несколько веток)
     if (key !== undefined) {
       throw new Error('Key should be used for components only');
     }
     return children;
   } else if (typeof type === 'function') {
+    // Функциональный компонент
     if (key === undefined) {
       throw new Error('Every component should have a key');
     }
@@ -53,17 +55,27 @@ function jsx(
     };
     return ret;
   } else if (typeof type === 'string') {
+    // Обычный HTML-элемент
+    const mappedProps: Map<string, any> = new Map();
+    Object.entries(props).forEach(([key, value]) => {
+      if (key !== 'children') {
+        mappedProps.set(key, value);
+      } else {
+        mappedProps.set('children', children);
+      }
+    });
     if (key !== undefined) {
       throw new Error('Key should be used for components only');
     }
     const ret: JSXElement = {
       elementType: 'JSXElement',
       tagName: type,
-      props,
+      props: mappedProps,
       children,
     };
     return ret;
   }
+
   throw new Error('Error in JSX function: type is used wrong');
 }
 function jsxTemplate(): void {

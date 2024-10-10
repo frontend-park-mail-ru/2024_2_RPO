@@ -1,5 +1,5 @@
 import { ComponentInstance } from './core.js';
-import { markDirty } from './updateQueue';
+import { markDirty, scheduleUpdate } from './updateQueue';
 
 let stateNum: number = 0;
 let activeInstance: ComponentInstance | undefined;
@@ -25,6 +25,7 @@ export function useState<S>(
   const setState = (newState: S): void => {
     currentInstance.state[idx] = newState;
     markDirty(currentInstance);
+    scheduleUpdate();
   };
   let value: S = initialValue;
   if (activeInstance.state.length <= stateNum) {

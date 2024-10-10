@@ -1,6 +1,8 @@
 export type JSXTextNode = string;
 
-export type IComponentFunction = (props?: object) => NormalizedChildren;
+export type IComponentFunction<PropsType = any> = (
+  props?: PropsType
+) => [componentName: string, vSubtree: NormalizedChildren];
 
 export interface JSXElement {
   elementType: 'JSXElement';
@@ -13,7 +15,7 @@ export interface IComponentElement {
   elementType: 'ComponentElement';
   func: IComponentFunction;
   key: string;
-  props: Map<string, any>;
+  props: any;
   children: NormalizedChildren;
 }
 
@@ -23,3 +25,7 @@ export type JSXChildrenType =
   | (JSXChildType | undefined)[]
   | undefined;
 export type NormalizedChildren = JSXChildType[];
+
+export interface ComponentProps {
+  key: string;
+}

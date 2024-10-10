@@ -1,5 +1,4 @@
 import { boardsStore } from '@/stores/boardsStore';
-import { RenderJSX } from '@/jsxCore/renderer';
 import { HomePage } from '@/screens/HomePage';
 import { MainApp } from '@/screens/MainApp';
 import { AppState } from '@/types/appState';
@@ -41,7 +40,7 @@ class InterfaceStateStore {
       }
     }
     const app = modeToView[this.mode]();
-    RenderJSX(this.appRoot, app);
+    //RenderJSX(this.appRoot, app);
   }
   /**
    * Обновить информацию о текущем пользователе и о его доступных досках, затем перерисовать
@@ -83,7 +82,7 @@ export let interfaceStateStore: InterfaceStateStore | undefined = undefined;
 /**
  * Инициализировать Interface State Store
  */
-export const initISS = ():void => {
+export const initISS = (): void => {
   if (appRoot !== null) {
     interfaceStateStore = new InterfaceStateStore(appRoot);
   } else {
@@ -116,7 +115,6 @@ export const getHomePageISS = (): HomePageState => {
   }
   throw new Error('You are on another screen');
 };
-
 
 export const goToApp = () => {
   history.pushState(null, '', '/app');
