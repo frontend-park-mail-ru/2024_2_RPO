@@ -3,15 +3,23 @@
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const lightningcss = require('lightningcss');
+const browserslist = require('browserslist');
+
 module.exports = {
   mode: 'development',
   entry: './src/App.tsx',
   module: {
     rules: [
       {
-        test: /\.tsx?$/,
-        use: [{ loader: 'ts-loader' }],
+        test: /\.tsx?$/i,
+        use: ['ts-loader'],
         exclude: /node_modules/,
+      },
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
       },
     ],
   },
@@ -28,9 +36,7 @@ module.exports = {
       }),
     ],
   },
-  optimization: {
-    runtimeChunk: 'single',
-  },
+
   output: {
     filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
@@ -40,4 +46,16 @@ module.exports = {
       template: './index.html',
     }),
   ],
+  optimization: {
+    runtimeChunk: 'single',
+    minimize: true,
+    minimizer: [
+      new CssMinimizerPlugin({
+        minify: CssMinimizerPlugin.lightningCssMinify,
+        minimizerOptions: {
+          targets: lightningcss.browserslistToTargets(browserslist('>= 0.25%')),
+        },
+      }),
+    ],
+  },
 };
