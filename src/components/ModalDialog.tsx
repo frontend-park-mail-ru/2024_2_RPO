@@ -1,5 +1,5 @@
 import { ButtonComponent } from '@/components/Button';
-import { JSXChildType } from '@/jsxCore/jsx-runtime';
+import { JSXChildType } from '@/jsxCore/types';
 import { noop } from '@/utils/noop';
 
 interface ModalDialogProps {

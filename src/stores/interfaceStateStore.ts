@@ -1,7 +1,4 @@
 import { boardsStore } from '@/stores/boardsStore';
-import { RenderJSX } from '@/jsxCore/renderer';
-import { HomePage } from '@/screens/HomePage';
-import { MainApp } from '@/screens/MainApp';
 import { AppState } from '@/types/appState';
 import { HomePageState } from '@/types/homePageState';
 import { User } from '@/types/user';
@@ -9,10 +6,10 @@ import { Board } from '@/types/board';
 import { getBoards } from '@/api/boards';
 import { getUserMe } from '@/api/users';
 
-const modeToView = {
-  app: MainApp,
-  homePage: HomePage,
-};
+// const modeToView = {
+//   app: MainApp,
+//   homePage: HomePage,
+// };
 
 class InterfaceStateStore {
   mode: 'homePage' | 'app' = 'homePage';
@@ -40,8 +37,8 @@ class InterfaceStateStore {
         this.state = new HomePageState();
       }
     }
-    const app = modeToView[this.mode]();
-    RenderJSX(this.appRoot, app);
+    //const app = modeToView[this.mode]();
+    //RenderJSX(this.appRoot, app);
   }
   /**
    * Обновить информацию о текущем пользователе и о его доступных досках, затем перерисовать
@@ -83,7 +80,7 @@ export let interfaceStateStore: InterfaceStateStore | undefined = undefined;
 /**
  * Инициализировать Interface State Store
  */
-export const initISS = ():void => {
+export const initISS = (): void => {
   if (appRoot !== null) {
     interfaceStateStore = new InterfaceStateStore(appRoot);
   } else {
@@ -116,7 +113,6 @@ export const getHomePageISS = (): HomePageState => {
   }
   throw new Error('You are on another screen');
 };
-
 
 export const goToApp = () => {
   history.pushState(null, '', '/app');
