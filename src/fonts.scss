@@ -1,0 +1,8 @@
+/* Здесь находится всё, что используется для загрузки шрифтов */
+@font-face {
+  font-family: 'Source Sans 3';
+  font-style: normal;
+  font-weight: 400;
+  src: url(/static/fonts/SourceSans3-Regular.ttf) format('ttf');
+}
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Source+Sans+3:wght@400;700&display=swap');

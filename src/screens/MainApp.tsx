@@ -1,9 +1,9 @@
-import { LeftPanel } from '/containers/LeftPanel.js';
-import { NavBar } from '/containers/NavBar.js';
-import { ButtonComponent } from '/components/Button.js';
-import { ModalDialog } from '/components/ModalDialog.js';
-import { getAppISS, interfaceStateStore } from '/stores/interfaceStateStore.js';
-import { getApiUrl } from '../api/apiHelper.js';
+import { LeftPanel } from '@/containers/LeftPanel';
+import { NavBar } from '@/containers/NavBar';
+import { ButtonComponent } from '@/components/Button';
+import { ModalDialog } from '@/components/ModalDialog';
+import { getAppISS, interfaceStateStore } from '@/stores/interfaceStateStore';
+import { getApiUrl } from '@/api/apiHelper';
 
 export const MainApp = () => {
   return (

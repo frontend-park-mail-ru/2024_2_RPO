@@ -1,13 +1,13 @@
-import { boardsStore } from './boardsStore.js';
-import { RenderJSX } from '/jsxCore/renderer.js';
-import { HomePage } from '/screens/HomePage.js';
-import { MainApp } from '/screens/MainApp.js';
-import { AppState } from '/types/appState.js';
-import { HomePageState } from '/types/homePageState.js';
-import { User } from '/types/user.js';
-import { Board } from '/types/board.js';
-import { getBoards } from '/api/boards.js';
-import { getUserMe } from '/api/users.js';
+import { boardsStore } from '@/stores/boardsStore';
+import { RenderJSX } from '@/jsxCore/renderer';
+import { HomePage } from '@/screens/HomePage';
+import { MainApp } from '@/screens/MainApp';
+import { AppState } from '@/types/appState';
+import { HomePageState } from '@/types/homePageState';
+import { User } from '@/types/user';
+import { Board } from '@/types/board';
+import { getBoards } from '@/api/boards';
+import { getUserMe } from '@/api/users';
 
 const modeToView = {
   app: MainApp,

@@ -1,11 +1,11 @@
-import { registerUser } from '/api/users.js';
-import { ModalDialog } from '/components/ModalDialog.js';
+import { registerUser } from '@/api/users';
+import { ModalDialog } from '@/components/ModalDialog';
 import {
   getHomePageISS,
   interfaceStateStore,
-} from '/stores/interfaceStateStore.js';
-import { AppState } from '/types/appState.js';
-import { getInputElementById } from '/utils/domHelper.js';
+} from '@/stores/interfaceStateStore';
+import { AppState } from '@/types/appState';
+import { getInputElementById } from '@/utils/domHelper';
 
 export const RegistrationDialog = () => {
   return ModalDialog({
@@ -14,7 +14,9 @@ export const RegistrationDialog = () => {
       <div>
         <form id="reg_data">
           <div class="form-field">
-            <label for="nickname">Никнейм:</label>
+            <label for="nickname" class="login__label">
+              Никнейм:
+            </label>
             <input
               type="text"
               id="nickname"
@@ -23,11 +25,15 @@ export const RegistrationDialog = () => {
             />
           </div>
           <div class="form-field">
-            <label for="email">Email:</label>
+            <label for="email" class="login__label">
+              Email:
+            </label>
             <input type="email" id="email" name="email" placeholder="Email" />
           </div>
           <div class="form-field">
-            <label for="password">Пароль:</label>
+            <label for="password" class="login__label">
+              Пароль:
+            </label>
             <input
               type="password"
               id="password"
@@ -36,7 +42,9 @@ export const RegistrationDialog = () => {
             />
           </div>
           <div class="form-field">
-            <label for="confirm-password">Повторите пароль:</label>
+            <label for="confirm-password" class="login__label">
+              Повторите пароль:
+            </label>
             <input
               type="password"
               id="confirm-password"

@@ -2,9 +2,9 @@ import {
   getApiUrl,
   HTTP_STATUS_OK,
   HTTP_STATUS_INTERNAL_ERROR,
-} from './apiHelper.js';
-import { User } from '/types/user.js';
-import { interfaceStateStore } from '/stores/interfaceStateStore.js';
+} from '@/api/apiHelper';
+import { User } from '@/types/user';
+import { interfaceStateStore } from '@/stores/interfaceStateStore';
 
 /**
  * Получить информацию о текущем пользователе
