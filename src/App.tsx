@@ -1,5 +1,3 @@
-import { initISS, interfaceStateStore } from '@/stores/interfaceStateStore';
-import { setApiUrl } from '@/api/apiHelper';
 import './index.scss';
 import './fonts.scss';
 import { createApp } from './jsxCore/core';
@@ -9,7 +7,7 @@ import { noop } from './utils/noop';
 
 interface ButtonProps extends ComponentProps {
   label: string;
-  onClick?: Function;
+  onClick?: () => void;
 }
 const Button = (props: ButtonProps) => {
   const label = props.label;

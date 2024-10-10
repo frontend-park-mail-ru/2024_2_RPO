@@ -1,6 +1,4 @@
 import { boardsStore } from '@/stores/boardsStore';
-import { HomePage } from '@/screens/HomePage';
-import { MainApp } from '@/screens/MainApp';
 import { AppState } from '@/types/appState';
 import { HomePageState } from '@/types/homePageState';
 import { User } from '@/types/user';
@@ -8,10 +6,10 @@ import { Board } from '@/types/board';
 import { getBoards } from '@/api/boards';
 import { getUserMe } from '@/api/users';
 
-const modeToView = {
-  app: MainApp,
-  homePage: HomePage,
-};
+// const modeToView = {
+//   app: MainApp,
+//   homePage: HomePage,
+// };
 
 class InterfaceStateStore {
   mode: 'homePage' | 'app' = 'homePage';
@@ -39,7 +37,7 @@ class InterfaceStateStore {
         this.state = new HomePageState();
       }
     }
-    const app = modeToView[this.mode]();
+    //const app = modeToView[this.mode]();
     //RenderJSX(this.appRoot, app);
   }
   /**
