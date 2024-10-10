@@ -25,14 +25,6 @@
 
 ### Запуск Development Server
 
-Надо составить файл `serverConfig.json` в корне репозитория со следующим содержанием:
-
-```json
-{
-  "serverPort": 3000
-}
-```
-
 `npm i` - установить все зависимости
 
 `npm run start` - запустить Development Server

@@ -1,11 +1,11 @@
-import { loginUser } from '/api/users.js';
-import { ModalDialog } from '/components/ModalDialog.js';
+import { loginUser } from '@/api/users';
+import { ModalDialog } from '@/components/ModalDialog';
 import {
   getHomePageISS,
   interfaceStateStore,
-} from '/stores/interfaceStateStore.js';
-import { AppState } from '/types/appState.js';
-import { getInputElementById } from '/utils/domHelper.js';
+} from '@/stores/interfaceStateStore';
+import { AppState } from '@/types/appState';
+import { getInputElementById } from '@/utils/domHelper';
 
 export const LoginDialog = () => {
   return ModalDialog({

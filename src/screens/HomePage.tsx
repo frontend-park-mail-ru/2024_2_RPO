@@ -1,10 +1,10 @@
-import { ButtonComponent } from '/components/Button.js';
-import { LoginDialog } from '/containers/LoginDialog.js';
-import { RegistrationDialog } from '/containers/RegistrationDialog.js';
+import { ButtonComponent } from '@/components/Button';
+import { LoginDialog } from '@/containers/LoginDialog';
+import { RegistrationDialog } from '@/containers/RegistrationDialog';
 import {
   getHomePageISS,
   interfaceStateStore,
-} from '/stores/interfaceStateStore.js';
+} from '@/stores/interfaceStateStore';
 
 export const HomePage = () => {
   return (
@@ -14,7 +14,7 @@ export const HomePage = () => {
         <i class="bi-kanban icon2"></i>
       </div>
       <div class="landing_contents">
-        <img src="/static/logo.svg" class="logo_image" />
+        <img src="static/img/logo.svg" class="logo_image" />
         <h1 class="homepage__pumpkin">Pumpkin</h1>
         <span style="margin-bottom: 30px">
           Облачный канбан со сверхспособностями

@@ -1,7 +1,7 @@
-import { ButtonComponent } from '/components/Button.js';
-import { getAppISS, interfaceStateStore } from '/stores/interfaceStateStore.js';
-import { logout } from '/api/users.js';
-import { ModeSelect } from '/components/ModeSelect.js';
+import { ButtonComponent } from '@/components/Button';
+import { getAppISS, interfaceStateStore } from '@/stores/interfaceStateStore';
+import { logout } from '@/api/users';
+import { ModeSelect } from '@/components/ModeSelect';
 
 export const NavBar = () => {
   const openMenuBtn = (

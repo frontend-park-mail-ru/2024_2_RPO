@@ -1,5 +1,5 @@
-import { Board } from '/types/board.js';
-import { getApiUrl } from './apiHelper.js';
+import { Board } from '@/types/board';
+import { getApiUrl } from '@/api/apiHelper';
 
 /**
  * Получить все доступные пользователю доски

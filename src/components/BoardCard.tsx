@@ -1,5 +1,5 @@
-import { boardsStore } from '/stores/boardsStore.js';
-import { getAppISS, interfaceStateStore } from '/stores/interfaceStateStore.js';
+import { boardsStore } from '@/stores/boardsStore';
+import { getAppISS, interfaceStateStore } from '@/stores/interfaceStateStore';
 
 interface BoardCardProps {
   title?: string;
