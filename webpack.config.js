@@ -6,6 +6,7 @@ const path = require('path');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const lightningcss = require('lightningcss');
 const browserslist = require('browserslist');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
   mode: 'development',
@@ -19,13 +20,17 @@ module.exports = {
       },
       {
         test: /\.css$/i,
-        use: ['style-loader', 'css-loader'],
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
+      },
+      {
+        test: /\.s[ac]ss$/i,
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
       },
     ],
   },
   devtool: 'inline-source-map',
   devServer: {
-    static: [path.resolve(__dirname), path.resolve(__dirname, 'src')],
+    static: [path.resolve(__dirname)],
     liveReload: true,
   },
   resolve: {
@@ -45,6 +50,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './index.html',
     }),
+    new MiniCssExtractPlugin(),
   ],
   optimization: {
     runtimeChunk: 'single',

@@ -153,17 +153,6 @@
   justify-content: center;
 }
 
-.x-lg {
-  background-color: #f5f6fa;
-  border: 1px solid #f5f6fa;
-  border-radius: 3px;
-  height: 32px;
-  width: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .dots {
   background-color: #f5f6fa;
   border: 1px solid #f5f6fa;
@@ -227,6 +216,7 @@
   z-index: 100;
   padding-left: 20px;
   padding-right: 20px;
+  padding-bottom: 10px;
   border-radius: 12px;
 }
 
@@ -352,14 +342,6 @@ left-menu__first-level {
   font-weight: bold;
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Source+Sans+3:wght@400;700&display=swap');
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 .background {
   position: absolute;
   width: 100vw;
@@ -383,23 +365,16 @@ left-menu__first-level {
   position: absolute;
   top: 173px;
   left: 0;
-  width: 320px;
-  height: 320px;
-  transform: rotate(-10.47deg);
-  background-image: url('icons/kanban.svg');
-  background-size: cover;
+  font-size: 320px;
+  transform: rotate(-10deg);
   opacity: 0.1;
 }
-
 .icon2 {
   position: absolute;
   top: 215.86px;
   left: 304.86px;
-  width: 640px;
-  height: 640px;
-  transform: rotate(21.82deg);
-  background-image: url('icons/kanban.svg');
-  background-size: cover;
+  font-size: 640px;
+  transform: rotate(21deg);
   opacity: 0.1;
 }
 
@@ -428,19 +403,6 @@ form {
 }
 
 .close-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 24px;
-  height: 24px;
-  background-image: url('icons/x-lg.svg');
-  background-size: cover;
-  background-repeat: no-repeat;
-  border: none;
-  cursor: pointer;
-  z-index: 20;
-  background-color: white;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .header::after {
@@ -460,11 +422,6 @@ form {
   width: 100%;
 }
 
-label {
-  margin-right: 10px;
-  width: 150px;
-}
-
 input,
 textarea {
   flex: 1;
@@ -473,6 +430,10 @@ textarea {
   border: 1px solid #ccc;
   border-radius: 8px;
   resize: none;
+}
+
+.login__label {
+  width: 120px;
 }
 
 textarea {
@@ -488,13 +449,6 @@ textarea {
   border-radius: 8px;
   cursor: pointer;
   height: 32px;
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  justify-content: center;
-  align-items: center;
   padding-left: 8px;
   padding-right: 8px;
 }
