@@ -6,7 +6,8 @@ import { getAppISS, interfaceStateStore } from '@/stores/interfaceStateStore';
 import { getApiUrl } from '@/api/apiHelper';
 
 export const MainApp = () => {
-  return (
+  return [
+    'MainApp',
     <>
       {getAppISS().isNewBoardDialogOpened
         ? ModalDialog({
@@ -98,6 +99,6 @@ export const MainApp = () => {
           </div>
         </div>
       </main>
-    </>
-  );
+    </>,
+  ];
 };

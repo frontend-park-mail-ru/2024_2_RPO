@@ -1,13 +1,16 @@
 import { ButtonComponent } from '@/components/Button';
 import { LoginDialog } from '@/containers/LoginDialog';
 import { RegistrationDialog } from '@/containers/RegistrationDialog';
+import { useState } from '@/jsxCore/hooks';
 import {
   getHomePageISS,
   interfaceStateStore,
 } from '@/stores/interfaceStateStore';
 
 export const HomePage = () => {
-  return (
+  const [isRegistrationOpened, setIsRegistrationOpened] = useState(false);
+  return [
+    'HomePage',
     <>
       <div class="background">
         <i class="bi-kanban icon1"></i>
@@ -23,8 +26,7 @@ export const HomePage = () => {
         {ButtonComponent({
           text: 'Зарегистрироваться',
           callback: () => {
-            getHomePageISS().isRegistrationDialogOpened = true;
-            interfaceStateStore?.update();
+            setIsRegistrationOpened(true);
           },
         })}
         {ButtonComponent({
@@ -36,10 +38,8 @@ export const HomePage = () => {
         })}
       </div>
 
-      {getHomePageISS().isRegistrationDialogOpened
-        ? RegistrationDialog()
-        : undefined}
+      {isRegistrationOpened ? RegistrationDialog() : undefined}
       {getHomePageISS().isLoginDialogOpened ? LoginDialog() : undefined}
-    </>
-  );
+    </>,
+  ];
 };

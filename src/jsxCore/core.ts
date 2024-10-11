@@ -59,7 +59,9 @@ function patchProps(props: any, elem: DOMElementRepr) {
       ) {
         const stringVal = value as string;
         elem.existingAttrs.set(key, stringVal.toString());
-        elem.node.setAttribute(key, stringVal.toString());
+        if (stringVal.toString() !== elem.node.getAttribute(key)) {
+          elem.node.setAttribute(key, stringVal.toString());
+        }
       }
     }
   });
@@ -82,6 +84,7 @@ export class ComponentInstance<
     parent: ComponentInstance<any> | undefined,
     props: any = new Map()
   ) {
+    console.log('new instance');
     this.parent = parent;
     this.depth = parent !== undefined ? parent.depth + 1 : 0;
     this.func = func;
@@ -121,6 +124,9 @@ export class ComponentInstance<
     this.componentName = componentName;
     _unsetUpdatedInstance();
     this.vTree = newVTree;
+    if (!Array.isArray(this.vTree)) {
+      this.vTree = [this.vTree];
+    }
   }
   update() {
     // Обновить vTree
@@ -128,7 +134,18 @@ export class ComponentInstance<
     // Обновить под-инстансы и удалить неактуальные
     this._patchInstances();
     // Пропатчить DOM
-    this._patchDomNodes(this.domNodes, this.vTree);
+    if (this.domNodes.length) {
+      this._patchDomNodes(
+        this.domNodes,
+        this.vTree,
+        this.domNodes[0].node.parentElement
+      );
+    }else{
+      this._patchDomNodes(
+        this.domNodes,
+        this.vTree
+      );
+    }
   }
   /**
    * Обновить instanceMap
@@ -259,7 +276,7 @@ export class ComponentInstance<
             vNode.nodeType === 'JSXElement') ||
           (corrDomNode.nodeType === 'Element' &&
             vNode.nodeType === 'JSXElement' &&
-            corrDomNode.node.tagName !== vNode.tagName)
+            corrDomNode.node.tagName !== vNode.tagName.toUpperCase())
         ) {
           // Если надо добавить узел или узел имеет не тот тип
           if (vNode.nodeType === 'JSXElement') {

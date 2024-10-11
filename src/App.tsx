@@ -1,49 +1,14 @@
 import './index.scss';
 import './fonts.scss';
 import { createApp } from './jsxCore/core';
-import { ComponentProps, IComponentFunction } from './jsxCore/types';
-import { useState } from './jsxCore/hooks';
-
-interface ButtonProps extends ComponentProps {
-  label: string;
-  onClick?: () => void;
-}
-const Button = (props: ButtonProps) => {
-  const label = props.label;
-  const onClick = props.onClick;
-  return [
-    'Button',
-    <>
-      <button ON_click={onClick}>test</button>
-      <span style="min-width:20px"></span>
-      {label}
-    </>,
-  ];
-};
+import { HomePage } from './screens/HomePage';
+import { IComponentFunction } from './jsxCore/types';
+import { initISS } from './stores/interfaceStateStore';
 
 const App: IComponentFunction = () => {
-  const [clicks, setClicks] = useState(0);
-  const label = `Clicked ${clicks} times`;
-  return [
-    'App',
-    <>
-      My app
-      <br></br>
-      <Button
-        key="btn1"
-        label={label}
-        onClick={() => {
-          setClicks(clicks + 1);
-        }}
-      />
-      <br></br>
-      <div>
-        <Button key="btn2" label={label} />
-      </div>
-    </>,
-  ];
+  return ['App', <HomePage key="main_app" />];
 };
 
 const appRoot = document.getElementById('app_root') as HTMLDivElement;
-
+initISS();
 createApp(App, appRoot);
