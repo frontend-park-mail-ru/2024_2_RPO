@@ -7,7 +7,7 @@ export default [
   ...tseslint.configs.recommended,
   {
     rules: {
-      'nonblock-statement-body-position': 'warning',
+      'nonblock-statement-body-position': 'warn',
       '@typescript-eslint/no-explicit-any': 'off',
       eqeqeq: 'error',
     },

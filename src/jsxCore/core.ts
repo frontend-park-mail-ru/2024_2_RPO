@@ -50,7 +50,7 @@ function patchProps(props: any, elem: DOMElementRepr) {
         type: eventType,
         listener: value as EventListener,
       });
-    } else if (key !== 'children')
+    } else if (key !== 'children') {
       if (
         !elem.existingAttrs.has(key) ||
         elem.existingAttrs.get(key) !== value
@@ -59,6 +59,7 @@ function patchProps(props: any, elem: DOMElementRepr) {
         elem.existingAttrs.set(key, stringVal.toString());
         elem.node.setAttribute(key, stringVal.toString());
       }
+    }
   });
 }
 
@@ -234,7 +235,7 @@ export class ComponentInstance<
       prevNode = nodes[0].node.previousSibling;
     }
 
-    vTr.forEach((vNode, vIndex) => {
+    vTr.forEach((vNode) => {
       if (vNode.nodeType === 'ComponentElement') {
         const instance = this.instanceMap.get(vNode.key);
         if (instance === undefined) {
