@@ -2,9 +2,9 @@ import { ComponentInstance } from './core.js';
 import { markDirty, scheduleUpdate } from './updateQueue';
 
 let stateNum: number = 0;
-let activeInstance: ComponentInstance | undefined;
+let activeInstance: ComponentInstance<any> | undefined;
 
-export function _setUpdatedInstance(instance: ComponentInstance) {
+export function _setUpdatedInstance(instance: ComponentInstance<any>) {
   stateNum = 0;
   activeInstance = instance;
 }

@@ -1,24 +1,77 @@
 import { deepEqual } from '@/utils/deepEqual';
 import { _setUpdatedInstance, _unsetUpdatedInstance } from './hooks';
 import {
-  IComponentElement,
+  JsxComponentElement,
   IComponentFunction,
-  NormalizedChildren,
+  JsxSubtree,
+  ComponentProps,
+  JsxHtmlElement,
+  JsxTextNode,
 } from './types';
 import { markDirty, scheduleUpdate } from './updateQueue';
 
 // Тип нужен для хранения информации о существующих DOM-узлах, связанных именно с этим инстансом
 // и не имеющих отношения к под-инстансам
-type DOMNodeRepr = Node | { elem: Element; children: DOMNodeRepr[] };
+interface DOMElementRepr {
+  nodeType: 'Element';
+  node: Element;
+  children: DOMNodeRepr[];
+  eventListeners: {
+    type: string;
+    listener: EventListener;
+  }[];
+  existingAttrs: Map<string, string>;
+}
+interface DOMTextNodeRepr {
+  nodeType: 'TextNode';
+  node: Node;
+}
+type DOMNodeRepr = DOMTextNodeRepr | DOMElementRepr;
 
-export class ComponentInstance<PropsType = any> {
-  func: IComponentFunction;
+/**
+ * Пропатчить элементу пропсы. Удалить неактуальные атрибуты. Заменить ранее назначенные обработчики событий
+ * @param props Пропсы
+ * @param elem Элемент, который будем менять
+ */
+function patchProps(props: any, elem: DOMElementRepr) {
+  // Снять обработчики событий
+  elem.eventListeners.forEach((listener) => {
+    elem.node.removeEventListener(listener.type, listener.listener);
+  });
+  elem.eventListeners = [];
+  Object.entries(props).forEach(([key, value]) => {
+    if (key.startsWith('ON_')) {
+      if (typeof value !== 'function') {
+        throw new Error('Event handler should be function');
+      }
+      const eventType = key.slice(3);
+      elem.node.addEventListener(eventType, value as EventListener);
+      elem.eventListeners.push({
+        type: eventType,
+        listener: value as EventListener,
+      });
+    } else if (key !== 'children')
+      if (
+        !elem.existingAttrs.has(key) ||
+        elem.existingAttrs.get(key) !== value
+      ) {
+        const stringVal = value as string;
+        elem.existingAttrs.set(key, stringVal.toString());
+        elem.node.setAttribute(key, stringVal.toString());
+      }
+  });
+}
+
+export class ComponentInstance<
+  PropsType extends ComponentProps = ComponentProps
+> {
+  func: IComponentFunction<PropsType>;
   depth: number;
   props: any;
   state: any[] = [];
   componentName: string = 'Unknown';
   private instanceMap: Map<string, ComponentInstance<PropsType>> = new Map(); // Карта для хранения инстансов
-  vTree: NormalizedChildren = [];
+  vTree: JsxSubtree = [];
   parent?: ComponentInstance<any>;
   domNodes: DOMNodeRepr[] = []; // Только те DOM-узлы, которые принадлежат этому компоненту; узлы подкомпонентов не включаются
   constructor(
@@ -36,24 +89,14 @@ export class ComponentInstance<PropsType = any> {
    * Получить список узлов верхнего уровня (в список включены узлы, созданные подкомпонентами)
    */
   getMountNodes(): Node[] {
-    console.log('-----');
-    console.log('func', this.func);
-    console.log('vTree', this.vTree);
-    console.log('domNodes', this.domNodes);
-    console.log('-----');
     const ret: Node[] = [];
     let i: number = 0;
     this.vTree.forEach((vNode) => {
-      if (typeof vNode === 'string' || vNode.elementType === 'JSXElement') {
+      if (vNode.nodeType === 'TextNode' || vNode.nodeType === 'JSXElement') {
         if (i >= this.domNodes.length) {
           throw new RangeError('vTree and domNodes are not aligned');
         }
-        const nodeRepr = this.domNodes[i];
-        if (nodeRepr instanceof Node) {
-          ret.push(nodeRepr);
-        } else {
-          ret.push(nodeRepr.elem);
-        }
+        ret.push(this.domNodes[i].node);
         i++;
       } else {
         // ComponentElement
@@ -72,7 +115,6 @@ export class ComponentInstance<PropsType = any> {
     _setUpdatedInstance(this);
     const [componentName, newVTree] = this.func(this.props);
     this.componentName = componentName;
-    console.log(componentName, newVTree);
     _unsetUpdatedInstance();
     this.vTree = newVTree;
   }
@@ -82,91 +124,9 @@ export class ComponentInstance<PropsType = any> {
     // Построить vTree
     this.updateVTree();
     // Создать инстансы подкомпонентов
-    this.createComponentInstances();
+    this.patchInstances();
     // Создать DOM-узлы
-    this.createDomNodes();
-  }
-  private createComponentInstances() {
-    this.createComponentInstances_impl(this.vTree);
-  }
-  private createComponentInstances_impl(vSubtree: NormalizedChildren) {
-    vSubtree.forEach((vNode) => {
-      if (typeof vNode !== `string`) {
-        if (vNode.elementType === 'ComponentElement') {
-          if (this.instanceMap.has(vNode.key)) {
-            throw new Error(`Duplicating key: '${vNode.key}'`);
-          }
-          const newInstance = new ComponentInstance(
-            vNode.func,
-            this,
-            vNode.props
-          );
-          this.instanceMap.set(vNode.key, newInstance);
-        } else {
-          this.createComponentInstances_impl(vNode.children);
-        }
-      }
-    });
-  }
-  /**
-   * Создать DOM-узлы, соответствующие vTree (для нового Instance компонента)
-   */
-  private createDomNodes() {
-    const newDomNodes: DOMNodeRepr[] = [];
-    this.vTree.forEach((vNode) => {
-      if (typeof vNode === 'string') {
-        newDomNodes.push(document.createTextNode(vNode));
-      } else if (vNode.elementType === 'JSXElement') {
-        const newElement = document.createElement(vNode.tagName);
-        vNode.props.forEach((value, key) => {
-          newElement.setAttribute(key, value);
-        });
-        const newEntry: { elem: Element; children: DOMNodeRepr[] } = {
-          elem: newElement,
-          children: [],
-        };
-        this.createDomNodes_impl(newElement, vNode.children, newEntry.children);
-        newDomNodes.push(newEntry);
-      } else {
-        // В инстансе не хранятся узлы, созданные под-инстансом
-      }
-    });
-    console.log(newDomNodes);
-    this.domNodes = newDomNodes;
-  }
-  private createDomNodes_impl(
-    parent: Element,
-    vTree: NormalizedChildren,
-    arrayToPush: DOMNodeRepr[]
-  ): void {
-    const newChildren: Node[] = [];
-    vTree.forEach((vNode) => {
-      if (typeof vNode === 'string') {
-        const newNode = document.createTextNode(vNode);
-        arrayToPush.push(newNode);
-        newChildren.push(newNode);
-      } else if (vNode.elementType === 'ComponentElement') {
-        const instance = this.instanceMap.get(vNode.key);
-        if (instance === undefined) {
-          throw new Error(`Instance with key ${vNode.key} was not created`);
-        } else {
-          newChildren.push(...instance.getMountNodes());
-        }
-      } else if (vNode.elementType === 'JSXElement') {
-        const newElement = document.createElement(vNode.tagName);
-        const newEntry: { elem: Element; children: DOMNodeRepr[] } = {
-          elem: newElement,
-          children: [],
-        };
-        vNode.props.forEach((value, key) => {
-          newElement.setAttribute(key, value);
-        });
-        this.createDomNodes_impl(newElement, vNode.children, newEntry.children);
-        arrayToPush.push(newEntry);
-        newChildren.push(newElement);
-      }
-    });
-    parent.replaceChildren(...newChildren);
+    this.patchDomNodes(this.domNodes, this.vTree);
   }
 
   update() {
@@ -175,10 +135,11 @@ export class ComponentInstance<PropsType = any> {
     // Обновить под-инстансы и удалить неактуальные
     this.patchInstances();
     // Пропатчить DOM
+    this.patchDomNodes(this.domNodes, this.vTree);
   }
   private patchInstances() {
     // Получить список всех элементов из нового vTree
-    const allElements = new Map<string, IComponentElement>();
+    const allElements = new Map<string, JsxComponentElement>();
     this.getElementsFromVTree(this.vTree, allElements);
 
     // Удалить неактуальные под-инстансы
@@ -240,47 +201,126 @@ export class ComponentInstance<PropsType = any> {
    * @param allElements Мапа, в которую будут помещены найденные IComponentElement
    */
   private getElementsFromVTree(
-    vSubtree: NormalizedChildren,
-    allElements: Map<string, IComponentElement>
+    vSubtree: JsxSubtree,
+    allElements: Map<string, JsxComponentElement>
   ) {
     vSubtree.forEach((vNode) => {
-      if (typeof vNode !== 'string') {
-        if (vNode.elementType === 'JSXElement') {
-          this.getElementsFromVTree(vNode.children, allElements);
-        } else {
-          if (allElements.has(vNode.key)) {
-            throw new Error(`Duplicating key: ${vNode.key}`);
-          }
-          allElements.set(vNode.key, vNode);
+      if (vNode.nodeType === 'JSXElement') {
+        this.getElementsFromVTree(vNode.children, allElements);
+      } else if (vNode.nodeType === 'ComponentElement') {
+        if (allElements.has(vNode.key)) {
+          throw new Error(`Duplicating key: ${vNode.key}`);
         }
+        allElements.set(vNode.key, vNode);
       }
     });
   }
-  private patchDomNodes() {
-    this.patchDomNodes_impl(this.domNodes, this.vTree);
-  }
-  private patchDomNodes_impl(nodes: DOMNodeRepr[], vTr: NormalizedChildren) {
+  /**
+   * Пропатчить DOM-узлы этого компонента
+   * @param nodes Представление существующих DOM-узлов
+   * @param vTr Виртуальное дерево, с которым сравниваться
+   * @param reattachMode Режим переприкрепления дочерних узлов: none - не прикреплять,
+   * firstNode - "навесить" ветки как sibling'и для первого узла в массиве nodes,
+   * replace - заменить детей у родительского узла
+   */
+  private patchDomNodes(
+    nodes: DOMNodeRepr[],
+    vTr: JsxSubtree,
+    parent: Element | null = null
+  ) {
     let domIndex = 0;
-    let vIndex = 0;
-    while (domIndex < nodes.length && vIndex < vTr.length) {
-      let domNode = nodes[domIndex];
-      const vNode = vTr[vIndex];
-      if (vNode === undefined) {
-        vIndex++;
-        continue;
-      }
-      if (domNode instanceof Element && typeof vNode === 'string') {
-        domNode = document.createTextNode(vNode);
-        if (domNode.parentNode !== null) {
-          domNode.parentNode.replaceChild(domNode, domNode);
-        }
-        nodes.splice(domIndex, 1, domNode);
-        domIndex++;
-        vIndex++;
-      } else if (domNode instanceof Node && typeof vNode === 'object') {
-        //const newElement=document.createElement()
-      }
+    let prevNode: Node | null = null;
+    if (nodes.length) {
+      prevNode = nodes[0].node.previousSibling;
     }
+
+    vTr.forEach((vNode, vIndex) => {
+      if (vNode.nodeType === 'ComponentElement') {
+        const instance = this.instanceMap.get(vNode.key);
+        if (instance === undefined) {
+          throw new Error(`Key: ${vNode.key} not exists in instanceMap`);
+        }
+        instance.getMountNodes().forEach((node) => {
+          if (prevNode === null) {
+            if (parent !== null) {
+              parent.insertBefore(node, parent.firstChild);
+            }
+          } else {
+            if (prevNode.parentElement !== null) {
+              prevNode.parentElement.insertBefore(node, prevNode.nextSibling);
+            }
+          }
+          prevNode = node;
+        });
+      } else {
+        let rawNode: DOMNodeRepr;
+        const corrDomNode = nodes[domIndex];
+        if (
+          domIndex >= nodes.length ||
+          (corrDomNode.nodeType === 'Element' &&
+            vNode.nodeType === 'TextNode') ||
+          (corrDomNode.nodeType === 'TextNode' &&
+            vNode.nodeType === 'JSXElement') ||
+          (corrDomNode.nodeType === 'Element' &&
+            vNode.nodeType === 'JSXElement' &&
+            corrDomNode.node.tagName !== vNode.tagName)
+        ) {
+          // Если надо добавить узел или узел имеет не тот тип
+          if (vNode.nodeType === 'JSXElement') {
+            rawNode = {
+              nodeType: 'Element',
+              node: document.createElement(vNode.tagName),
+              children: [],
+              eventListeners: [],
+              existingAttrs: new Map(),
+            };
+          } else {
+            rawNode = {
+              nodeType: 'TextNode',
+              node: document.createTextNode('UNSET'),
+            };
+          }
+          // Если узел заменяется, заменить старый на новый в родителе
+          if (domIndex < nodes.length) {
+            const oldNode = nodes[domIndex];
+            if (oldNode.node.parentElement !== null) {
+              oldNode.node.parentElement.replaceChild(
+                rawNode.node,
+                oldNode.node
+              );
+            }
+          }
+          // Если создаётся новый узел, выставить его
+          if (domIndex >= nodes.length) {
+            if (parent !== null) {
+              if (prevNode === null) {
+                parent.insertBefore(rawNode.node, parent.firstChild);
+              } else {
+                parent.insertBefore(rawNode.node, prevNode.nextSibling);
+              }
+            }
+          }
+          // Обновить массив nodes
+          nodes.splice(domIndex, 1, rawNode);
+        } else {
+          // Если узел существует и имеет правильный тип
+          rawNode = nodes[domIndex];
+        }
+        // Патчим пропсы и добавляем дочерние элементы
+        if (rawNode.nodeType === 'Element') {
+          const vElem = vNode as JsxHtmlElement;
+          patchProps(vElem.props, rawNode);
+          this.patchDomNodes(rawNode.children, vElem.children, rawNode.node);
+        } else if (rawNode.nodeType === 'TextNode') {
+          const vTextNode = vNode as JsxTextNode;
+          if (rawNode.node.textContent !== vTextNode.text) {
+            rawNode.node.textContent = vTextNode.text;
+          }
+        }
+        prevNode = rawNode.node;
+        domIndex++;
+      }
+    });
   }
 
   destroy() {

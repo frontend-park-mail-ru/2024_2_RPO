@@ -1,10 +1,10 @@
 import { ButtonComponent } from '@/components/Button';
-import { JSXChildType } from '@/jsxCore/types';
+import { JsxNode } from '@/jsxCore/types';
 import { noop } from '@/utils/noop';
 
 interface ModalDialogProps {
   title?: string;
-  content?: JSXChildType;
+  content?: JsxNode;
   closeCallback?: () => void;
 }
 

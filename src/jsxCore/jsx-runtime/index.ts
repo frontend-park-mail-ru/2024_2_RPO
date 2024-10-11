@@ -1,10 +1,10 @@
 import { JSXInternal as _JSX } from './jsx';
 import {
-  JSXElement,
-  JSXChildrenType,
+  JsxHtmlElement,
   IComponentFunction,
-  NormalizedChildren,
-  IComponentElement,
+  JsxSubtree,
+  JsxComponentElement,
+  JsxNode,
 } from '../types';
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -15,14 +15,31 @@ namespace JSX {
 
 const Fragment = 'fragment';
 
-const normalizeChildren = (children: JSXChildrenType): NormalizedChildren => {
+// То, что может лежать в props.children
+type JSXChildrenType =
+  | (JsxNode | string)
+  | (JsxNode | string | undefined)[]
+  | undefined;
+
+const normalizeChildren = (children: JSXChildrenType): JsxSubtree => {
   if (Array.isArray(children)) {
-    return children.filter((el) => {
-      return el !== undefined;
-    });
+    return children
+      .filter((vNode) => {
+        return vNode !== undefined;
+      })
+      .map((vNode) => {
+        if (typeof vNode === 'string') {
+          return { nodeType: 'TextNode', text: vNode };
+        } else {
+          return vNode;
+        }
+      });
   }
   if (children === undefined) {
     return [];
+  }
+  if (typeof children === 'string') {
+    return [{ nodeType: 'TextNode', text: children }];
   }
   return [children];
 };
@@ -31,7 +48,7 @@ function jsx(
   type: string | IComponentFunction | 'fragment',
   props: any,
   key?: string
-): NormalizedChildren | IComponentElement | JSXElement {
+): JsxSubtree | JsxComponentElement | JsxHtmlElement {
   const children = normalizeChildren(props.children);
   props.children = children;
 
@@ -46,8 +63,8 @@ function jsx(
     if (key === undefined) {
       throw new Error('Every component should have a key');
     }
-    const ret: IComponentElement = {
-      elementType: 'ComponentElement',
+    const ret: JsxComponentElement = {
+      nodeType: 'ComponentElement',
       func: type,
       children,
       props,
@@ -56,21 +73,13 @@ function jsx(
     return ret;
   } else if (typeof type === 'string') {
     // Обычный HTML-элемент
-    const mappedProps: Map<string, any> = new Map();
-    Object.entries(props).forEach(([key, value]) => {
-      if (key !== 'children') {
-        mappedProps.set(key, value);
-      } else {
-        mappedProps.set('children', children);
-      }
-    });
     if (key !== undefined) {
       throw new Error('Key should be used for components only');
     }
-    const ret: JSXElement = {
-      elementType: 'JSXElement',
+    const ret: JsxHtmlElement = {
+      nodeType: 'JSXElement',
       tagName: type,
-      props: mappedProps,
+      props,
       children,
     };
     return ret;

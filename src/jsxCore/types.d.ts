@@ -1,30 +1,29 @@
-export type JSXTextNode = string;
+export type IComponentFunction<
+  PropsType extends ComponentProps = ComponentProps
+> = (props?: PropsType) => [componentName: string, vSubtree: JsxSubtree];
 
-export type IComponentFunction<PropsType = any> = (
-  props?: PropsType
-) => [componentName: string, vSubtree: NormalizedChildren];
-
-export interface JSXElement {
-  elementType: 'JSXElement';
-  tagName: string;
-  props: Map<string, string>;
-  children: NormalizedChildren;
+export interface JsxTextNode {
+  nodeType: 'TextNode';
+  text: string;
 }
 
-export interface IComponentElement {
-  elementType: 'ComponentElement';
+export interface JsxHtmlElement {
+  nodeType: 'JSXElement';
+  tagName: string;
+  props: any;
+  children: JsxSubtree;
+}
+
+export interface JsxComponentElement {
+  nodeType: 'ComponentElement';
   func: IComponentFunction;
   key: string;
   props: any;
-  children: NormalizedChildren;
+  children: JsxSubtree;
 }
 
-export type JSXChildType = JSXElement | IComponentElement | JSXTextNode;
-export type JSXChildrenType =
-  | JSXChildType
-  | (JSXChildType | undefined)[]
-  | undefined;
-export type NormalizedChildren = JSXChildType[];
+export type JsxNode = JsxHtmlElement | JsxComponentElement | JsxTextNode;
+export type JsxSubtree = JsxNode[];
 
 export interface ComponentProps {
   key: string;
