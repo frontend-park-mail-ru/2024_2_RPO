@@ -95,14 +95,14 @@ export class ComponentInstance<
    * Получить список узлов верхнего уровня (в список включены узлы, созданные подкомпонентами)
    */
   getMountNodes(): Node[] {
-    const ret: Node[] = [];
+    const nodesToMount: Node[] = [];
     let i: number = 0;
     this.vTree.forEach((vNode) => {
       if (vNode.nodeType === 'TextNode' || vNode.nodeType === 'JSXElement') {
         if (i >= this.domNodes.length) {
           throw new RangeError('vTree and domNodes are not aligned');
         }
-        ret.push(this.domNodes[i].node);
+        nodesToMount.push(this.domNodes[i].node);
         i++;
       } else {
         // ComponentElement
@@ -112,10 +112,10 @@ export class ComponentInstance<
             `No matching instance in instanceMap with key='${vNode.key}'`
           );
         }
-        ret.push(...instance.getMountNodes());
+        nodesToMount.push(...instance.getMountNodes());
       }
     });
-    return ret;
+    return nodesToMount;
   }
   /** Обновить vTree, запустив функцию и получив новое дерево */
   private _updateVTree() {
