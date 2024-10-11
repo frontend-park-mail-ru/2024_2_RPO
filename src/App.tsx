@@ -11,7 +11,7 @@ interface ButtonProps extends ComponentProps {
 }
 const Button = (props: ButtonProps) => {
   const label = props.label;
-  const onClick = props.onClick ?? noop;
+  const onClick = props.onClick;
   return [
     'Button',
     <>

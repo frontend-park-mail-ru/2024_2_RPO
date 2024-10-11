@@ -41,11 +41,13 @@ function patchProps(props: any, elem: DOMElementRepr) {
   elem.eventListeners = [];
   Object.entries(props).forEach(([key, value]) => {
     if (key.startsWith('ON_')) {
-      if (typeof value !== 'function') {
+      if (typeof value !== 'function' && typeof value !== 'undefined') {
         throw new Error('Event handler should be function');
       }
       const eventType = key.slice(3);
-      elem.node.addEventListener(eventType, value as EventListener);
+      if (value !== undefined) {
+        elem.node.addEventListener(eventType, value as EventListener);
+      }
       elem.eventListeners.push({
         type: eventType,
         listener: value as EventListener,
@@ -67,7 +69,7 @@ export class ComponentInstance<
   PropsType extends ComponentProps = ComponentProps
 > {
   func: IComponentFunction<PropsType>;
-  depth: number;
+  depth: number; // Глубина нужна для того, чтобы планировщик обновления отдавал предпочтение более корневому инстансу
   props: any;
   state: any[] = [];
   componentName: string = 'Unknown';
@@ -84,7 +86,7 @@ export class ComponentInstance<
     this.depth = parent !== undefined ? parent.depth + 1 : 0;
     this.func = func;
     this.props = props;
-    this.create();
+    this.update();
   }
   /**
    * Получить список узлов верхнего уровня (в список включены узлы, созданные подкомпонентами)
@@ -102,7 +104,7 @@ export class ComponentInstance<
       } else {
         // ComponentElement
         const instance = this.instanceMap.get(vNode.key);
-        if (instance === undefined) {
+        if (!instance) {
           throw new Error(
             `No matching instance in instanceMap with key='${vNode.key}'`
           );
@@ -112,36 +114,29 @@ export class ComponentInstance<
     });
     return ret;
   }
-  private updateVTree() {
+  /** Обновить vTree, запустив функцию и получив новое дерево */
+  private _updateVTree() {
     _setUpdatedInstance(this);
     const [componentName, newVTree] = this.func(this.props);
     this.componentName = componentName;
     _unsetUpdatedInstance();
     this.vTree = newVTree;
   }
-
-  /** Построить vTree, создать инстансы подкомпонентов и создать DOM-узлы */
-  private create() {
-    // Построить vTree
-    this.updateVTree();
-    // Создать инстансы подкомпонентов
-    this.patchInstances();
-    // Создать DOM-узлы
-    this.patchDomNodes(this.domNodes, this.vTree);
-  }
-
   update() {
     // Обновить vTree
-    this.updateVTree();
+    this._updateVTree();
     // Обновить под-инстансы и удалить неактуальные
-    this.patchInstances();
+    this._patchInstances();
     // Пропатчить DOM
-    this.patchDomNodes(this.domNodes, this.vTree);
+    this._patchDomNodes(this.domNodes, this.vTree);
   }
-  private patchInstances() {
+  /**
+   * Обновить instanceMap
+   */
+  private _patchInstances() {
     // Получить список всех элементов из нового vTree
     const allElements = new Map<string, JsxComponentElement>();
-    this.getElementsFromVTree(this.vTree, allElements);
+    this._getElementsFromVTree(this.vTree, allElements);
 
     // Удалить неактуальные под-инстансы
     const allKeys = new Set<string>();
@@ -201,13 +196,13 @@ export class ComponentInstance<
    * @param vSubtree Поддерево, из которого надо извлекать IComponentElement
    * @param allElements Мапа, в которую будут помещены найденные IComponentElement
    */
-  private getElementsFromVTree(
+  private _getElementsFromVTree(
     vSubtree: JsxSubtree,
     allElements: Map<string, JsxComponentElement>
   ) {
     vSubtree.forEach((vNode) => {
       if (vNode.nodeType === 'JSXElement') {
-        this.getElementsFromVTree(vNode.children, allElements);
+        this._getElementsFromVTree(vNode.children, allElements);
       } else if (vNode.nodeType === 'ComponentElement') {
         if (allElements.has(vNode.key)) {
           throw new Error(`Duplicating key: ${vNode.key}`);
@@ -224,7 +219,7 @@ export class ComponentInstance<
    * firstNode - "навесить" ветки как sibling'и для первого узла в массиве nodes,
    * replace - заменить детей у родительского узла
    */
-  private patchDomNodes(
+  private _patchDomNodes(
     nodes: DOMNodeRepr[],
     vTr: JsxSubtree,
     parent: Element | null = null
@@ -311,7 +306,7 @@ export class ComponentInstance<
         if (rawNode.nodeType === 'Element') {
           const vElem = vNode as JsxHtmlElement;
           patchProps(vElem.props, rawNode);
-          this.patchDomNodes(rawNode.children, vElem.children, rawNode.node);
+          this._patchDomNodes(rawNode.children, vElem.children, rawNode.node);
         } else if (rawNode.nodeType === 'TextNode') {
           const vTextNode = vNode as JsxTextNode;
           if (rawNode.node.textContent !== vTextNode.text) {
@@ -323,7 +318,7 @@ export class ComponentInstance<
       }
     });
   }
-
+  /** Погубить инстанс */
   destroy() {
     // Просто удалить себя из DOM-дерева
     this.getMountNodes().forEach((node) => {
@@ -332,10 +327,7 @@ export class ComponentInstance<
   }
 }
 
-let mainFunc: IComponentFunction | undefined = undefined;
-
 export function createApp(func: IComponentFunction, mountTo: Element) {
-  mainFunc = func;
-  const mainInstance = new ComponentInstance(mainFunc, undefined, new Map());
+  const mainInstance = new ComponentInstance(func, undefined, new Map());
   mountTo.replaceChildren(...mainInstance.getMountNodes());
 }
