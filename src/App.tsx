@@ -3,7 +3,6 @@ import './fonts.scss';
 import { createApp } from './jsxCore/core';
 import { ComponentProps, IComponentFunction } from './jsxCore/types';
 import { useState } from './jsxCore/hooks';
-import { noop } from './utils/noop';
 
 interface ButtonProps extends ComponentProps {
   label: string;
