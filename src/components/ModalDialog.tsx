@@ -1,10 +1,9 @@
-import { ButtonComponent } from '@/components/Button';
-import { JsxNode } from '@/jsxCore/types';
-import { noop } from '@/utils/noop';
+import { Button } from '@/components/Button';
+import { ComponentProps, JsxNode } from '@/jsxCore/types';
 
-interface ModalDialogProps {
+interface ModalDialogProps extends ComponentProps {
   title?: string;
-  content?: JsxNode;
+  children?: JsxNode;
   closeCallback?: () => void;
 }
 
@@ -13,19 +12,16 @@ interface ModalDialogProps {
  * @param props Пропсы модального диалога
  * @returns JSX модального диалога
  */
-export const ModalDialog = (props: ModalDialogProps = {}) => {
+export const ModalDialog = (props: ModalDialogProps) => {
   return (
     <div class="modal-dialog__container">
       <div class="modal-dialog">
         <div class="modal-dialog__header-block">
           <span class="modal-dialog__title">{props.title}</span>
-          {ButtonComponent({
-            icon: 'bi-x',
-            callback: props.closeCallback ?? noop,
-          })}
+          <Button key="close_btn" icon="bi-x" callback={props.closeCallback} />
         </div>
         <hr class="mb-16px" />
-        {props.content}
+        {props.children}
       </div>
     </div>
   );

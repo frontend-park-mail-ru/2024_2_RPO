@@ -1,5 +1,5 @@
 import { boardsStore } from '@/stores/boardsStore';
-import { getAppISS, interfaceStateStore } from '@/stores/interfaceStateStore';
+import { interfaceStateStore } from '@/stores/interfaceStateStore';
 
 interface BoardCardProps {
   title?: string;
@@ -23,8 +23,8 @@ export const BoardCardComponent = (props: BoardCardProps) => {
       <span
         class="board-delete-link"
         ON_click={() => {
-          getAppISS().isBoardDeleteDialogOpened = true;
-          getAppISS().boardDeleteDialogCallback = () => {
+          interfaceStateStore.appState.isBoardDeleteDialogOpened = true;
+          interfaceStateStore.appState.boardDeleteDialogCallback = () => {
             boardsStore.deleteBoard(props.boardId);
           };
           interfaceStateStore?.update();

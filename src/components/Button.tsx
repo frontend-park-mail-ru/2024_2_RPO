@@ -1,6 +1,7 @@
+import { ComponentProps } from '@/jsxCore/types';
 import { noop } from '@/utils/noop';
 
-interface ButtonProps {
+interface ButtonProps extends ComponentProps {
   text?: string;
   icon?: string;
   callback?: (event: PointerEvent) => void;
@@ -11,7 +12,7 @@ interface ButtonProps {
  * @param props Пропсы кнопки
  * @returns JSX кнопки
  */
-export const ButtonComponent = (props: ButtonProps = {}) => {
+export const Button = (props: ButtonProps) => {
   return (
     <div>
       <div class="button" ON_click={props.callback ?? noop}>

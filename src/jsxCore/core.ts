@@ -84,7 +84,7 @@ export class ComponentInstance<
     parent: ComponentInstance<any> | undefined,
     props: any = new Map()
   ) {
-    console.log('new instance');
+    this.componentName = func.name;
     this.parent = parent;
     this.depth = parent !== undefined ? parent.depth + 1 : 0;
     this.func = func;
@@ -120,10 +120,8 @@ export class ComponentInstance<
   /** Обновить vTree, запустив функцию и получив новое дерево */
   private _updateVTree() {
     _setUpdatedInstance(this);
-    const [componentName, newVTree] = this.func(this.props);
-    this.componentName = componentName;
+    this.vTree = this.func(this.props);
     _unsetUpdatedInstance();
-    this.vTree = newVTree;
     if (!Array.isArray(this.vTree)) {
       this.vTree = [this.vTree];
     }
@@ -140,11 +138,8 @@ export class ComponentInstance<
         this.vTree,
         this.domNodes[0].node.parentElement
       );
-    }else{
-      this._patchDomNodes(
-        this.domNodes,
-        this.vTree
-      );
+    } else {
+      this._patchDomNodes(this.domNodes, this.vTree);
     }
   }
   /**

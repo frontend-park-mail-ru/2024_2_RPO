@@ -1,9 +1,15 @@
-
 /**
  * Компонент выбора режима отображения доски
  * @returns JSX выбора режима отображения доски
  */
-export const ModeSelect = () => {
+
+import { ComponentProps } from '@/jsxCore/types';
+
+interface ModeSelectProps extends ComponentProps {
+  currentMode: 'kanban' | 'list';
+}
+export const ModeSelect = (props: ModeSelectProps) => {
+  console.log(props);
   return (
     <div class="currentMode">
       <div class="mode">

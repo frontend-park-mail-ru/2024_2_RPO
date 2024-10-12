@@ -1,16 +1,12 @@
-import { ButtonComponent } from '@/components/Button';
+import { Button } from '@/components/Button';
 import { LoginDialog } from '@/containers/LoginDialog';
 import { RegistrationDialog } from '@/containers/RegistrationDialog';
 import { useState } from '@/jsxCore/hooks';
-import {
-  getHomePageISS,
-  interfaceStateStore,
-} from '@/stores/interfaceStateStore';
 
 export const HomePage = () => {
   const [isRegistrationOpened, setIsRegistrationOpened] = useState(false);
-  return [
-    'HomePage',
+  const [isLoginOpened, setIsLoginOpened] = useState(false);
+  return (
     <>
       <div class="background">
         <i class="bi-kanban icon1"></i>
@@ -23,23 +19,39 @@ export const HomePage = () => {
           Облачный канбан со сверхспособностями
         </span>
 
-        {ButtonComponent({
+        {Button({
+          key: 'dfdsff',
           text: 'Зарегистрироваться',
           callback: () => {
             setIsRegistrationOpened(true);
           },
         })}
-        {ButtonComponent({
-          text: 'Войти',
-          callback: () => {
-            getHomePageISS().isLoginDialogOpened = true;
-            interfaceStateStore?.update();
-          },
-        })}
+
+        <Button
+          key="LoginButton"
+          text="Войти"
+          callback={() => {
+            setIsLoginOpened(true);
+          }}
+        />
       </div>
 
-      {isRegistrationOpened ? RegistrationDialog() : undefined}
-      {getHomePageISS().isLoginDialogOpened ? LoginDialog() : undefined}
-    </>,
-  ];
+      {isRegistrationOpened ? (
+        <RegistrationDialog
+          key="reg_dialog"
+          closeCallback={() => {
+            setIsRegistrationOpened(false);
+          }}
+        />
+      ) : undefined}
+      {isLoginOpened ? (
+        <LoginDialog
+          key="login_dialog"
+          closeCallback={() => {
+            setIsLoginOpened(false);
+          }}
+        />
+      ) : undefined}
+    </>
+  );
 };

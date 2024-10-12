@@ -1,22 +1,23 @@
 import { LeftPanel } from '@/containers/LeftPanel';
 import { NavBar } from '@/containers/NavBar';
-import { ButtonComponent } from '@/components/Button';
+import { Button } from '@/components/Button';
 import { ModalDialog } from '@/components/ModalDialog';
-import { getAppISS, interfaceStateStore } from '@/stores/interfaceStateStore';
+import { interfaceStateStore } from '@/stores/interfaceStateStore';
 import { getApiUrl } from '@/api/apiHelper';
 
 export const MainApp = () => {
   return [
     'MainApp',
     <>
-      {getAppISS().isNewBoardDialogOpened
+      {interfaceStateStore.appState.isNewBoardDialogOpened
         ? ModalDialog({
+            key: '228',
             title: 'Название новой доски',
             closeCallback: () => {
-              getAppISS().isNewBoardDialogOpened = false;
+              interfaceStateStore.appState.isNewBoardDialogOpened = false;
               interfaceStateStore?.update();
             },
-            content: (
+            children: (
               <div>
                 <input
                   ON_keydown={(event: KeyboardEvent) => {
@@ -35,11 +36,13 @@ export const MainApp = () => {
                         })
                           .then(() => {
                             interfaceStateStore?.updateRegAndApp();
-                            getAppISS().isNewBoardDialogOpened = false;
+                            interfaceStateStore.appState.isNewBoardDialogOpened =
+                              false;
                           })
                           .catch(() => {
                             alert('Неизвестная ошибка на бэке');
-                            getAppISS().isNewBoardDialogOpened = false;
+                            interfaceStateStore.appState.isNewBoardDialogOpened =
+                              false;
                           });
                       }
                     }
@@ -49,34 +52,40 @@ export const MainApp = () => {
             ),
           })
         : undefined}
-      {getAppISS().isBoardDeleteDialogOpened
+      {interfaceStateStore.appState.isBoardDeleteDialogOpened
         ? ModalDialog({
+            key: '228',
             title: 'Вы точно хотите удалить доску?',
-            content: (
+            children: (
               <div>
-                {ButtonComponent({
-                  text: 'Да',
-                  callback: () => {
-                    const cb = getAppISS().boardDeleteDialogCallback;
+                <Button
+                  key="yes_btn"
+                  text="Да"
+                  callback={() => {
+                    const cb =
+                      interfaceStateStore.appState.boardDeleteDialogCallback;
                     if (cb !== undefined) cb();
-                    getAppISS().isBoardDeleteDialogOpened = false;
+                    interfaceStateStore.appState.isBoardDeleteDialogOpened =
+                      false;
                     interfaceStateStore?.update();
-                  },
-                })}
-                {ButtonComponent({
-                  text: 'Нет',
-                  callback: () => {
-                    getAppISS().isBoardDeleteDialogOpened = false;
+                  }}
+                />
+                <Button
+                  key="no_btn"
+                  text="Нет"
+                  callback={() => {
+                    interfaceStateStore.appState.isBoardDeleteDialogOpened =
+                      false;
                     interfaceStateStore?.update();
-                  },
-                })}
+                  }}
+                />
               </div>
             ),
           })
         : undefined}
       <header>{NavBar()}</header>
 
-      {getAppISS().isLeftPanelOpened ? LeftPanel() : undefined}
+      {interfaceStateStore.appState.isLeftPanelOpened ? LeftPanel() : undefined}
 
       <main>
         <img

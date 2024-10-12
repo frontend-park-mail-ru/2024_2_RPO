@@ -1,6 +1,6 @@
 export type IComponentFunction<
   PropsType extends ComponentProps = ComponentProps
-> = (props?: PropsType) => [componentName: string, vSubtree: JsxSubtree];
+> = (props?: PropsType) => JsxSubtree;
 
 export interface JsxTextNode {
   nodeType: 'TextNode';
