@@ -6,6 +6,7 @@ import {
   JsxComponentElement,
   JsxNode,
 } from '../types';
+import { flatten } from '@/utils/misc';
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 namespace JSX {
@@ -18,12 +19,12 @@ const Fragment = 'fragment';
 // То, что может лежать в props.children
 type JSXChildrenType =
   | (JsxNode | string)
-  | (JsxNode | string | undefined)[]
+  | (JsxNode | string | undefined | JSXChildrenType)[]
   | undefined;
 
 const normalizeChildren = (children: JSXChildrenType): JsxSubtree => {
   if (Array.isArray(children)) {
-    return children
+    const normalizedChildren = children
       .filter((vNode) => {
         return vNode !== undefined;
       })
@@ -34,6 +35,7 @@ const normalizeChildren = (children: JSXChildrenType): JsxSubtree => {
           return vNode;
         }
       });
+    return flatten(normalizedChildren);
   }
   if (children === undefined) {
     return [];
