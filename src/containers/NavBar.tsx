@@ -1,5 +1,5 @@
-import { ButtonComponent } from '@/components/Button';
-import { getAppISS, interfaceStateStore } from '@/stores/interfaceStateStore';
+import { Button } from '@/components/Button';
+import { interfaceStateStore } from '@/stores/interfaceStateStore';
 import { logout } from '@/api/users';
 import { ModeSelect } from '@/components/ModeSelect';
 
@@ -8,12 +8,17 @@ export const NavBar = () => {
     <div
       class="button pt-0"
       ON_click={() => {
-        getAppISS().isLeftPanelOpened = !getAppISS().isLeftPanelOpened;
+        interfaceStateStore.appState.isLeftPanelOpened =
+          !interfaceStateStore.appState.isLeftPanelOpened;
         interfaceStateStore?.update();
       }}
     >
       <i
-        class={[getAppISS().isLeftPanelOpened ? 'bi-x-lg' : 'bi-list']}
+        class={[
+          interfaceStateStore.appState.isLeftPanelOpened
+            ? 'bi-x-lg'
+            : 'bi-list',
+        ]}
         style="font-size: 22px"
       ></i>
     </div>
@@ -38,12 +43,12 @@ export const NavBar = () => {
       </div>
       <div class="navbar__rest">
         <div class="borderNameWithGear">
-          {ModeSelect()}
+          <ModeSelect key="mode_select" currentMode="kanban" />
 
           <div class="borderName" style="font-size: 18px; font-weight: 600">
             Моя доска
           </div>
-          {ButtonComponent({ icon: 'bi-gear' })}
+          <Button key="settings" icon="bi-gear" />
         </div>
         <div class="flex-grow"></div>
         <div class="search">
@@ -54,13 +59,14 @@ export const NavBar = () => {
             style="padding-left: 36px"
           />
           <i class="bi-search" style="position: absolute;"></i>
-          {ButtonComponent({ icon: 'bi-bell' })}
-          {ButtonComponent({
-            icon: 'bi-box-arrow-right',
-            callback: () => {
+          <Button key="notification_btn" icon="bi-bell" />
+          <Button
+            key="logout_btn"
+            icon="bi-box-arrow-right"
+            callback={() => {
               logout();
-            },
-          })}
+            }}
+          />
           {interfaceStateStore?.me?.name}
           <div class="profilePicture">
             <img

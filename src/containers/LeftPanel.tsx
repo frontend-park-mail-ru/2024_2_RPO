@@ -1,7 +1,7 @@
 import { BoardCardComponent } from '@/components/BoardCard';
-import { ButtonComponent } from '@/components/Button';
+import { Button } from '@/components/Button';
 import { boardsStore } from '@/stores/boardsStore';
-import { getAppISS, interfaceStateStore } from '@/stores/interfaceStateStore';
+import { interfaceStateStore } from '@/stores/interfaceStateStore';
 
 /**
  * Компонент левой панели
@@ -16,7 +16,7 @@ export const LeftPanel = () => {
           <div
             class="x-lg"
             ON_click={() => {
-              getAppISS().isLeftPanelOpened = false;
+              interfaceStateStore.appState.isLeftPanelOpened = false;
               interfaceStateStore?.update();
             }}
           ></div>
@@ -26,7 +26,7 @@ export const LeftPanel = () => {
         <div class="left-menu__first-level">
           <div class="left-menu__body-name">
             <span>Мои доски</span>
-            {ButtonComponent({ icon: 'bi-star' })}
+            <Button key="favourite_btn" icon="bi-star" />
           </div>
         </div>
         <div class="cards" style="flex-direction: column;">
@@ -39,14 +39,15 @@ export const LeftPanel = () => {
             });
           })}
         </div>
-        {ButtonComponent({
-          icon: 'bi-plus-square',
-          text: 'Добавить доску',
-          callback: () => {
-            getAppISS().isNewBoardDialogOpened = true;
+        <Button
+          key="add_board_btn"
+          icon="bi-plus-square"
+          text="Добавить доску"
+          callback={() => {
+            interfaceStateStore.appState.isNewBoardDialogOpened = true;
             interfaceStateStore?.update();
-          },
-        })}
+          }}
+        />
       </div>
     </div>
   );

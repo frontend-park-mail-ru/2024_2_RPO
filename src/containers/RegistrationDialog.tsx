@@ -1,16 +1,19 @@
 import { registerUser } from '@/api/users';
 import { ModalDialog } from '@/components/ModalDialog';
-import {
-  getHomePageISS,
-  interfaceStateStore,
-} from '@/stores/interfaceStateStore';
+import { ComponentProps } from '@/jsxCore/types';
+import { interfaceStateStore } from '@/stores/interfaceStateStore';
 import { AppState } from '@/types/appState';
 import { getInputElementById } from '@/utils/domHelper';
 
-export const RegistrationDialog = () => {
+interface RegistrationDialogProps extends ComponentProps {
+  closeCallback?: () => any;
+}
+
+export const RegistrationDialog = (props: RegistrationDialogProps) => {
   return ModalDialog({
+    key: 'any',
     title: 'Добро пожаловать в Pumpkin!',
-    content: (
+    children: (
       <div>
         <form id="reg_data">
           <div class="form-field">
@@ -139,7 +142,7 @@ export const RegistrationDialog = () => {
                 () => {
                   if (typeof interfaceStateStore !== 'undefined') {
                     interfaceStateStore.mode = 'app';
-                    interfaceStateStore.state = new AppState();
+                    interfaceStateStore.appState = new AppState();
                     interfaceStateStore.updateRegAndApp();
                   }
                 },
@@ -156,9 +159,6 @@ export const RegistrationDialog = () => {
         </button>
       </div>
     ),
-    closeCallback: () => {
-      getHomePageISS().isRegistrationDialogOpened = false;
-      interfaceStateStore?.update();
-    },
+    closeCallback: props.closeCallback,
   });
 };

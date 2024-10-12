@@ -1,8 +1,12 @@
-import { initISS, interfaceStateStore } from '@/stores/interfaceStateStore';
-import { setApiUrl } from '@/api/apiHelper';
 import './index.scss';
 import './fonts.scss';
+import { createApp } from './jsxCore/core';
+import { HomePage } from './screens/HomePage';
+import { IComponentFunction } from './jsxCore/types';
 
-setApiUrl('http://localhost:8800'); //TODO вынести из хардкода
-initISS();
-interfaceStateStore?.updateRegAndApp();
+const App: IComponentFunction = () => {
+  return <HomePage key="main_app" />;
+};
+
+const appRoot = document.getElementById('app_root') as HTMLDivElement;
+createApp(App, appRoot);

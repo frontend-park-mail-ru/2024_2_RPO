@@ -1,7 +1,4 @@
 import { boardsStore } from '@/stores/boardsStore';
-import { RenderJSX } from '@/jsxCore/renderer';
-import { HomePage } from '@/screens/HomePage';
-import { MainApp } from '@/screens/MainApp';
 import { AppState } from '@/types/appState';
 import { HomePageState } from '@/types/homePageState';
 import { User } from '@/types/user';
@@ -9,18 +6,20 @@ import { Board } from '@/types/board';
 import { getBoards } from '@/api/boards';
 import { getUserMe } from '@/api/users';
 
-const modeToView = {
-  app: MainApp,
-  homePage: HomePage,
-};
+// const modeToView = {
+//   app: MainApp,
+//   homePage: HomePage,
+// };
 
 class InterfaceStateStore {
   mode: 'homePage' | 'app' = 'homePage';
-  state: HomePageState | AppState = new HomePageState();
+  homePageState: HomePageState;
+  appState: AppState;
   me?: User;
-  appRoot: Element;
-  constructor(appRoot: Element) {
-    this.appRoot = appRoot;
+  constructor() {
+    this.homePageState = new HomePageState();
+    this.appState = new AppState();
+    this.update();
   }
   /** Перерисовать приложение */
   update() {
@@ -28,20 +27,20 @@ class InterfaceStateStore {
       if (this.mode !== 'app') {
         if (this.me !== undefined) {
           this.mode = 'app';
-          this.state = new AppState();
+          this.appState = new AppState();
         } else {
           this.mode = 'homePage';
-          this.state = new HomePageState();
+          this.homePageState = new HomePageState();
         }
       }
     } else {
       if (this.mode !== 'homePage') {
         this.mode = 'homePage';
-        this.state = new HomePageState();
+        this.homePageState = new HomePageState();
       }
     }
-    const app = modeToView[this.mode]();
-    RenderJSX(this.appRoot, app);
+    //const app = modeToView[this.mode]();
+    //RenderJSX(this.appRoot, app);
   }
   /**
    * Обновить информацию о текущем пользователе и о его доступных досках, затем перерисовать
@@ -52,12 +51,12 @@ class InterfaceStateStore {
         this.me = user;
         if (this.me === undefined) {
           this.mode = 'homePage';
-          this.state = new HomePageState();
+          this.homePageState = new HomePageState();
           history.pushState(null, '', '/');
           this.update();
         } else {
           this.mode = 'app';
-          this.state = new AppState();
+          this.appState = new AppState();
           history.pushState(null, '', '/app');
           getBoards()
             .then((boards: Board[]) => {
@@ -77,46 +76,7 @@ class InterfaceStateStore {
   }
 }
 
-const appRoot = document.getElementById('app_root');
-export let interfaceStateStore: InterfaceStateStore | undefined = undefined;
-
-/**
- * Инициализировать Interface State Store
- */
-export const initISS = ():void => {
-  if (appRoot !== null) {
-    interfaceStateStore = new InterfaceStateStore(appRoot);
-  } else {
-    throw new Error('App root is null');
-  }
-};
-
-/**
- * Получить состояние канбана
- * @returns Состояние приложения для экрана канбана
- */
-export const getAppISS = (): AppState => {
-  if (interfaceStateStore?.mode === 'app') {
-    if (interfaceStateStore.state instanceof AppState) {
-      return interfaceStateStore.state;
-    }
-  }
-  throw new Error('You are on another screen');
-};
-
-/**
- * Получить состояние домашней страницы
- * @returns Состояние приложения для экрана домашней страницы
- */
-export const getHomePageISS = (): HomePageState => {
-  if (interfaceStateStore?.mode === 'homePage') {
-    if (interfaceStateStore.state instanceof HomePageState) {
-      return interfaceStateStore.state;
-    }
-  }
-  throw new Error('You are on another screen');
-};
-
+export const interfaceStateStore = new InterfaceStateStore();
 
 export const goToApp = () => {
   history.pushState(null, '', '/app');
