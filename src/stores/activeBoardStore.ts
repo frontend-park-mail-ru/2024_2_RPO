@@ -1,5 +1,5 @@
 import { ActiveBoard } from '@/types/activeBoard';
-import { activeBoardMock } from '@/mocks/activeBoard';
+import { activeBoardMock } from '@/api/mocks/activeBoard';
 
 class ActiveBoardStore {
   activeBoard: ActiveBoard; // TODO рассмотреть возможность установки private

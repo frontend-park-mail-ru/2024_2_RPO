@@ -13,7 +13,7 @@
     "sourceMap": true,
     "jsx": "react-jsx",
     "jsxImportSource": "@/jsxCore",
-    "paths": { "@/*": ["./src/*"] },
+    "paths": { "@/*": ["./src/*"], "tslib": ["./node_modules/tslib"] },
     "plugins": [{ "name": "typescript-plugin-css-modules" }]
   }
 }

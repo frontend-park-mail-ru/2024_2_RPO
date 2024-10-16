@@ -1,5 +1,6 @@
 import { BoardCardComponent } from '@/components/BoardCard';
 import { Button } from '@/components/Button';
+import { ComponentProps } from '@/jsxCore/types';
 import { boardsStore } from '@/stores/boardsStore';
 import { interfaceStateStore } from '@/stores/interfaceStateStore';
 
@@ -8,7 +9,10 @@ import { interfaceStateStore } from '@/stores/interfaceStateStore';
  * @param props Пропсы левой панели
  * @returns JSX левой панели
  */
-export const LeftPanel = () => {
+
+type LeftPanelProps = ComponentProps;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const LeftPanel = (props: LeftPanelProps) => {
   return (
     <div class="left-menu">
       <div class="left-menu__header">

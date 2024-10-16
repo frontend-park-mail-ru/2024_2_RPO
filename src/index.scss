@@ -264,7 +264,7 @@
   overflow: hidden;
 }
 
-.board__column {
+.kanban-column {
   display: flex;
   flex-direction: column;
   height: 427px;
@@ -275,20 +275,20 @@
   margin-left: 14px;
 }
 
-.board__column__header {
+.kanban-column__header {
   display: flex;
   align-items: center;
   position: relative;
 }
 
-.board__column__title {
+.kanban-column__title {
   font-size: 14px;
   font-weight: 500;
   padding-left: 10px;
   padding-top: 6px;
 }
 
-.board__column__dots-button {
+.kanban-column__dots-button {
   cursor: pointer;
   position: absolute;
   right: 10px;

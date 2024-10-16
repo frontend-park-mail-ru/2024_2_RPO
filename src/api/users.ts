@@ -2,29 +2,33 @@ import {
   getApiUrl,
   HTTP_STATUS_OK,
   HTTP_STATUS_INTERNAL_ERROR,
+  useMocks,
 } from '@/api/apiHelper';
 import { User } from '@/types/user';
 import { interfaceStateStore } from '@/stores/interfaceStateStore';
+import { userMeMock } from './mocks/user';
 
 /**
  * Получить информацию о текущем пользователе
  * @returns промис, который возвращает или User (если залогинен), или undefined (если не залогинен)
  */
-export const getUserMe = (): Promise<User | undefined> => {
-  return fetch(getApiUrl('/users/me'), {
-    credentials: 'include',
-  })
-    .then((response): Promise<User | undefined> => {
-      if (response.status === HTTP_STATUS_OK) {
-        return response.json().then((json): User => {
-          return { name: json.name, id: json.id };
-        });
-      }
-      return Promise.resolve(undefined);
-    })
-    .catch(() => {
-      return undefined;
+export const getUserMe = async (): Promise<User | undefined> => {
+  if (useMocks) {
+    return userMeMock;
+  }
+  try {
+    const response = await fetch(getApiUrl('/users/me'), {
+      credentials: 'include',
     });
+
+    if (response.status === HTTP_STATUS_OK) {
+      const json = await response.json();
+      return { name: json.name, id: json.id, email: json.email };
+    }
+    return undefined;
+  } catch {
+    return undefined;
+  }
 };
 
 type strong = string;

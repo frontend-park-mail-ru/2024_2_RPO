@@ -1,4 +1,5 @@
 let apiRoot: string = '';
+export let useMocks = false;
 
 /**
  * Функция получает полный URL ресурса в API
@@ -13,6 +14,9 @@ export const getApiUrl = (addr: string): string => {
 };
 export const setApiUrl = (apiRoot_: string) => {
   apiRoot = apiRoot_;
+};
+export const setUseMocks = (newUseMocks: boolean) => {
+  useMocks = newUseMocks;
 };
 
 export const HTTP_STATUS_OK = 200;

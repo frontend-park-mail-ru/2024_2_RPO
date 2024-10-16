@@ -83,9 +83,13 @@ export const MainApp = () => {
             ),
           })
         : undefined}
-      <header>{NavBar()}</header>
+      <header>
+        <NavBar key="navbar" />
+      </header>
 
-      {interfaceStateStore.appState.isLeftPanelOpened ? LeftPanel() : undefined}
+      {interfaceStateStore.appState.isLeftPanelOpened ? (
+        <LeftPanel key="left_panel" />
+      ) : undefined}
 
       <main>
         <img
@@ -95,10 +99,10 @@ export const MainApp = () => {
         />
 
         <div class="board">
-          <div class="board__column">
-            <div class="board__column__header">
-              <div class="board__column__title">Апокалипсис</div>
-              <div class="board__column__dots-button">
+          <div class="kanban-column">
+            <div class="kanban-column__header">
+              <div class="kanban-column__title">Апокалипсис</div>
+              <div class="kanban-column__dots-button">
                 <i
                   class="bi-three-dots"
                   style="margin-left: 3px; margin-top: 3px;"

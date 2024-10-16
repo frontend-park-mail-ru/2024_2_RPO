@@ -2,8 +2,11 @@ import { Button } from '@/components/Button';
 import { interfaceStateStore } from '@/stores/interfaceStateStore';
 import { logout } from '@/api/users';
 import { ModeSelect } from '@/components/ModeSelect';
+import { ComponentProps } from '@/jsxCore/types';
 
-export const NavBar = () => {
+type NavBarProps = ComponentProps;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const NavBar = (props: NavBarProps) => {
   const openMenuBtn = (
     <div
       class="button pt-0"
