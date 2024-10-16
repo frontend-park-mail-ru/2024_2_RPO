@@ -3,38 +3,33 @@ import { interfaceStateStore } from '@/stores/interfaceStateStore';
 import { logout } from '@/api/users';
 import { ModeSelect } from '@/components/ModeSelect';
 import { ComponentProps } from '@/jsxCore/types';
+import { EditableText } from '@/components/EditableText';
 
-type NavBarProps = ComponentProps;
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+interface NavBarProps extends ComponentProps {
+  leftPanelOpened: boolean;
+  setLeftPanelOpened: (state: boolean) => void;
+}
+
 export const NavBar = (props: NavBarProps) => {
-  const openMenuBtn = (
-    <div
-      class="button pt-0"
-      ON_click={() => {
-        interfaceStateStore.appState.isLeftPanelOpened =
-          !interfaceStateStore.appState.isLeftPanelOpened;
-        interfaceStateStore?.update();
-      }}
-    >
-      <i
-        class={[
-          interfaceStateStore.appState.isLeftPanelOpened
-            ? 'bi-x-lg'
-            : 'bi-list',
-        ]}
-        style="font-size: 22px"
-      ></i>
-    </div>
-  );
   return (
     <nav class="navbar">
       <div class="navbar__logo">
-        {openMenuBtn}
+        <div
+          class="navbar__left-panel-button"
+          ON_click={() => {
+            props.setLeftPanelOpened(!props.leftPanelOpened);
+          }}
+        >
+          <i
+            class={props.leftPanelOpened ? 'bi-x-lg' : 'bi-list'}
+            style="font-size: 22px"
+          ></i>
+        </div>
         <a class="logo__link" href="/">
           <div class="logo">
             <img
               draggable="false"
-              src="/static/logo.svg"
+              src="/static/img/logo.svg"
               alt="Logo"
               style="margin-bottom: 8px;"
             />
@@ -44,24 +39,32 @@ export const NavBar = (props: NavBarProps) => {
           </div>
         </a>
       </div>
-      <div class="navbar__rest">
+      <div class="navbar__rest navbar__group">
         <div class="borderNameWithGear">
           <ModeSelect key="mode_select" currentMode="kanban" />
-
-          <div class="borderName" style="font-size: 18px; font-weight: 600">
-            Моя доска
-          </div>
+          <EditableText
+            key="board_name_text"
+            text="Моя доска"
+            textClassName='navbar__board-name'
+            wrapperClassName='navbar__board-name-wrapper'
+            setText={(a) => {
+              console.log(a);
+            }}
+          />
           <Button key="settings" icon="bi-gear" />
         </div>
         <div class="flex-grow"></div>
-        <div class="search">
+        <div class="navbar__group">
           <input
-            class="searchInput"
+            class="search-input"
             type="text"
             placeholder="Поиск"
             style="padding-left: 36px"
           />
-          <i class="bi-search" style="position: absolute;"></i>
+          <i
+            class="search-input__search-icon bi-search"
+            style="position: absolute;"
+          ></i>
           <Button key="notification_btn" icon="bi-bell" />
           <Button
             key="logout_btn"
@@ -74,7 +77,7 @@ export const NavBar = (props: NavBarProps) => {
           <div class="profilePicture">
             <img
               draggable="false"
-              src="/static/avatar.svg"
+              src="/static/img/avatar.svg"
               alt="ProfilePicture"
             />
           </div>

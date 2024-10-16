@@ -5,6 +5,7 @@ interface ModalDialogProps extends ComponentProps {
   title?: string;
   children?: JsxNode;
   closeCallback?: () => void;
+  isOpened: boolean;
 }
 
 /**
@@ -13,6 +14,9 @@ interface ModalDialogProps extends ComponentProps {
  * @returns JSX модального диалога
  */
 export const ModalDialog = (props: ModalDialogProps) => {
+  if (!props.isOpened) {
+    return <div style="display:none" />;
+  }
   return (
     <div class="modal-dialog__container">
       <div class="modal-dialog">

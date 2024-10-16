@@ -1,5 +1,4 @@
 import { ComponentProps } from '@/jsxCore/types';
-import { noop } from '@/utils/noop';
 
 interface ButtonProps extends ComponentProps {
   text?: string;
@@ -15,10 +14,10 @@ interface ButtonProps extends ComponentProps {
 export const Button = (props: ButtonProps) => {
   return (
     <div>
-      <div class="button" ON_click={props.callback ?? noop}>
+      <div class="button" ON_click={props.callback}>
         {props.icon !== undefined ? <i class={[props.icon]}></i> : undefined}
         {props.icon !== undefined && props.text !== undefined ? (
-          <div class="w-8px"></div>
+          <div style="width: 8px"></div>
         ) : undefined}
         {props.text !== undefined ? props.text : undefined}
       </div>

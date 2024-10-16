@@ -36,3 +36,8 @@ export function useState<S>(
   stateNum++;
   return [value, setState];
 }
+
+export function useEffectRefs(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  cb: (refs: Map<string, undefined | Element>) => void
+): void {}

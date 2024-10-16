@@ -40,7 +40,19 @@ function patchProps(props: any, elem: DOMElementRepr) {
   });
   elem.eventListeners = [];
   Object.entries(props).forEach(([key, value]) => {
-    if (key.startsWith('ON_')) {
+    if (key === 'className') {
+      let newValue: string = '';
+      if (value === undefined) {
+        return;
+      } else if (Array.isArray(value)) {
+        newValue = value.join(' ');
+      } else if (typeof value === 'string') {
+        newValue = value;
+      }
+      if (elem.node.getAttribute('class') !== newValue) {
+        elem.node.setAttribute('class', newValue);
+      }
+    } else if (key.startsWith('ON_')) {
       if (typeof value !== 'function' && typeof value !== 'undefined') {
         throw new Error('Event handler should be function');
       }
@@ -80,6 +92,8 @@ export class ComponentInstance<
   vTree: JsxSubtree = [];
   parent?: ComponentInstance<any>;
   domNodes: DOMNodeRepr[] = []; // Только те DOM-узлы, которые принадлежат этому компоненту; узлы подкомпонентов не включаются
+  private refEffects:
+
   constructor(
     func: IComponentFunction<PropsType>,
     parent: ComponentInstance<any> | undefined,

@@ -2,17 +2,21 @@ import { Button } from '@/components/Button';
 import { LoginDialog } from '@/containers/LoginDialog';
 import { RegistrationDialog } from '@/containers/RegistrationDialog';
 import { useState } from '@/jsxCore/hooks';
+import { ComponentProps } from '@/jsxCore/types';
 
-export const HomePage = () => {
+type HomePageProps = ComponentProps;
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const HomePage = (props: HomePageProps) => {
   const [isRegistrationOpened, setIsRegistrationOpened] = useState(false);
   const [isLoginOpened, setIsLoginOpened] = useState(false);
   return (
     <>
-      <div class="background">
-        <i class="bi-kanban icon1"></i>
-        <i class="bi-kanban icon2"></i>
+      <div class="home-page-bg">
+        <i class="bi-kanban home-page-bg__icon1"></i>
+        <i class="bi-kanban home-page-bg__icon2"></i>
       </div>
-      <div class="landing_contents">
+      <div class="homepage">
         <img src="static/img/logo.svg" class="logo_image" />
         <h1 class="homepage__pumpkin">Pumpkin</h1>
         <span style="margin-bottom: 30px">

@@ -10,10 +10,13 @@ interface RegistrationDialogProps extends ComponentProps {
 }
 
 export const RegistrationDialog = (props: RegistrationDialogProps) => {
-  return ModalDialog({
-    key: 'any',
-    title: 'Добро пожаловать в Pumpkin!',
-    children: (
+  return (
+    <ModalDialog
+      key="modal_dialog"
+      closeCallback={props.closeCallback}
+      title="Добро пожаловать в Pumpkin!"
+      isOpened={true}
+    >
       <div>
         <form id="reg_data">
           <div class="form-field">
@@ -158,7 +161,6 @@ export const RegistrationDialog = (props: RegistrationDialogProps) => {
           Зарегистрироваться!
         </button>
       </div>
-    ),
-    closeCallback: props.closeCallback,
-  });
+    </ModalDialog>
+  );
 };

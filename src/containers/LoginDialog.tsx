@@ -11,7 +11,7 @@ interface LoginDialogProps extends ComponentProps {
 
 export const LoginDialog = (props: LoginDialogProps) => {
   return (
-    <ModalDialog key="login_dialog" closeCallback={props.closeCallback}>
+    <ModalDialog key="login_dialog" closeCallback={props.closeCallback} isOpened={true}>
       <div>
         <form id="reg_data">
           <div class="form-field">

@@ -48,6 +48,7 @@ export function popDirty(): ComponentInstance<any> | null {
       }
       if (ret !== undefined) {
         queue[i].delete(ret);
+        scheduleUpdate();
         return ret;
       } else {
         return null;
