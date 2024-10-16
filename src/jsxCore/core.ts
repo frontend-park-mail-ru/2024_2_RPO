@@ -59,7 +59,8 @@ function patchProps(props: any, elem: DOMElementRepr) {
       ) {
         const stringVal = value as string;
         elem.existingAttrs.set(key, stringVal.toString());
-        if (stringVal.toString() !== elem.node.getAttribute(key)) {
+        const prevValue = elem.node.getAttribute(key);
+        if (stringVal.toString() !== prevValue) {
           elem.node.setAttribute(key, stringVal.toString());
         }
       }
@@ -100,6 +101,7 @@ export class ComponentInstance<
     this.vTree.forEach((vNode) => {
       if (vNode.nodeType === 'TextNode' || vNode.nodeType === 'JSXElement') {
         if (i >= this.domNodes.length) {
+          this._errorInfo();
           throw new RangeError('vTree and domNodes are not aligned');
         }
         nodesToMount.push(this.domNodes[i].node);
@@ -108,6 +110,7 @@ export class ComponentInstance<
         // ComponentElement
         const instance = this.instanceMap.get(vNode.key);
         if (!instance) {
+          this._errorInfo();
           throw new Error(
             `No matching instance in instanceMap with key='${vNode.key}'`
           );
@@ -151,7 +154,7 @@ export class ComponentInstance<
     this._getElementsFromVTree(this.vTree, allElements);
 
     // Удалить неактуальные под-инстансы
-    const allKeys = new Set<string>();
+    const allKeys = new Set<string>(allElements.keys());
     const existingKeys = new Set<string>(this.instanceMap.keys());
     const keysToDestroy: string[] = [];
     existingKeys.forEach((key) => {
@@ -217,6 +220,7 @@ export class ComponentInstance<
         this._getElementsFromVTree(vNode.children, allElements);
       } else if (vNode.nodeType === 'ComponentElement') {
         if (allElements.has(vNode.key)) {
+          this._errorInfo();
           throw new Error(`Duplicating key: ${vNode.key}`);
         }
         allElements.set(vNode.key, vNode);
@@ -246,6 +250,7 @@ export class ComponentInstance<
       if (vNode.nodeType === 'ComponentElement') {
         const instance = this.instanceMap.get(vNode.key);
         if (instance === undefined) {
+          this._errorInfo();
           throw new Error(`Key: ${vNode.key} not exists in instanceMap`);
         }
         instance.getMountNodes().forEach((node) => {
@@ -336,6 +341,13 @@ export class ComponentInstance<
     this.getMountNodes().forEach((node) => {
       node.parentElement?.removeChild(node);
     });
+  }
+  /** Вывести информацию о том, в каком инстансе мы сейчас находимся */
+  private _errorInfo() {
+    if (this.parent !== undefined) {
+      this.parent._errorInfo();
+    }
+    console.error(`At component ${this.componentName}`);
   }
 }
 
