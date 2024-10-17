@@ -28,3 +28,4 @@ export type JsxSubtree = JsxNode[];
 export interface ComponentProps {
   key: string;
 }
+export type RefsMap = Map<string, undefined | Element>;

@@ -1,5 +1,6 @@
 import { ComponentInstance } from './core.js';
 import { markDirty, scheduleUpdate } from './updateQueue';
+import { RefsMap } from './types.js';
 
 let stateNum: number = 0;
 let activeInstance: ComponentInstance<any> | undefined;
@@ -37,7 +38,20 @@ export function useState<S>(
   return [value, setState];
 }
 
-export function useEffectRefs(
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  cb: (refs: Map<string, undefined | Element>) => void
-): void {}
+export function useEffectRefs(cb: (refs: RefsMap) => void): void {
+  if (activeInstance === undefined) {
+    throw new Error(
+      'Active instance is undefined; maybe wrongly used useEffectRefs'
+    );
+  }
+  activeInstance.refEffects.push(cb);
+}
+
+export function useEffect(cb: () => void): void {
+  if (activeInstance === undefined) {
+    throw new Error(
+      'Active instance is undefined; maybe wrongly used useEffect'
+    );
+  }
+  activeInstance.effects.push(cb);
+}

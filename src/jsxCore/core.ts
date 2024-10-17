@@ -7,6 +7,7 @@ import {
   ComponentProps,
   JsxHtmlElement,
   JsxTextNode,
+  RefsMap,
 } from './types';
 import { markDirty, scheduleUpdate } from './updateQueue';
 
@@ -92,7 +93,9 @@ export class ComponentInstance<
   vTree: JsxSubtree = [];
   parent?: ComponentInstance<any>;
   domNodes: DOMNodeRepr[] = []; // Только те DOM-узлы, которые принадлежат этому компоненту; узлы подкомпонентов не включаются
-  private refEffects:
+  // Массивы для поддержки хуков useEffect и useEffectRefs
+  refEffects: ((refs: RefsMap) => void)[] = [];
+  effects: (() => void)[] = [];
 
   constructor(
     func: IComponentFunction<PropsType>,
@@ -144,6 +147,8 @@ export class ComponentInstance<
     }
   }
   update() {
+    this.refEffects = [];
+    this.effects = [];
     // Обновить vTree
     this._updateVTree();
     // Обновить под-инстансы и удалить неактуальные
@@ -157,6 +162,15 @@ export class ComponentInstance<
       );
     } else {
       this._patchDomNodes(this.domNodes, this.vTree);
+    }
+    this.effects.forEach((fn) => {
+      fn();
+    });
+    if (this.refEffects.length) {
+      const refsMap = this._collectRefs(this.domNodes);
+      this.refEffects.forEach((fn) => {
+        fn(refsMap);
+      });
     }
   }
   /**
@@ -362,6 +376,22 @@ export class ComponentInstance<
       this.parent._errorInfo();
     }
     console.error(`At component ${this.componentName}`);
+  }
+  private _collectRefs(subtree: DOMNodeRepr[]): RefsMap {
+    const refsMap: RefsMap = new Map();
+    subtree.forEach((node) => {
+      if (node.nodeType === 'Element') {
+        const ref = node.node.getAttribute('ref');
+        if (ref !== null) {
+          refsMap.set(ref, node.node);
+        }
+        const childsMap = this._collectRefs(node.children);
+        childsMap.forEach((value, key) => {
+          refsMap.set(key, value);
+        });
+      }
+    });
+    return refsMap;
   }
 }
 
