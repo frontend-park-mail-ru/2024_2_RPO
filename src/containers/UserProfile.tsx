@@ -1,3 +1,4 @@
+import { logout } from '@/api/users';
 import { Button } from '@/components/Button';
 import { ModalDialog } from '@/components/ModalDialog';
 import { ComponentProps } from '@/jsxCore/types';
@@ -22,32 +23,49 @@ export const UserProfile = (props: UserProfileProps) => {
             </div>
           </div>
           <div class="info-column">
-            <button class="copy-token-btn" onclick="copyToken()">
-              Скопировать токен
-              <i class="bi-link-45deg"></i>
-            </button>
+            <Button
+              key="copy-token"
+              text="Скопировать токен"
+              icon="bi-link-45deg"
+              // onclick="copyToken()"
+            />
             <p class="subscription-id" id="user-token">
               @123456
             </p>
-            <h2 class="username">
-              Карл Маркс <i class="bi-pencil"></i>
-            </h2>
+            <p>
+              <h2 class="username">Карл Маркс</h2>
+              <Button key="edit_username" icon="bi-pencil" />
+            </p>
             <p class="email">
-              email: karl.marks@mail.ru <i class="bi-pencil"></i>
+              email: karl.marks@mail.ru
+              <Button key="edit_email" icon="bi-pencil" />
             </p>
             <p class="subscription-type">
               Тип подписки: <span>Премиум</span>
-              <i class="bi-star"></i>
-              <button class="upgrade-btn">Upgrade!</button>
+              <Button
+                key="upgrade_subscription"
+                text="Upgrade!"
+                icon="bi-star"
+                // onclick=""
+              />
             </p>
           </div>
         </div>
-        <button class="save-btn">
-          Сохранить <i class="bi-floppy"></i>
-        </button>
-        <button class="logout-btn">
-          <i class="bi-box-arrow-right"></i>
-        </button>
+
+        <Button
+          key="save-btn"
+          text="Сохранить"
+          icon="bi-floppy"
+          // onclick=""
+        />
+
+        <Button
+          key="logout_btn"
+          icon="bi-box-arrow-right"
+          callback={() => {
+            logout();
+          }}
+        />
       </div>
     </ModalDialog>
   );
