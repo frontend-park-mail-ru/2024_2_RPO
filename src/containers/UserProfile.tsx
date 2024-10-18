@@ -1,3 +1,4 @@
+import { Button } from '@/components/Button';
 import { ModalDialog } from '@/components/ModalDialog';
 import { ComponentProps } from '@/jsxCore/types';
 
@@ -8,13 +9,6 @@ export const UserProfile = (props: UserProfileProps) => {
   return (
     <ModalDialog key="Modal" isOpened={true}>
       <div class="modal">
-        <div class="modal-header">
-          <h1>Мой профиль</h1>
-          <button class="close-btn">
-            <img src="x-lg.svg" alt="Close" />
-          </button>
-        </div>
-        <hr />
         <div class="modal-content">
           <div class="profile-column">
             <div class="profile-image-container">
@@ -23,9 +17,8 @@ export const UserProfile = (props: UserProfileProps) => {
                 alt="Profile Image"
                 class="profile-image"
               />
-              <button class="upload-btn">
-                <i class="bi-images"></i>
-              </button>
+
+              <Button key="upload-button" icon="bi-images" />
             </div>
           </div>
           <div class="info-column">
