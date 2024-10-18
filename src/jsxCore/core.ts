@@ -9,7 +9,8 @@ import {
   JsxTextNode,
   RefsMap,
 } from './types';
-import { markDirty, scheduleUpdate } from './updateQueue';
+import { markDirty } from './updateQueue';
+import { _unsubscribeFromStores } from './hooks';
 
 // Тип нужен для хранения информации о существующих DOM-узлах, связанных именно с этим инстансом
 // и не имеющих отношения к под-инстансам
@@ -210,7 +211,6 @@ export class ComponentInstance<
           if (!deepEqual(oldProps, newProps)) {
             oldInstance.props = newProps;
             markDirty(oldInstance);
-            scheduleUpdate();
           }
         }
       }
@@ -369,6 +369,7 @@ export class ComponentInstance<
     this.getMountNodes().forEach((node) => {
       node.parentElement?.removeChild(node);
     });
+    _unsubscribeFromStores(this);
   }
   /** Вывести информацию о том, в каком инстансе мы сейчас находимся */
   private _errorInfo() {

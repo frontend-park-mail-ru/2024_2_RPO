@@ -12,6 +12,7 @@ export function markDirty(instance: ComponentInstance<any>) {
     queue.push(new Set());
   }
   queue[instance.depth].add(instance);
+  scheduleUpdate();
 }
 
 function updateNow() {
@@ -24,13 +25,13 @@ function updateNow() {
 /**
  * Создать задачу по обновлению
  */
-export function scheduleUpdate() {
+function scheduleUpdate() {
   if (isUpdateTaskExists === false) {
     isUpdateTaskExists = true;
-    window.requestIdleCallback(() => {
+    setTimeout(() => {
       isUpdateTaskExists = false;
       updateNow();
-    });
+    }, 0);
   }
 }
 

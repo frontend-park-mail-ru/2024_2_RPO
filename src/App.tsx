@@ -11,12 +11,8 @@ const isMainPage = true; // TODO убрать, это для дебага
 const App: IComponentFunction = () => {
   return (
     <>
-      {
-        !isMainPage ? <HomePage key="home_page" /> : undefined
-      }
-      {
-        isMainPage ? <MainApp key="main_app" /> : undefined
-      }
+      {!isMainPage ? <HomePage key="home_page" /> : undefined}
+      {isMainPage ? <MainApp key="main_app" /> : undefined}
     </>
   );
 };
@@ -25,3 +21,11 @@ setUseMocks(true);
 
 const appRoot = document.getElementById('app_root') as HTMLDivElement;
 createApp(App, appRoot);
+// В routerStore разместить store, котоырй будет содержать href
+// routerStore, который хранит currentRoute
+// Действия: goTo, replace, goBack (в сторе для роутера)
+// Компонент Router
+// const routerStore = useStores()
+// reouteStore.onRouteChange(() => {}); на смене роутера определяется, какая страница будет отрендерена
+// Глобальный href, компонент роутера,
+// Глобальная функция, меняющая href
