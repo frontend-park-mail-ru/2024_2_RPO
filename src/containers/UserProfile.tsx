@@ -1,4 +1,3 @@
-import { logout } from '@/api/users';
 import { Button } from '@/components/Button';
 import { ModalDialog } from '@/components/ModalDialog';
 import { ComponentProps } from '@/jsxCore/types';
@@ -19,11 +18,21 @@ export const UserProfile = (props: UserProfileProps) => {
                 class="profile-image"
               />
 
-              <Button key="upload-button" icon="bi-images" />
+              <Button
+                key="change_avatar"
+                text="Сменить аватарку"
+                icon="bi-images"
+              />
+
+              <Button
+                key="change_passwd"
+                text="Изменить пароль"
+                icon="bi-floppy"
+              />
             </div>
           </div>
           <div class="info-column">
-            <Button
+            {/* <Button
               key="copy-token"
               text="Скопировать токен"
               icon="bi-link-45deg"
@@ -31,16 +40,52 @@ export const UserProfile = (props: UserProfileProps) => {
             />
             <p class="subscription-id" id="user-token">
               @123456
-            </p>
-            <p>
-              <h2 class="username">Карл Маркс</h2>
-              <Button key="edit_username" icon="bi-pencil" />
-            </p>
-            <p class="email">
-              email: karl.marks@mail.ru
-              <Button key="edit_email" icon="bi-pencil" />
-            </p>
-            <p class="subscription-type">
+            </p> */}
+
+            <form id="nickname">
+              <div class="form-field">
+                <label for="nickname">Никнейм </label>
+                <input
+                  type="text"
+                  id="nickname"
+                  name="nickname"
+                  placeholder="KarlMarks"
+                />
+              </div>
+              <div class="form-field">
+                <label for="email">Email </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="karl.m@mail.ru"
+                />
+              </div>
+            </form>
+            <br />
+            <br />
+            <div>
+              <tr>
+                <td>
+                  <Button
+                    key="save_btn"
+                    text="Сохранить"
+                    icon="bi-floppy"
+                    // onclick=""
+                  />
+                </td>
+                <td> -</td>
+                <td>
+                  <Button
+                    key="n0_save_btn"
+                    text="Отменить"
+                    icon="bi-x-lg"
+                    // onclick=""
+                  />
+                </td>
+              </tr>
+            </div>
+            {/* <p class="subscription-type">
               Тип подписки: <span>Премиум</span>
               <Button
                 key="upgrade_subscription"
@@ -48,24 +93,11 @@ export const UserProfile = (props: UserProfileProps) => {
                 icon="bi-star"
                 // onclick=""
               />
-            </p>
+            </p> */}
           </div>
         </div>
-
-        <Button
-          key="save-btn"
-          text="Сохранить"
-          icon="bi-floppy"
-          // onclick=""
-        />
-
-        <Button
-          key="logout_btn"
-          icon="bi-box-arrow-right"
-          callback={() => {
-            logout();
-          }}
-        />
+        <br />
+        <Button key="discard_btn" icon="bi-trash" text="Удалить аккаунт" />
       </div>
     </ModalDialog>
   );
