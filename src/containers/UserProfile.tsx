@@ -7,7 +7,7 @@ type UserProfileProps = ComponentProps;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const UserProfile = (props: UserProfileProps) => {
   return (
-    <ModalDialog key="Modal" isOpened={true}>
+    <ModalDialog key="Modal" isOpened={true} title="Настройки аккаунта">
       <div class="modal">
         <div class="modal-content">
           <div class="profile-column">
