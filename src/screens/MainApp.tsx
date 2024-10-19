@@ -5,6 +5,7 @@ import { ModalDialog } from '@/components/ModalDialog';
 import { interfaceStateStore } from '@/stores/interfaceStateStore';
 import { ComponentProps } from '@/jsxCore/types';
 import { useState } from '@/jsxCore/hooks';
+import { KanbanBoard } from '@/containers/KanbanBoard';
 
 type MainAppProps = ComponentProps;
 
@@ -62,19 +63,7 @@ export const MainApp = (props: MainAppProps) => {
           alt=""
         />
 
-        <div class="board">
-          <div class="kanban-column">
-            <div class="kanban-column__header">
-              <div class="kanban-column__title">Апокалипсис</div>
-              <div class="kanban-column__dots-button">
-                <i
-                  class="bi-three-dots"
-                  style="margin-left: 3px; margin-top: 3px;"
-                ></i>
-              </div>
-            </div>
-          </div>
-        </div>
+        <KanbanBoard key="kanban-board" />
       </main>
     </>
   );
