@@ -9,6 +9,7 @@ import { useState } from '@/jsxCore/hooks';
 
 // import { UserPopup } from '@/containers/UserPopup';
 import { UserPopup } from '@/containers/UserPopup';
+import { UserProfile } from '@/containers/UserProfile';
 
 type MainAppProps = ComponentProps;
 
@@ -21,10 +22,7 @@ export const MainApp = (props: MainAppProps) => {
   return (
     <>
       <UserPopup key="usr_popup" isOpened={true} />
-
-      {/* <UserPopup key="user_popup" /> */}
-
-      {/* <UserProfile key="user_profile" /> */}
+      <UserProfile key="user_profile" />
 
       <ModalDialog
         key="modal_dialog"

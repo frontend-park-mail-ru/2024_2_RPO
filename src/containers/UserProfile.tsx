@@ -97,7 +97,12 @@ export const UserProfile = (props: UserProfileProps) => {
           </div>
         </div>
         <br />
-        <Button key="discard_btn" icon="bi-trash" text="Удалить аккаунт" />
+        <Button
+          color="red"
+          key="discard_btn"
+          icon="bi-trash"
+          text="Удалить аккаунт"
+        />
       </div>
     </ModalDialog>
   );
