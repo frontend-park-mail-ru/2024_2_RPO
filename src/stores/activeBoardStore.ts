@@ -1,11 +1,9 @@
 import { ActiveBoard } from '@/types/activeBoard';
-import { activeBoardMock } from '@/api/mocks/activeBoard';
+import { defineStore } from '@/jsxCore/hooks';
 
-class ActiveBoardStore {
-  activeBoard: ActiveBoard; // TODO рассмотреть возможность установки private
-  constructor() {
-    this.activeBoard = activeBoardMock;
-  }
-}
-
-export const activeBoardStore = new ActiveBoardStore();
+export const [useActiveBoardStore, setActiveBoardStore] =
+  defineStore<ActiveBoard>('activeBoardStore', {
+    columns: [],
+    id: 0,
+    title: 'Моя самая любимая доска',
+  });

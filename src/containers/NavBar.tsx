@@ -4,7 +4,10 @@ import { logout } from '@/api/users';
 import { ModeSelect } from '@/components/ModeSelect';
 import { ComponentProps } from '@/jsxCore/types';
 import { EditableText } from '@/components/EditableText';
-import { useState } from '@/jsxCore/hooks';
+import {
+  setActiveBoardStore,
+  useActiveBoardStore,
+} from '@/stores/activeBoardStore';
 
 interface NavBarProps extends ComponentProps {
   leftPanelOpened: boolean;
@@ -12,7 +15,8 @@ interface NavBarProps extends ComponentProps {
 }
 
 export const NavBar = (props: NavBarProps) => {
-  const [boardName, setBoardName] = useState('Моя доска');
+  const activeBoardStore = useActiveBoardStore();
+  console.log(activeBoardStore);
   return (
     <nav class="navbar">
       <div class="navbar__logo-group">
@@ -46,10 +50,13 @@ export const NavBar = (props: NavBarProps) => {
           <ModeSelect key="mode_select" currentMode="kanban" />
           <EditableText
             key="board_name_text"
-            text={boardName}
+            text={activeBoardStore.title}
             textClassName="navbar__board-name"
             wrapperClassName="navbar__board-name-wrapper"
-            setText={setBoardName}
+            setText={(newTitle) => {
+              activeBoardStore.title = newTitle;
+              setActiveBoardStore(activeBoardStore);
+            }}
           />
           <Button key="settings" icon="bi-gear" />
         </div>

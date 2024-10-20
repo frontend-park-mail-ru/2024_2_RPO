@@ -14,7 +14,7 @@ type LeftPanelProps = ComponentProps;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const LeftPanel = (props: LeftPanelProps) => {
   return (
-    <div class="left-menu">
+    <aside class="left-menu">
       <div class="left-menu__header">
         <div class="left-menu__left-elements">
           <div
@@ -53,6 +53,6 @@ export const LeftPanel = (props: LeftPanelProps) => {
           }}
         />
       </div>
-    </div>
+    </aside>
   );
 };

@@ -1,9 +1,13 @@
 import { ComponentProps } from '@/jsxCore/types';
 import { KanbanCard } from '@/components/KanbanCard';
+import { useActiveBoardStore } from '@/stores/activeBoardStore';
 
-type KanbanColumnProps = ComponentProps;
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+interface KanbanColumnProps extends ComponentProps {
+  columnId: number;
+}
 export const KanbanColumn = (props: KanbanColumnProps) => {
+  const activeBoardStore = useActiveBoardStore();
+  const columnData = activeBoardStore.columns[props.columnId];
   return (
     <div class="kanban-column">
       <div class="kanban-column__header">
@@ -15,9 +19,9 @@ export const KanbanColumn = (props: KanbanColumnProps) => {
           ></i>
         </div>
       </div>
-      <KanbanCard key="card0" text="Kartochka 1" />
-      <KanbanCard key="card1" text="Kartochka 228" />
-      <KanbanCard key="card2" text="Kartochka 137" />
+      {columnData.cards.map((cardData) => {
+        return <KanbanCard key={`card_${cardData.id}`} text={cardData.title} />;
+      })}
     </div>
   );
 };
