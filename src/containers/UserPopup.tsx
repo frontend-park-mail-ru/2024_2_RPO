@@ -37,13 +37,7 @@ export const UserPopup = (props: UserPopupProps) => {
             <i class="bi bi-info-circle"></i>
           </div>
 
-          <div class="popup__button-text">
-            Помощь (
-            <a href="https://github.com/frontend-park-mail-ru/2024_2_RPO">
-              ссылка на GH
-            </a>
-            )
-          </div>
+          <div class="popup__button-text">Помощь (ссылка на GH)</div>
         </div>
 
         <div class="popup__button">

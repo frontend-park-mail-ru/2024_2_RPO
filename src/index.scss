@@ -477,17 +477,25 @@
 }
 
 .popup__button {
-  width: 200px;
-  height: 20px;
+  border-radius: 3px;
+  width: 210px;
+  height: 25px;
   margin: 5%;
   display: flex;
   justify-content: flex-start;
+  cursor: pointer;
+}
+
+.popup__button:hover {
+  background-color: rgba(0, 0, 0, 0.236);
 }
 
 .popup__button-icon {
   width: 16px;
   height: 16px;
+  margin-top: 1px;
   margin-right: 8px;
+  margin-left: 8px;
 }
 
 .popup__button-text {
