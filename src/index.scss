@@ -427,11 +427,6 @@
   align-items: flex-start;
 }
 
-.icon_cell {
-  width: 32px;
-  height: 32px;
-}
-
 .user-popup {
   min-width: 216px;
   min-height: 229px;
@@ -479,4 +474,22 @@
 .user-popup__info {
   display: flex;
   flex-direction: column;
+}
+
+.popup__button {
+  width: 200px;
+  height: 20px;
+  margin: 5%;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.popup__button-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+}
+
+.popup__button-text {
+  margin-right: 8px;
 }

@@ -31,33 +31,43 @@ export const UserPopup1 = (props: UserPopupProps) => {
             <div class="user-popup__info">kmarx@mail.ru</div>
           </div>
         </div>
-        <div>
-          <tr>
-            <td>
-              <div class="icon_cell">
-                <i class="bi bi-info-circle"></i>
-              </div>
-            </td>
-            <td>Помощь (ссылка на GH)</td>
-          </tr>
-          <tr>
-            <td>
-              <i class="bi bi-rocket-takeoff"></i>
-            </td>
-            <td>Улучшить аккаунт</td>
-          </tr>
-          <tr>
-            <td>
-              <i class="bi bi-gear"></i>
-            </td>
-            <td>Настройки аккаунта</td>
-          </tr>
-          <tr>
-            <td>
-              <i class="bi bi-box-arrow-right"></i>
-            </td>
-            <td>Выйти</td>
-          </tr>
+
+        <div class="popup__button">
+          <div class="popup__button-icon">
+            <i class="bi bi-info-circle"></i>
+          </div>
+
+          <div class="popup__button-text">
+            Помощь (
+            <a href="https://github.com/frontend-park-mail-ru/2024_2_RPO">
+              ссылка на GH
+            </a>
+            )
+          </div>
+        </div>
+
+        <div class="popup__button">
+          <div class="popup__button-icon">
+            <i class="bi bi bi-rocket-takeoff"></i>
+          </div>
+
+          <div class="popup__button-text">Улучшить аккаунт</div>
+        </div>
+
+        <div class="popup__button">
+          <div class="popup__button-icon">
+            <i class="bi bi-gear"></i>
+          </div>
+
+          <div class="popup__button-text">Настройки аккаунта</div>
+        </div>
+
+        <div class="popup__button">
+          <div class="popup__button-icon">
+            <i class="bi-box-arrow-right"></i>
+          </div>
+
+          <div class="popup__button-text">Выйти</div>
         </div>
       </div>
       <div class="user-popup__wrapper"></div>
