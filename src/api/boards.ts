@@ -1,5 +1,10 @@
 import { Board } from '@/types/board';
-import { getApiUrl, HTTP_STATUS_OK } from '@/api/apiHelper';
+import {
+  getApiUrl,
+  HTTP_STATUS_NOT_FOUND,
+  HTTP_STATUS_OK,
+  HTTP_STATUS_UNAUTHORIZED,
+} from '@/api/apiHelper';
 
 /**
  * Получить все доступные пользователю доски
@@ -17,9 +22,9 @@ export const getBoards = async (): Promise<Board[]> => {
         return { id: el.id, title: el.name };
       });
       return boards;
-    } else if (response.status === 404) {
+    } else if (response.status === HTTP_STATUS_NOT_FOUND) {
       alert('Board not found');
-    } else if (response.status === 401) {
+    } else if (response.status === HTTP_STATUS_UNAUTHORIZED) {
       alert('Get boards: User not authorized');
     } else {
       alert('Get boards: Unexpected error');
