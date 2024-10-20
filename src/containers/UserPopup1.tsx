@@ -13,56 +13,54 @@ interface UserPopupProps extends ComponentProps {
  */
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const UserPopup = (props: UserPopupProps) => {
+export const UserPopup1 = (props: UserPopupProps) => {
   return (
-    <UserPopup key="user_popup" isOpened={true}>
+    <>
       <div class="user-popup">
-        <div class="user-popup__container">
-          <tbody>
-            <tr>
-              <td rowspan="2">
-                <img
-                  src="static/img/avatar.svg"
-                  alt="Profile Image"
-                  class="popup-image"
-                />
-              </td>
-              <td>@KarlMarkssss</td>
-            </tr>
-            <tr>
-              <td>kmarx@mail.ru</td>
-            </tr>
-          </tbody>
-          <tbody>
-            <tr>
-              <td>
-                <div class="icon_cell">
-                  <i class="bi bi-info-circle"></i>
-                </div>
-              </td>
-              <td>Помощь (ссылка на GH)</td>
-            </tr>
-            <tr>
-              <td>
-                <i class="bi bi-rocket-takeoff"></i>
-              </td>
-              <td>Улучшить аккаунт</td>
-            </tr>
-            <tr>
-              <td>
-                <i class="bi bi-gear"></i>
-              </td>
-              <td>Настройки аккаунта</td>
-            </tr>
-            <tr>
-              <td>
-                <i class="bi bi-box-arrow-right"></i>
-              </td>
-              <td>Выйти</td>
-            </tr>
-          </tbody>
+        <div class="user-popup__profile-info">
+          <div class="user-popup__avatar">
+            <img
+              src="static/img/KarlMarks.jpg"
+              alt="Profile Image"
+              class="popup-image"
+            />
+          </div>
+          <div class="user-popup__info">
+            <div class="user-popup__info">@KarlMarkssss</div>
+
+            <div class="user-popup__info">kmarx@mail.ru</div>
+          </div>
+        </div>
+        <div>
+          <tr>
+            <td>
+              <div class="icon_cell">
+                <i class="bi bi-info-circle"></i>
+              </div>
+            </td>
+            <td>Помощь (ссылка на GH)</td>
+          </tr>
+          <tr>
+            <td>
+              <i class="bi bi-rocket-takeoff"></i>
+            </td>
+            <td>Улучшить аккаунт</td>
+          </tr>
+          <tr>
+            <td>
+              <i class="bi bi-gear"></i>
+            </td>
+            <td>Настройки аккаунта</td>
+          </tr>
+          <tr>
+            <td>
+              <i class="bi bi-box-arrow-right"></i>
+            </td>
+            <td>Выйти</td>
+          </tr>
         </div>
       </div>
-    </UserPopup>
+      <div class="user-popup__wrapper"></div>
+    </>
   );
 };

@@ -74,10 +74,11 @@ export const NavBar = (props: NavBarProps) => {
             }}
           />
           {interfaceStateStore?.me?.name}
-          <div class="profilePicture">
+          <div class="navbar__profile-picture">
             <img
+              class="navbar__profile-picture"
               draggable="false"
-              src="/static/img/avatar.svg"
+              src="/static/img/KarlMarks.jpg"
               alt="ProfilePicture"
             />
           </div>
