@@ -8,7 +8,7 @@ import { useState } from '@/jsxCore/hooks';
 // import { UserProfile } from '@/containers/UserProfile';
 
 // import { UserPopup } from '@/containers/UserPopup';
-import { UserPopup1 } from '@/containers/UserPopup1';
+import { UserPopup } from '@/containers/UserPopup';
 
 type MainAppProps = ComponentProps;
 
@@ -20,7 +20,7 @@ export const MainApp = (props: MainAppProps) => {
   const [dialogTitle, setDialogTitle] = useState('Unset');
   return (
     <>
-      <UserPopup1 key="usr_popup" isOpened={true} />
+      <UserPopup key="usr_popup" isOpened={true} />
 
       {/* <UserPopup key="user_popup" /> */}
 

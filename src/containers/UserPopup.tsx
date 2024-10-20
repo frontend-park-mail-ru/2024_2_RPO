@@ -1,56 +1,76 @@
-import { ModalDialog } from '@/components/ModalDialog';
+import { ComponentProps, JsxNode } from '@/jsxCore/types';
 
-import { ComponentProps } from '@/jsxCore/types';
+interface UserPopupProps extends ComponentProps {
+  children?: JsxNode;
+  closeCallback?: () => void;
+  isOpened: boolean;
+}
 
-type UserPopupProps = ComponentProps;
+/**
+ * Компонент модального диалога
+ * @param props Пропсы модального диалога
+ * @returns JSX модального диалога
+ */
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const UserPopup = (props: UserPopupProps) => {
   return (
-    <ModalDialog key="user_popup" isOpened={true}>
-      <tbody>
-        <tr>
-          <td rowspan="2">
+    <>
+      <div class="user-popup">
+        <div class="user-popup__profile-info">
+          <div class="user-popup__avatar">
             <img
-              src="static/img/avatar.svg"
+              src="static/img/KarlMarks.jpg"
               alt="Profile Image"
               class="popup-image"
             />
-          </td>
-          <td>@KarlMarkssss</td>
-        </tr>
-        <tr>
-          <td>kmarx@mail.ru</td>
-        </tr>
-      </tbody>
-      <tbody>
-        <tr>
-          <td>
-            <div class="icon_cell">
-              <i class="bi bi-info-circle"></i>
-            </div>
-          </td>
-          <td>Помощь (ссылка на GH)</td>
-        </tr>
-        <tr>
-          <td>
-            <i class="bi bi-rocket-takeoff"></i>
-          </td>
-          <td>Улучшить аккаунт</td>
-        </tr>
-        <tr>
-          <td>
+          </div>
+          <div class="user-popup__info">
+            <div class="user-popup__info">@KarlMarkssss</div>
+
+            <div class="user-popup__info">kmarx@mail.ru</div>
+          </div>
+        </div>
+
+        <div class="popup__button">
+          <div class="popup__button-icon">
+            <i class="bi bi-info-circle"></i>
+          </div>
+
+          <div class="popup__button-text">
+            Помощь (
+            <a href="https://github.com/frontend-park-mail-ru/2024_2_RPO">
+              ссылка на GH
+            </a>
+            )
+          </div>
+        </div>
+
+        <div class="popup__button">
+          <div class="popup__button-icon">
+            <i class="bi bi bi-rocket-takeoff"></i>
+          </div>
+
+          <div class="popup__button-text">Улучшить аккаунт</div>
+        </div>
+
+        <div class="popup__button">
+          <div class="popup__button-icon">
             <i class="bi bi-gear"></i>
-          </td>
-          <td>Настройки аккаунта</td>
-        </tr>
-        <tr>
-          <td>
-            <i class="bi bi-box-arrow-right"></i>
-          </td>
-          <td>Выйти</td>
-        </tr>
-      </tbody>
-    </ModalDialog>
+          </div>
+
+          <div class="popup__button-text">Настройки аккаунта</div>
+        </div>
+
+        <div class="popup__button">
+          <div class="popup__button-icon">
+            <i class="bi-box-arrow-right"></i>
+          </div>
+
+          <div class="popup__button-text">Выйти</div>
+        </div>
+      </div>
+      <div class="user-popup__wrapper"></div>
+    </>
   );
 };
