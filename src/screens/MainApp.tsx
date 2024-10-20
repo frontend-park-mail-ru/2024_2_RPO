@@ -5,7 +5,9 @@ import { ModalDialog } from '@/components/ModalDialog';
 import { interfaceStateStore } from '@/stores/interfaceStateStore';
 import { ComponentProps } from '@/jsxCore/types';
 import { useState } from '@/jsxCore/hooks';
-import { UserProfile } from '@/containers/UserProfile';
+// import { UserProfile } from '@/containers/UserProfile';
+
+import { UserPopup } from '@/containers/UserPopup';
 
 type MainAppProps = ComponentProps;
 
@@ -17,7 +19,12 @@ export const MainApp = (props: MainAppProps) => {
   const [dialogTitle, setDialogTitle] = useState('Unset');
   return (
     <>
-      <UserProfile key="user_profile" />
+      <UserPopup1 key="usr_popup" />
+
+      <UserPopup key="user_popup" />
+
+      {/* <UserProfile key="user_profile" /> */}
+
       <ModalDialog
         key="modal_dialog"
         title={dialogTitle}
