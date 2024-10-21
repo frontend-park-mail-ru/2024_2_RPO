@@ -65,6 +65,9 @@
 .button__transparent {
   background-color: var(--color-transparent);
 }
+.button__icon {
+  margin-top: 1px;
+}
 
 .search-input {
   border: #f5f6fa;
@@ -73,11 +76,6 @@
 }
 .search-input__search-icon {
   margin-left: 8px;
-}
-
-.board-delete-link {
-  color: red;
-  cursor: pointer;
 }
 
 .modal-dialog {
@@ -97,6 +95,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
+  z-index: 100;
   background-color: rgba(0, 0, 0, 0.2);
   display: flex;
   align-items: center;
@@ -105,6 +104,7 @@
 .modal-dialog__header-block {
   padding-left: 20px;
   padding-right: 4px;
+  padding-bottom: 5px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -119,9 +119,12 @@
 .modal-dialog__title-wrapper {
   flex-grow: 1;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.backgroundPicture {
+.app__background-image {
   object-fit: cover;
   width: 100vw;
   height: 100vh;
@@ -172,14 +175,6 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-}
-// TODO вынести стили в блок BoardCard (и вообще переработать карточку, а то она выглядит уродливо)
-.left-menu__board-card__subtext {
-  font-size: 12px;
-}
-.left-menu__board-card__title {
-  font-size: 18px;
-  font-weight: bold;
 }
 
 .kanban-card {
@@ -238,14 +233,6 @@
   flex-direction: row;
 }
 
-.icon-container {
-  //TODO зачем он здесь?
-  position: relative;
-  justify-content: center;
-  width: 740px;
-  height: 640px;
-}
-
 .home-page-bg {
   position: absolute;
   width: 100vw;
@@ -275,6 +262,7 @@
 }
 
 .header::after {
+  //TODO зачем это здесь?
   content: '';
   display: block;
   width: 100%;
@@ -407,47 +395,116 @@
   border: solid black 2px;
 }
 
-.modal {
-  display: inline-block;
-  min-width: 254px;
-  max-width: 100%;
-  background-color: #ffffff;
-  border-radius: 16px;
-  padding: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+.user-popup__avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: #b4c0ee;
   position: relative;
-}
-
-.modal-header {
-  text-align: center;
-  margin-top: 4px;
-  position: relative;
-}
-
-.modal-header h1 {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 24px;
-  font-weight: bold;
-  margin: 0;
-}
-
-.modal-content {
-  display: flex;
-  margin: 8px 10px;
-  justify-content: space-between;
   align-items: flex-start;
 }
+.user-popup {
+  background-color: white;
+  position: absolute;
+  top: 50px;
+  right: 10px;
+  z-index: 102;
+  border-radius: 12px;
+}
+.user-popup__wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.89);
+  z-index: 100;
+}
+.user-popup__profile-info {
+  margin-top: 20px;
+  margin-left: 15px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: flex-start;
+  column-gap: 8px;
+}
+.user-popup__nickname {
+  font-size: 1.3em;
+  font-weight: bold;
+}
+.user-popup__button {
+  width: 100%;
+  padding-left: 15px;
+  padding-right: 20px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  display: flex;
+  justify-content: flex-start;
+  cursor: pointer;
+}
+.user-popup__button:hover {
+  background-color: rgba(0, 0, 0, 0.236);
+}
+.user-popup__button-icon {
+  margin-top: 1px;
+  margin-right: 8px;
+}
+.user-popup__button-text {
+  margin-right: 8px;
+}
 
+.user-profile {
+  display: flex;
+  flex-direction: row;
+  row-gap: 20px;
+  margin-top: 15px;
+}
+.user-profile__main {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.user-profile__change-data-section {
+  justify-content: center;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+.user-profile__change-data-section-field {
+  justify-content: center;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+.user-profile__change-data-section-label {
+  justify-content: end;
+  display: inline-block;
+  margin-right: 10px;
+  min-width: 100px;
+  text-align: right;
+}
+.user-profile__change-data-section-form {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.user-profile__change-data-section-form input {
+  width: 182px;
+  flex-grow: 0;
+}
+.user-profile__save-data-section {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+}
 .user-profile__aside {
   position: relative;
 }
-
-.user-profile__aside Button {
-  min-width: 150px;
-  width: 100%;
-  margin-bottom: 10px;
-}
-
 .user-profile__avatar {
   width: 150px;
   height: 150px;
@@ -457,139 +514,6 @@
   position: relative;
   margin-right: 40px;
   top: 0;
-}
-
-.popup-image {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-  background-color: #b4c0ee;
-  position: relative;
-  // top: 25px;
-  align-items: flex-start;
-}
-.user-profile__main {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.user-profile__change-data-section {
-  justify-content: center;
-  flex-direction: column;
-  align-items: flex-start;
-  width: 100%;
-}
-
-.user-profile__change-data-section-field {
-  justify-content: center;
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-}
-
-.user-profile__change-data-section-label {
-  justify-content: end;
-  display: inline-block;
-  margin-right: 10px;
-  min-width: 100px;
-  text-align: right;
-}
-
-.user-profile__change-data-section-form {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.user-profile__change-data-section-form input {
-  width: 182px;
-  flex-grow: 0;
-}
-
-.user-profile__save-data-section {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  gap: 20px;
-  width: 100%;
-}
-
-.user-popup {
-  min-width: 216px;
-  min-height: 229px;
-  background-color: white;
-  position: absolute;
-  top: 50px;
-  right: 10px;
-  z-index: 100;
-  padding-left: 20px;
-  padding-right: 20px;
-  padding-bottom: 10px;
-  padding-top: 10px;
-  border-radius: 12px;
-}
-
-.user-popup__wrapper {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.89);
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-}
-
-.user-popup__profile-info {
-  height: 60px;
-  // padding: 8px;
-  display: flex;
-  justify-content: flex-start;
-  column-gap: 8px;
-}
-
-.user-popup__avatar {
-  border-radius: 50%;
-  object-fit: cover;
-  // align-items: flex-start;
-  // margin: 8px;
-  display: flex;
-  flex-direction: column;
-}
-
-.user-popup__info {
-  display: flex;
-  flex-direction: column;
-}
-
-.popup__button {
-  border-radius: 3px;
-  width: 210px;
-  height: 25px;
-  margin: 5%;
-  display: flex;
-  justify-content: flex-start;
-  cursor: pointer;
-}
-
-.popup__button:hover {
-  background-color: rgba(0, 0, 0, 0.236);
-}
-
-.popup__button-icon {
-  width: 16px;
-  height: 16px;
-  margin-top: 1px;
-  margin-right: 8px;
-  margin-left: 8px;
-}
-
-.popup__button-text {
-  margin-right: 8px;
 }
 
 .display-none {

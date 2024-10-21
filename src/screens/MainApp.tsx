@@ -43,7 +43,7 @@ export const MainApp = (props: MainAppProps) => {
       <main>
         <img
           src="/static/img/backgroundPicture.png"
-          class="backgroundPicture"
+          class="app__background-image"
           alt=""
         />
 

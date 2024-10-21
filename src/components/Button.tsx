@@ -19,7 +19,9 @@ export const Button = (props: ButtonProps) => {
         className={['button', `button__${props.variant ?? 'default'}`]}
         ON_click={props.callback}
       >
-        {props.icon !== undefined ? <i class={[props.icon]}></i> : undefined}
+        {props.icon !== undefined ? (
+          <i className={[props.icon, 'button__icon']}></i>
+        ) : undefined}
         {props.icon !== undefined && props.text !== undefined ? (
           <div style="width: 8px"></div>
         ) : undefined}

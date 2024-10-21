@@ -22,7 +22,7 @@ export const ModalDialog = (props: ModalDialogProps) => {
       <div class="modal-dialog">
         <div class="modal-dialog__header-block">
           <div className="modal-dialog__title-wrapper">
-            <span class="modal-dialog__title">{props.title}</span>
+            <div class="modal-dialog__title">{props.title}</div>
           </div>
           <Button key="close_btn" icon="bi-x-lg" callback={props.closeCallback} />
         </div>

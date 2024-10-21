@@ -1,6 +1,5 @@
 import { defineStore } from '@/jsxCore/hooks';
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
 interface ModalDialogs {
   isUserProfileOpened: boolean;
 }

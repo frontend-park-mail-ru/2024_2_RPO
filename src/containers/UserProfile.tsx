@@ -21,7 +21,7 @@ export const UserProfile = (props: UserProfileProps) => {
         setModalDialogsStore(modalDialogsStore);
       }}
     >
-      <div class="modal-content">
+      <div class="user-profile">
         <div class="user-profile__aside ">
           <img
             src="static/img/KarlMarks.jpg"
@@ -74,7 +74,6 @@ export const UserProfile = (props: UserProfileProps) => {
           </div>
           <div class="user-profile__save-data-section">
             <Button key="save_btn" text="Сохранить" icon="bi-floppy" />
-
             <Button key="no_save_btn" text="Отменить" icon="bi-x-lg" />
           </div>
         </div>

@@ -1,6 +1,5 @@
 import { Button } from '@/components/Button';
 import { interfaceStateStore } from '@/stores/interfaceStateStore';
-import { logout } from '@/api/users';
 import { ModeSelect } from '@/components/ModeSelect';
 import { ComponentProps } from '@/jsxCore/types';
 import { EditableText } from '@/components/EditableText';
@@ -72,13 +71,6 @@ export const NavBar = (props: NavBarProps) => {
               style="position: absolute;"
             ></i>
             <Button key="notification_btn" icon="bi-bell" />
-            <Button
-              key="logout_btn"
-              icon="bi-box-arrow-right"
-              callback={() => {
-                logout();
-              }}
-            />
             {interfaceStateStore?.me?.name}
             <div
               class="navbar__profile-picture"

@@ -7,21 +7,23 @@ import {
 interface PopupButtonProps extends ComponentProps {
   icon: string;
   title: string;
-  callback: (event: Event) => void;
+  callback?: (event: Event) => void;
 }
 
 const PopupButton = (props: PopupButtonProps) => {
   return (
     <div
-      class="popup__button"
+      class="user-popup__button"
       ON_click={(event: any) => {
-        props.callback(event as Event);
+        if (props.callback !== undefined) {
+          props.callback(event as Event);
+        }
       }}
     >
-      <div class="popup__button-icon">
+      <div class="user-popup__button-icon">
         <i className={props.icon}></i>
       </div>
-      <div class="popup__button-text">{props.title}</div>
+      <div class="user-popup__button-text">{props.title}</div>
     </div>
   );
 };
@@ -45,31 +47,23 @@ export const UserPopup = (props: UserPopupProps) => {
             <img
               src="static/img/KarlMarks.jpg"
               alt="Profile Image"
-              class="popup-image"
+              class="user-popup__avatar"
             />
           </div>
           <div class="user-popup__info">
-            <div class="user-popup__info">@KarlMarkssss</div>
+            <div class="user-popup__nickname">@KarlMarkssss</div>
 
             <div class="user-popup__info">kmarx@mail.ru</div>
           </div>
         </div>
 
-        <div class="popup__button">
-          <div class="popup__button-icon">
-            <i class="bi bi-info-circle"></i>
-          </div>
+        <PopupButton key="help_btn" title="Помощь" icon="bi-info-circle" />
 
-          <div class="popup__button-text">Помощь (ссылка на GH)</div>
-        </div>
-
-        <div class="popup__button">
-          <div class="popup__button-icon">
-            <i class="bi bi bi-rocket-takeoff"></i>
-          </div>
-
-          <div class="popup__button-text">Улучшить аккаунт</div>
-        </div>
+        <PopupButton
+          key="account_upgrade_btn"
+          title="Улучшить аккаунт"
+          icon="bi-rocket-takeoff"
+        />
 
         <PopupButton
           key="account_settings_btn"
@@ -82,14 +76,7 @@ export const UserPopup = (props: UserPopupProps) => {
             setModalDialogsStore(modalDialogsStore);
           }}
         />
-
-        <div class="popup__button">
-          <div class="popup__button-icon">
-            <i class="bi-box-arrow-right"></i>
-          </div>
-
-          <div class="popup__button-text">Выйти</div>
-        </div>
+        <PopupButton key="logout_btn" title="Выйти" icon="bi-box-arrow-right" />
       </div>
       <div
         className={
