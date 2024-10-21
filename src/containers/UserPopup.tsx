@@ -2,7 +2,7 @@ import { ComponentProps, JsxNode } from '@/jsxCore/types';
 
 interface UserPopupProps extends ComponentProps {
   children?: JsxNode;
-  closeCallback?: () => void;
+  closeCallback?: (event: PointerEvent) => void;
   isOpened: boolean;
 }
 
@@ -16,7 +16,7 @@ interface UserPopupProps extends ComponentProps {
 export const UserPopup = (props: UserPopupProps) => {
   return (
     <>
-      <div class="user-popup">
+      <div className={'user-popup ' + (props.isOpened ? '' : 'display-none')}>
         <div class="user-popup__profile-info">
           <div class="user-popup__avatar">
             <img
@@ -64,7 +64,16 @@ export const UserPopup = (props: UserPopupProps) => {
           <div class="popup__button-text">Выйти</div>
         </div>
       </div>
-      <div class="user-popup__wrapper"></div>
+      <div
+        className={
+          'user-popup__wrapper ' + (props.isOpened ? '' : 'display-none')
+        }
+        ON_click={(event: PointerEvent) => {
+          if (props.closeCallback !== undefined) {
+            props.closeCallback(event);
+          }
+        }}
+      ></div>
     </>
   );
 };

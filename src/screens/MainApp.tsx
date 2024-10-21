@@ -5,10 +5,6 @@ import { ModalDialog } from '@/components/ModalDialog';
 import { interfaceStateStore } from '@/stores/interfaceStateStore';
 import { ComponentProps } from '@/jsxCore/types';
 import { useState } from '@/jsxCore/hooks';
-// import { UserProfile } from '@/containers/UserProfile';
-
-// import { UserPopup } from '@/containers/UserPopup';
-import { UserPopup } from '@/containers/UserPopup';
 import { UserProfile } from '@/containers/UserProfile';
 
 type MainAppProps = ComponentProps;
@@ -21,7 +17,6 @@ export const MainApp = (props: MainAppProps) => {
   const [dialogTitle, setDialogTitle] = useState('Unset');
   return (
     <>
-      <UserPopup key="usr_popup" isOpened={true} />
       <UserProfile key="user_profile" />
 
       <ModalDialog
