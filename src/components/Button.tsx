@@ -4,17 +4,18 @@ interface ButtonProps extends ComponentProps {
   text?: string;
   icon?: string;
   callback?: (event: PointerEvent) => void;
-  color?: 'white' | 'grey' | 'green' | 'red' | 'blue' | 'cornflower' | 'violet';
+  variant?: 'default' | 'negative' | 'positive' | 'accent' | 'transparent';
 }
 
 const colorMap: Record<string, string> = {
-  white: '#F6F5FA',
-  grey: '#EAEBEE',
-  green: '#0DC268',
-  red: '#ED330A',
-  blue: '#0070F0',
-  cornflower: '#B4C0EE',
-  violet: '#C15DF3',
+  default: '#F6F5FA',
+  negative: '#ED330A',
+  positive: '#0DC268',
+  accent: '#0070F0',
+  transparent: '#C15DF3',
+
+  // grey: '#EAEBEE',
+  // cornflower: '#B4C0EE',
 };
 
 /**
@@ -23,7 +24,7 @@ const colorMap: Record<string, string> = {
  * @returns JSX кнопки
  */
 export const Button = (props: ButtonProps) => {
-  const backgroundColor = props.color ? colorMap[props.color] : '#F6F5FA'; // Цвет по умолчанию — белый
+  const backgroundColor = props.variant ? colorMap[props.variant] : '#F6F5FA'; // Цвет по умолчанию — белый
 
   return (
     <div>

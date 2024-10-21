@@ -44,6 +44,10 @@
   background-color: rgba(245, 246, 250, 0.5);
 }
 
+.button__negative {
+  background-color: #ed330a;
+}
+
 .search-input {
   border: #f5f6fa;
   border-radius: 3px;
@@ -362,9 +366,9 @@
 }
 
 .modal {
-  display: inline-block; /* Окно подстраивается под содержимое */
-  min-width: 254px; /* Минимальная ширина */
-  max-width: 100%; /* Ограничение по ширине */
+  display: inline-block;
+  min-width: 254px;
+  max-width: 100%;
   background-color: #ffffff;
   border-radius: 16px;
   padding: 16px;
@@ -388,25 +392,27 @@
 .modal-content {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start; /* Align top */
+  align-items: flex-start;
 }
 
-.profile-column {
+.user-profile__aside {
   position: relative;
 }
 
-.profile-image-container {
-  position: relative;
-  margin-right: 40px;
+.user-profile__aside Button {
+  min-width: 150px;
+  width: 100%;
+  margin-bottom: 10px;
 }
 
-.profile-image {
-  width: 130px;
-  height: 130px;
+.user-profile__avatar {
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
   object-fit: cover;
   background-color: #b4c0ee;
   position: relative;
+  margin-right: 40px;
   top: 0;
 }
 
@@ -420,11 +426,52 @@
   // top: 25px;
   align-items: flex-start;
 }
-
-.info-column {
+.user-profile__main {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+}
+
+.user-profile__change-data-section {
+  justify-content: center;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.user-profile__change-data-section-field {
+  justify-content: center;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.user-profile__change-data-section-label {
+  justify-content: end;
+  display: inline-block;
+  margin-right: 10px;
+  min-width: 100px;
+  text-align: right;
+}
+
+.user-profile__change-data-section-form {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.user-profile__change-data-section-form input {
+  width: 182px;
+  flex-grow: 0;
+}
+
+.user-profile__save-data-section {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
 }
 
 .user-popup {

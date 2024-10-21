@@ -10,29 +10,81 @@ export const UserProfile = (props: UserProfileProps) => {
     <ModalDialog key="Modal" isOpened={true} title="Настройки аккаунта">
       <div class="modal">
         <div class="modal-content">
-          <div class="profile-column">
-            <div class="profile-image-container">
-              <img
-                src="static/img/avatar.svg"
-                alt="Profile Image"
-                class="profile-image"
-              />
+          <div class="user-profile__aside ">
+            <img
+              src="static/img/KarlMarks.jpg"
+              alt="Profile Image"
+              class="user-profile__avatar"
+            />
 
-              <Button
-                key="change_avatar"
-                text="Сменить аватарку"
-                icon="bi-images"
-              />
+            <Button
+              key="change_avatar"
+              text="Сменить аватарку"
+              icon="bi-images"
+            />
 
+            <Button
+              key="change_passwd"
+              text="Изменить пароль"
+              icon="bi-floppy"
+            />
+            <br />
+            <Button
+              key="discard_btn"
+              icon="bi-trash"
+              text="Удалить аккаунт"
+              variant="accent"
+            />
+          </div>
+          <div class="user-profile__main">
+            <div class="user-profile__change-data-section">
+              <div class="user-profile__change-data-section-field">
+                <div class="user-profile__change-data-section-label">
+                  Никнейм
+                </div>
+                <div class="user-profile__change-data-section-form">
+                  <form id="nickname">
+                    <input
+                      type="text"
+                      id="nickname"
+                      name="nickname"
+                      placeholder="KarlMarks"
+                    />
+                  </form>
+                </div>
+              </div>
+              <div class="user-profile__change-data-section-field">
+                <div class="user-profile__change-data-section-label">Email</div>
+                <div class="user-profile__change-data-section-form">
+                  <form id="nickname">
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      placeholder="karl.m@mail.ru"
+                    />
+                  </form>
+                </div>
+              </div>
+            </div>
+            <div class="user-profile__save-data-section">
               <Button
-                key="change_passwd"
-                text="Изменить пароль"
+                key="save_btn"
+                text="Сохранить"
                 icon="bi-floppy"
+                // onclick=""
+              />
+
+              <Button
+                key="no_save_btn"
+                text="Отменить"
+                icon="bi-x-lg"
+                // onclick=""
               />
             </div>
           </div>
-          <div class="info-column">
-            {/* <Button
+
+          {/* <Button
               key="copy-token"
               text="Скопировать токен"
               icon="bi-link-45deg"
@@ -42,50 +94,7 @@ export const UserProfile = (props: UserProfileProps) => {
               @123456
             </p> */}
 
-            <form id="nickname">
-              <div class="form-field">
-                <label for="nickname">Никнейм </label>
-                <input
-                  type="text"
-                  id="nickname"
-                  name="nickname"
-                  placeholder="KarlMarks"
-                />
-              </div>
-              <div class="form-field">
-                <label for="email">Email </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  placeholder="karl.m@mail.ru"
-                />
-              </div>
-            </form>
-            <br />
-            <br />
-            <div>
-              <tr>
-                <td>
-                  <Button
-                    key="save_btn"
-                    text="Сохранить"
-                    icon="bi-floppy"
-                    // onclick=""
-                  />
-                </td>
-                <td> -</td>
-                <td>
-                  <Button
-                    key="n0_save_btn"
-                    text="Отменить"
-                    icon="bi-x-lg"
-                    // onclick=""
-                  />
-                </td>
-              </tr>
-            </div>
-            {/* <p class="subscription-type">
+          {/* <p class="subscription-type">
               Тип подписки: <span>Премиум</span>
               <Button
                 key="upgrade_subscription"
@@ -94,15 +103,7 @@ export const UserProfile = (props: UserProfileProps) => {
                 // onclick=""
               />
             </p> */}
-          </div>
         </div>
-        <br />
-        <Button
-          color="red"
-          key="discard_btn"
-          icon="bi-trash"
-          text="Удалить аккаунт"
-        />
       </div>
     </ModalDialog>
   );
