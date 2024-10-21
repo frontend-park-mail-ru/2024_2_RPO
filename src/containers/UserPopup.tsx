@@ -1,18 +1,41 @@
-import { ComponentProps, JsxNode } from '@/jsxCore/types';
+import { ComponentProps } from '@/jsxCore/types';
+import {
+  setModalDialogsStore,
+  useModalDialogsStore,
+} from '@/stores/modalDialogsStore';
 
-interface UserPopupProps extends ComponentProps {
-  children?: JsxNode;
-  closeCallback?: (event: PointerEvent) => void;
-  isOpened: boolean;
+interface PopupButtonProps extends ComponentProps {
+  icon: string;
+  title: string;
+  callback: (event: Event) => void;
 }
 
+const PopupButton = (props: PopupButtonProps) => {
+  return (
+    <div
+      class="popup__button"
+      ON_click={(event: any) => {
+        props.callback(event as Event);
+      }}
+    >
+      <div class="popup__button-icon">
+        <i className={props.icon}></i>
+      </div>
+      <div class="popup__button-text">{props.title}</div>
+    </div>
+  );
+};
+
+interface UserPopupProps extends ComponentProps {
+  closeCallback: (event: Event) => void;
+  isOpened: boolean;
+}
 /**
  * Компонент модального диалога
  * @param props Пропсы модального диалога
  * @returns JSX модального диалога
  */
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const UserPopup = (props: UserPopupProps) => {
   return (
     <>
@@ -48,13 +71,17 @@ export const UserPopup = (props: UserPopupProps) => {
           <div class="popup__button-text">Улучшить аккаунт</div>
         </div>
 
-        <div class="popup__button">
-          <div class="popup__button-icon">
-            <i class="bi bi-gear"></i>
-          </div>
-
-          <div class="popup__button-text">Настройки аккаунта</div>
-        </div>
+        <PopupButton
+          key="account_settings_btn"
+          title="Настройки аккаунта"
+          icon="bi-gear"
+          callback={(event) => {
+            props.closeCallback(event);
+            const modalDialogsStore = useModalDialogsStore();
+            modalDialogsStore.isUserProfileOpened = true;
+            setModalDialogsStore(modalDialogsStore);
+          }}
+        />
 
         <div class="popup__button">
           <div class="popup__button-icon">

@@ -4,10 +4,10 @@ import { logout } from '@/api/users';
 import { ModeSelect } from '@/components/ModeSelect';
 import { ComponentProps } from '@/jsxCore/types';
 import { EditableText } from '@/components/EditableText';
-import {
-  useActiveBoardStore,
-} from '@/stores/activeBoardStore';
+import { useActiveBoardStore } from '@/stores/activeBoardStore';
 import { UserPopup } from './UserPopup';
+import { useState } from '@/jsxCore/hooks';
+import { noop } from '@/utils/noop';
 
 interface NavBarProps extends ComponentProps {
   leftPanelOpened: boolean;
@@ -52,10 +52,10 @@ export const NavBar = (props: NavBarProps) => {
             <ModeSelect key="mode_select" currentMode="kanban" />
             <EditableText
               key="board_name_text"
-              text={boardName}
+              text="{boardName}"
               textClassName="navbar__board-name"
               wrapperClassName="navbar__board-name-wrapper"
-              setText={setBoardName}
+              setText={noop}
             />
             <Button key="settings" icon="bi-gear" />
           </div>

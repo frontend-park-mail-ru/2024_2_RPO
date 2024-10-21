@@ -6,12 +6,15 @@ import { UserProfile } from '@/containers/UserProfile';
 import { KanbanBoard } from '@/containers/KanbanBoard';
 import { Button } from '@/components/Button';
 import { ModalDialog } from '@/components/ModalDialog';
+import { useModalDialogsStore } from '@/stores/modalDialogsStore';
 
 type MainAppProps = ComponentProps;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const MainApp = (props: MainAppProps) => {
   const [leftPanelOpened, setLeftPanelOpened] = useState(false);
+  const modalDialogsStore = useModalDialogsStore();
+
   return (
     <>
       <NavBar
@@ -19,7 +22,9 @@ export const MainApp = (props: MainAppProps) => {
         setLeftPanelOpened={setLeftPanelOpened}
         key="nav_bar"
       />
-      <UserProfile key="user_profile" />
+      {modalDialogsStore.isUserProfileOpened ? (
+        <UserProfile key="user_profile" />
+      ) : undefined}
 
       <ModalDialog
         key="modal_dialog"
@@ -32,13 +37,6 @@ export const MainApp = (props: MainAppProps) => {
           <Button key="no_btn" text="Нет" callback={() => {}} />
         </div>
       </ModalDialog>
-      <header>
-        <NavBar
-          leftPanelOpened={leftPanelOpened}
-          setLeftPanelOpened={setLeftPanelOpened}
-          key="nav_bar"
-        />
-      </header>
 
       {leftPanelOpened ? <LeftPanel key="left_panel" /> : undefined}
 
