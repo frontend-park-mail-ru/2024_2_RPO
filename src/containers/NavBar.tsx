@@ -4,7 +4,9 @@ import { logout } from '@/api/users';
 import { ModeSelect } from '@/components/ModeSelect';
 import { ComponentProps } from '@/jsxCore/types';
 import { EditableText } from '@/components/EditableText';
-import { useState } from '@/jsxCore/hooks';
+import {
+  useActiveBoardStore,
+} from '@/stores/activeBoardStore';
 import { UserPopup } from './UserPopup';
 
 interface NavBarProps extends ComponentProps {
@@ -13,7 +15,8 @@ interface NavBarProps extends ComponentProps {
 }
 
 export const NavBar = (props: NavBarProps) => {
-  const [boardName, setBoardName] = useState('Моя доска');
+  const activeBoardStore = useActiveBoardStore();
+  console.log(activeBoardStore);
   const [userPopupOpened, setUserPopupOpened] = useState(false);
   return (
     <>

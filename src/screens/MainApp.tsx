@@ -1,51 +1,35 @@
 import { LeftPanel } from '@/containers/LeftPanel';
 import { NavBar } from '@/containers/NavBar';
-import { Button } from '@/components/Button';
-import { ModalDialog } from '@/components/ModalDialog';
-import { interfaceStateStore } from '@/stores/interfaceStateStore';
 import { ComponentProps } from '@/jsxCore/types';
 import { useState } from '@/jsxCore/hooks';
 import { UserProfile } from '@/containers/UserProfile';
+import { KanbanBoard } from '@/containers/KanbanBoard';
+import { Button } from '@/components/Button';
+import { ModalDialog } from '@/components/ModalDialog';
 
 type MainAppProps = ComponentProps;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const MainApp = (props: MainAppProps) => {
   const [leftPanelOpened, setLeftPanelOpened] = useState(false);
-  const [dialogOpened, setDialogOpened] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [dialogTitle, setDialogTitle] = useState('Unset');
   return (
     <>
+      <NavBar
+        leftPanelOpened={leftPanelOpened}
+        setLeftPanelOpened={setLeftPanelOpened}
+        key="nav_bar"
+      />
       <UserProfile key="user_profile" />
 
       <ModalDialog
         key="modal_dialog"
-        title={dialogTitle}
-        isOpened={dialogOpened}
-        closeCallback={() => {
-          setDialogOpened(false);
-        }}
+        title="2232441324234142324"
+        isOpened={false}
+        closeCallback={() => {}}
       >
         <div>
-          <Button
-            key="yes_btn"
-            text="Да"
-            callback={() => {
-              const cb = interfaceStateStore.appState.boardDeleteDialogCallback;
-              if (cb !== undefined) cb();
-              interfaceStateStore.appState.isBoardDeleteDialogOpened = false;
-              interfaceStateStore?.update();
-            }}
-          />
-          <Button
-            key="no_btn"
-            text="Нет"
-            callback={() => {
-              interfaceStateStore.appState.isBoardDeleteDialogOpened = false;
-              interfaceStateStore?.update();
-            }}
-          />
+          <Button key="yes_btn" text="Да" callback={() => {}} />
+          <Button key="no_btn" text="Нет" callback={() => {}} />
         </div>
       </ModalDialog>
       <header>
@@ -65,19 +49,7 @@ export const MainApp = (props: MainAppProps) => {
           alt=""
         />
 
-        <div class="board">
-          <div class="kanban-column">
-            <div class="kanban-column__header">
-              <div class="kanban-column__title">Апокалипсис</div>
-              <div class="kanban-column__dots-button">
-                <i
-                  class="bi-three-dots"
-                  style="margin-left: 3px; margin-top: 3px;"
-                ></i>
-              </div>
-            </div>
-          </div>
-        </div>
+        <KanbanBoard key="kanban-board" />
       </main>
     </>
   );

@@ -7,7 +7,6 @@ interface EditableTextProps extends ComponentProps {
   setText: (state: string) => void;
   textClassName?: string;
   wrapperClassName?: string;
-  inputClassName?: string;
 }
 
 /**

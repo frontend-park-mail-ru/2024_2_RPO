@@ -1,6 +1,6 @@
-import { ComponentInstance } from './core.js';
-import { markDirty, scheduleUpdate } from './updateQueue';
-import { RefsMap } from './types.js';
+import { ComponentInstance } from './core';
+import { RefsMap } from './types';
+import { markDirty } from './updateQueue';
 
 let stateNum: number = 0;
 let activeInstance: ComponentInstance<any> | undefined;
@@ -26,7 +26,6 @@ export function useState<S>(
   const setState = (newState: S): void => {
     currentInstance.state[idx] = newState;
     markDirty(currentInstance);
-    scheduleUpdate();
   };
   let value: S = initialValue;
   if (activeInstance.state.length <= stateNum) {
@@ -54,4 +53,43 @@ export function useEffect(cb: () => void): void {
     );
   }
   activeInstance.effects.push(cb);
+}
+
+const storeMap: Map<string, any> = new Map();
+const storeSubscribersIndex: Map<ComponentInstance, Set<string>> = new Map();
+const storeSubscribers: Map<string, Set<ComponentInstance>> = new Map();
+
+export function defineStore<S>(
+  storeName: string,
+  storeContent: S
+): [useStore: () => S, setStore: (newStoreContent: S) => void] {
+  storeMap.set(storeName, storeContent);
+  storeSubscribers.set(storeName, new Set());
+  const useStore = () => {
+    if (activeInstance !== undefined) {
+      // Подписать инстанс на store
+      if (!storeSubscribersIndex.has(activeInstance)) {
+        storeSubscribersIndex.set(activeInstance, new Set());
+        storeSubscribersIndex.get(activeInstance)?.add(storeName);
+        storeSubscribers.get(storeName)?.add(activeInstance);
+      }
+    }
+    return storeMap.get(storeName);
+  };
+  const setStore = (newStoreContent: S) => {
+    storeMap.set(storeName, newStoreContent);
+    storeSubscribers.get(storeName)?.forEach((instance) => {
+      markDirty(instance);
+    });
+  };
+  return [useStore, setStore];
+}
+
+export function _unsubscribeFromStores(instance: ComponentInstance<any>) {
+  if (storeSubscribersIndex.has(instance)) {
+    storeSubscribersIndex.get(instance)?.forEach((storeName) => {
+      storeSubscribers.get(storeName)?.delete(instance);
+    });
+    storeSubscribersIndex.delete(instance);
+  }
 }
