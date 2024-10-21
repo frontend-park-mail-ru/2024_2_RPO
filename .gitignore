@@ -2,3 +2,4 @@ node_modules
 build
 serverConfig.json
 dist
+.vscode
