@@ -33,9 +33,7 @@ interface UserPopupProps extends ComponentProps {
   isOpened: boolean;
 }
 /**
- * Компонент модального диалога
- * @param props Пропсы модального диалога
- * @returns JSX модального диалога
+ * Компонент попапа, который всплывает при нажатии на аватарку текущего пользователя на навбаре.
  */
 
 export const UserPopup = (props: UserPopupProps) => {

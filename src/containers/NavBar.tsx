@@ -1,5 +1,4 @@
 import { Button } from '@/components/Button';
-import { interfaceStateStore } from '@/stores/interfaceStateStore';
 import { ModeSelect } from '@/components/ModeSelect';
 import { ComponentProps } from '@/jsxCore/types';
 import { EditableText } from '@/components/EditableText';
@@ -13,9 +12,11 @@ interface NavBarProps extends ComponentProps {
   setLeftPanelOpened: (state: boolean) => void;
 }
 
+/**
+ * Компонент навбара, который отображается, когда открыта доска
+ */
 export const NavBar = (props: NavBarProps) => {
   const activeBoardStore = useActiveBoardStore();
-  console.log(activeBoardStore);
   const [userPopupOpened, setUserPopupOpened] = useState(false);
   return (
     <>
@@ -51,7 +52,7 @@ export const NavBar = (props: NavBarProps) => {
             <ModeSelect key="mode_select" currentMode="kanban" />
             <EditableText
               key="board_name_text"
-              text="{boardName}"
+              text={activeBoardStore.title}
               textClassName="navbar__board-name"
               wrapperClassName="navbar__board-name-wrapper"
               setText={noop}
@@ -71,7 +72,6 @@ export const NavBar = (props: NavBarProps) => {
               style="position: absolute;"
             ></i>
             <Button key="notification_btn" icon="bi-bell" />
-            {interfaceStateStore?.me?.name}
             <div
               class="navbar__profile-picture"
               ON_click={() => {
