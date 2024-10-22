@@ -1,32 +1,79 @@
 import { Board } from '@/types/board';
-import { getApiUrl } from '@/api/apiHelper';
+import {
+  apiGet,
+  HTTP_STATUS_FORBIDDEN,
+  HTTP_STATUS_NOT_FOUND,
+  HTTP_STATUS_OK,
+  HTTP_STATUS_UNAUTHORIZED,
+  useMocks,
+} from '@/api/apiHelper';
+import { ActiveBoard } from '@/types/activeBoard';
+import { activeBoardMock } from './mocks/activeBoard';
 
 /**
  * Получить все доступные пользователю доски
  * @returns Промис, который сходит на бэк и получит список доступных пользователю досок и вернёт их массивом
  */
-export const getBoards = (): Promise<Board[]> => {
-  return fetch(getApiUrl('/boards/my'), {
-    credentials: 'include',
-  })
-    .then((response) => {
-      if (response.status === 200) {
-        return response.json().then((json: any[]) => {
-          return json.map((el): Board => {
+export const getBoards = async (): Promise<Board[]> => {
+  try {
+    const response = await apiGet('boards/my');
+    const json = await response.body;
+
+    switch (response.status) {
+      case HTTP_STATUS_OK:
+        {
+          const boards: Board[] = json.map((el: any): Board => {
             return { id: el.id, title: el.name };
           });
-        });
-      } else if (response.status === 404) {
+          return boards;
+        }
+      case HTTP_STATUS_NOT_FOUND:
         alert('Board not found');
-      } else if (response.status === 401) {
+        break;
+      case HTTP_STATUS_UNAUTHORIZED:
+      case HTTP_STATUS_FORBIDDEN:
         alert('Get boards: User not authorized');
-      } else {
-        alert('Get boards: Unexpected error');
-      }
-    })
-    .then((data) => {
-      if (Array.isArray(data)) {
-        return data as Board[];
-      } else return [];
-    });
+        break;
+      default:
+        alert('Неизвестная ошибка');
+        break;
+    }
+
+    return [];
+  } catch (error) {
+    console.error('Error fetching boards:', error);
+    alert('An error occurred while fetching boards');
+    return [];
+  }
+};
+
+export const getBoardContent = async (
+  boardId: number
+): Promise<ActiveBoard> => {
+  if (useMocks) {
+    return activeBoardMock;
+  }
+  try {
+    const response = await apiGet(`/boards/${boardId}/allContent`);
+    const json = await response.body;
+
+    switch (response.status) {
+      case HTTP_STATUS_OK:
+        return json;
+      case HTTP_STATUS_NOT_FOUND:
+        alert('Get board content: Board not found');
+        break;
+      case HTTP_STATUS_UNAUTHORIZED:
+      case HTTP_STATUS_FORBIDDEN:
+        alert('Get board content: User not authorized');
+        break;
+      default:
+        alert('Get board content: Unexpected error');
+        break;
+    }
+  } catch (error) {
+    console.error('Error fetching boards:', error);
+    alert('An error occurred while fetching boards');
+  }
+  throw new Error('Error at getBoardContent');
 };

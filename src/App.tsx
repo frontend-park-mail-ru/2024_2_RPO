@@ -5,6 +5,7 @@ import { HomePage } from './screens/HomePage';
 import { IComponentFunction } from './jsxCore/types';
 import { setUseMocks } from './api/apiHelper';
 import { MainApp } from './screens/MainApp';
+import { loadBoard } from './stores/activeBoardStore';
 
 const isMainPage = true; // TODO убрать, это для дебага
 
@@ -29,3 +30,4 @@ createApp(App, appRoot);
 // reouteStore.onRouteChange(() => {}); на смене роутера определяется, какая страница будет отрендерена
 // Глобальный href, компонент роутера,
 // Глобальная функция, меняющая href
+loadBoard(2);

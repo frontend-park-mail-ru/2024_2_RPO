@@ -5,7 +5,6 @@ import {
   useMocks,
 } from '@/api/apiHelper';
 import { User } from '@/types/user';
-import { interfaceStateStore } from '@/stores/interfaceStateStore';
 import { userMeMock } from './mocks/user';
 
 /**
@@ -31,8 +30,6 @@ export const getUserMe = async (): Promise<User | undefined> => {
   }
 };
 
-type strong = string;
-
 /**
  * Зарегистрировать пользователя
  * @param nickname никнейм
@@ -40,78 +37,71 @@ type strong = string;
  * @param password пассворд
  * @returns промис, который вызовет фукнцию обратного вызова resolve() в случае успеха или reject(reason: string) в случае неудачной попытки логина
  */
-export const registerUser = (
+export const registerUser = async (
   nickname: string,
   email: string,
-  password: strong
+  password: string
 ) => {
-  return new Promise((resolve, reject) => {
-    fetch(getApiUrl('/auth/register'), {
+  try {
+    const response = await fetch(getApiUrl('/auth/register'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       credentials: 'include',
       body: JSON.stringify({ name: nickname, email, password }),
-    })
-      .then((res) => {
-        if (res.status === HTTP_STATUS_OK) {
-          resolve('Успешная регистрация');
-        } else if (res.status === HTTP_STATUS_INTERNAL_ERROR) {
-          alert('Ошибка на бэке');
-          reject('Ошибка на бэке');
-        } else {
-          reject('Логин или email заняты');
-        }
-      })
-      .catch(() => {
-        alert('Отвалился бэк, попробуйте перезагрузиться');
-        reject('Отвалился бэк');
-      });
-  });
+    });
+
+    if (response.status === HTTP_STATUS_OK) {
+      return 'Успешная регистрация';
+    } else if (response.status === HTTP_STATUS_INTERNAL_ERROR) {
+      alert('Ошибка на бэке');
+      throw new Error('Ошибка на бэке');
+    } else {
+      throw new Error('Логин или email заняты');
+    }
+  } catch (error) {
+    alert('Отвалился бэк, попробуйте перезагрузиться');
+    throw error;
+  }
 };
 
 /**
  * Выйти из аккаунта
  * @returns промис, который разлогинится и обновит интерфейс
  */
-export const logout = () => {
-  return fetch(getApiUrl('/auth/logout'), {
+export const logout = async () => {
+  const headers = await fetch(getApiUrl('/auth/logout'), {
     method: 'POST',
     credentials: 'include',
-  }).then(() => {
-    if (interfaceStateStore !== undefined) {
-      interfaceStateStore.me = undefined;
-    }
-    history.pushState(null, '', '/');
-    interfaceStateStore?.updateRegAndApp();
   });
+  if (headers.status !== HTTP_STATUS_OK) {
+    alert('Ошибка при logout');
+  }
 };
 
 /**
  * Залогиниться
  * @returns промис, который логинит и вызывает или onResolve(), или onReject(reason)
  */
-export const loginUser = (nickname: string, password: strong) => {
-  return new Promise((resolve, reject) => {
-    fetch(getApiUrl('/auth/login'), {
+export const loginUser = async (nickname: string, password: string) => {
+  try {
+    const response = await fetch(getApiUrl('/auth/login'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       credentials: 'include',
       body: JSON.stringify({ email: nickname, password }),
-    })
-      .then((res) => {
-        if (res.status !== HTTP_STATUS_OK) {
-          reject('Неверные учетные данные');
-        } else {
-          resolve('Успешный вход');
-        }
-      })
-      .catch(() => {
-        alert('Отвалился бэк, попробуйте перезагрузиться');
-        reject('Отвалился бэк');
-      });
-  });
+    });
+
+    if (response.status !== HTTP_STATUS_OK) {
+      throw new Error('Неверные учетные данные');
+    }
+
+    return 'Успешный вход';
+  } catch (error) {
+    alert('Отвалился бэк, попробуйте перезагрузиться');
+    throw error;
+  }
 };
