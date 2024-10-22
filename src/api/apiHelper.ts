@@ -1,17 +1,58 @@
 let apiRoot: string = '';
 export let useMocks = false;
 
+interface IResponce {
+  status: number;
+  body: any;
+  contentType: string;
+}
+
 /**
  * Функция получает полный URL ресурса в API
  * @param addr адрес ресурса в API. Например, /users/me
- * @returns
+ * @returns Например, 'https://example.com/api/v2/users/me'
  */
-export const getApiUrl = (addr: string): string => {
+const getApiUrl = (addr: string): string => {
   if (addr.startsWith('/')) {
     return apiRoot + addr;
   }
   return apiRoot + '/' + addr;
 };
+const fetchApi = async (addr: string, method: string): Promise<IResponce> => {
+  const response = await fetch(getApiUrl(addr), {
+    credentials: 'include',
+    method: method,
+  });
+  const contentType = response.headers.get('Content-Type') as string;
+  let returnValue: any = undefined;
+  if (contentType === 'application/json') {
+    returnValue = await response.json();
+  } else {
+    returnValue = await response.text();
+  }
+  return {
+    status: response.status,
+    body: returnValue,
+    contentType,
+  };
+};
+
+export const apiGet = async (addr: string) => {
+  return fetchApi(addr, 'GET');
+};
+export const apiPost = async (addr: string) => {
+  return fetchApi(addr, 'POST');
+};
+export const apiPatch = async (addr: string) => {
+  return fetchApi(addr, 'PATCH');
+};
+export const apiPut = async (addr: string) => {
+  return fetchApi(addr, 'PUT');
+};
+export const apiDelete = async (addr: string) => {
+  return fetchApi(addr, 'DELETE');
+};
+
 export const setApiUrl = (apiRoot_: string) => {
   apiRoot = apiRoot_;
 };
