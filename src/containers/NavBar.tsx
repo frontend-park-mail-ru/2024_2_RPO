@@ -1,95 +1,100 @@
 import { Button } from '@/components/Button';
-import { interfaceStateStore } from '@/stores/interfaceStateStore';
-import { logout } from '@/api/users';
 import { ModeSelect } from '@/components/ModeSelect';
 import { ComponentProps } from '@/jsxCore/types';
 import { EditableText } from '@/components/EditableText';
-import {
-  setActiveBoardStore,
-  useActiveBoardStore,
-} from '@/stores/activeBoardStore';
+import { useActiveBoardStore } from '@/stores/activeBoardStore';
+import { UserPopup } from './UserPopup';
+import { useState } from '@/jsxCore/hooks';
+import { noop } from '@/utils/noop';
 
 interface NavBarProps extends ComponentProps {
   leftPanelOpened: boolean;
   setLeftPanelOpened: (state: boolean) => void;
 }
 
+/**
+ * Компонент навбара, который отображается, когда открыта доска
+ */
 export const NavBar = (props: NavBarProps) => {
   const activeBoardStore = useActiveBoardStore();
-  console.log(activeBoardStore);
+  const [userPopupOpened, setUserPopupOpened] = useState(false);
   return (
-    <nav class="navbar">
-      <div class="navbar__logo-group">
-        <div
-          class="navbar__left-panel-button"
-          ON_click={() => {
-            props.setLeftPanelOpened(!props.leftPanelOpened);
-          }}
-        >
-          <i
-            class={props.leftPanelOpened ? 'bi-x-lg' : 'bi-list'}
-            style="font-size: 22px"
-          ></i>
+    <>
+      <nav class="navbar">
+        <div class="navbar__logo-group">
+          <div
+            class="navbar__left-panel-button"
+            ON_click={() => {
+              props.setLeftPanelOpened(!props.leftPanelOpened);
+            }}
+          >
+            <i
+              class={props.leftPanelOpened ? 'bi-x-lg' : 'bi-list'}
+              style="font-size: 22px"
+            ></i>
+          </div>
+          <a class="navbar__logo-link" href="/">
+            <div class="navbar__logo-icon">
+              <img
+                draggable="false"
+                src="/static/img/logo.svg"
+                alt="Logo"
+                style="margin-bottom: 8px;"
+              />
+              <div draggable="false" class="navbar__logo-link">
+                Pumpkin
+              </div>
+            </div>
+          </a>
         </div>
-        <a class="navbar__logo-link" href="/">
-          <div class="navbar__logo-icon">
-            <img
-              draggable="false"
-              src="/static/img/logo.svg"
-              alt="Logo"
-              style="margin-bottom: 8px;"
+        <div class="navbar__rest navbar__group">
+          <div class="navbar__group">
+            <ModeSelect key="mode_select" currentMode="kanban" />
+            <EditableText
+              key="board_name_text"
+              text={activeBoardStore.title}
+              textClassName="navbar__board-name"
+              wrapperClassName="navbar__board-name-wrapper"
+              setText={noop}
             />
-            <div draggable="false" class="navbar__logo-link">
-              Pumpkin
+            <Button key="settings" icon="bi-gear" />
+          </div>
+          <div class="flex-grow"></div>
+          <div class="navbar__group">
+            <input
+              class="search-input"
+              type="text"
+              placeholder="Поиск"
+              style="padding-left: 36px"
+            />
+            <i
+              class="search-input__search-icon bi-search"
+              style="position: absolute;"
+            ></i>
+            <Button key="notification_btn" icon="bi-bell" />
+            <div
+              class="navbar__profile-picture"
+              ON_click={() => {
+                setUserPopupOpened(true);
+              }}
+            >
+              <img
+                class="navbar__profile-picture"
+                draggable="false"
+                src="/static/img/KarlMarks.jpg"
+                alt="ProfilePicture"
+              />
             </div>
           </div>
-        </a>
-      </div>
-      <div class="navbar__rest navbar__group">
-        <div class="navbar__group">
-          <ModeSelect key="mode_select" currentMode="kanban" />
-          <EditableText
-            key="board_name_text"
-            text={activeBoardStore.title}
-            textClassName="navbar__board-name"
-            wrapperClassName="navbar__board-name-wrapper"
-            setText={(newTitle) => {
-              activeBoardStore.title = newTitle;
-              setActiveBoardStore(activeBoardStore);
-            }}
-          />
-          <Button key="settings" icon="bi-gear" />
         </div>
-        <div class="flex-grow"></div>
-        <div class="navbar__group">
-          <input
-            class="search-input"
-            type="text"
-            placeholder="Поиск"
-            style="padding-left: 36px"
-          />
-          <i
-            class="search-input__search-icon bi-search"
-            style="position: absolute;"
-          ></i>
-          <Button key="notification_btn" icon="bi-bell" />
-          <Button
-            key="logout_btn"
-            icon="bi-box-arrow-right"
-            callback={() => {
-              logout();
-            }}
-          />
-          {interfaceStateStore?.me?.name}
-          <div class="profilePicture">
-            <img
-              draggable="false"
-              src="/static/img/avatar.svg"
-              alt="ProfilePicture"
-            />
-          </div>
-        </div>
-      </div>
-    </nav>
+      </nav>
+      <UserPopup
+        key="usr_popup"
+        isOpened={userPopupOpened}
+        closeCallback={() => {
+          setUserPopupOpened(false);
+        }}
+      />
+    </>
   );
 };
