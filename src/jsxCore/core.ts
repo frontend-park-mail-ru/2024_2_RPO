@@ -362,6 +362,10 @@ export class ComponentInstance<
         domIndex++;
       }
     });
+    while (domIndex < nodes.length) {
+      nodes[domIndex].node.parentNode?.removeChild(nodes[domIndex].node);
+      nodes.splice(domIndex, 1);
+    }
   }
   /** Погубить инстанс */
   destroy() {
