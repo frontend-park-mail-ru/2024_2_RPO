@@ -88,13 +88,14 @@ export const NavBar = (props: NavBarProps) => {
           </div>
         </div>
       </nav>
-      <UserPopup
-        key="usr_popup"
-        isOpened={userPopupOpened}
-        closeCallback={() => {
-          setUserPopupOpened(false);
-        }}
-      />
+      {userPopupOpened && (
+        <UserPopup
+          key="usr_popup"
+          closeCallback={() => {
+            setUserPopupOpened(false);
+          }}
+        />
+      )}
     </>
   );
 };

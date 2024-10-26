@@ -1,4 +1,6 @@
-export const activeBoardMock = {
+import { ActiveBoard } from '@/types/activeBoard';
+
+export const activeBoardMock: ActiveBoard = {
   id: 0,
   title: 'Моя любимая доска',
   columns: [
@@ -15,4 +17,10 @@ export const activeBoardMock = {
       ],
     },
   ],
+  myPermissions: {
+    canInviteMembers: true,
+    canShare: true,
+    canWrite: true,
+    isAdmin: true,
+  },
 };

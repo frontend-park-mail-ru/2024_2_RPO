@@ -1,10 +1,7 @@
 import { Button } from '@/components/Button';
 import { ModalDialog } from '@/components/ModalDialog';
 import { ComponentProps } from '@/jsxCore/types';
-import {
-  setModalDialogsStore,
-  useModalDialogsStore,
-} from '@/stores/modalDialogsStore';
+import { closeUserProfileModalDialog } from '@/stores/modalDialogsStore';
 
 type UserProfileProps = ComponentProps;
 
@@ -15,11 +12,7 @@ export const UserProfile = (props: UserProfileProps) => {
       key="Modal"
       isOpened={true}
       title="Настройки аккаунта"
-      closeCallback={() => {
-        const modalDialogsStore = useModalDialogsStore();
-        modalDialogsStore.isUserProfileOpened = false;
-        setModalDialogsStore(modalDialogsStore);
-      }}
+      closeCallback={closeUserProfileModalDialog}
     >
       <div class="user-profile">
         <div class="user-profile__aside ">
@@ -35,7 +28,7 @@ export const UserProfile = (props: UserProfileProps) => {
             icon="bi-images"
           />
 
-          <Button key="change_passwd" text="Изменить пароль" icon="bi-floppy" />
+          <Button key="change_passwd" text="Изменить пароль" icon="bi-key" />
           <Button
             key="discard_btn"
             icon="bi-trash"
@@ -73,8 +66,13 @@ export const UserProfile = (props: UserProfileProps) => {
             </div>
           </div>
           <div class="user-profile__save-data-section">
-            <Button key="save_btn" text="Сохранить" icon="bi-floppy" />
             <Button key="no_save_btn" text="Отменить" icon="bi-x-lg" />
+            <Button
+              key="save_btn"
+              text="Сохранить"
+              icon="bi-floppy"
+              variant="accent"
+            />
           </div>
         </div>
       </div>

@@ -18,7 +18,7 @@ export const ModalDialog = (props: ModalDialogProps) => {
     return <div style="display:none" />;
   }
   return (
-    <div class="modal-dialog__container">
+    <div class="full-screen-dark">
       <div class="modal-dialog">
         <div class="modal-dialog__header-block">
           <div className="modal-dialog__title-wrapper">
