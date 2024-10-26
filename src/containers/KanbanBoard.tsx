@@ -17,14 +17,12 @@ type KanbanBoardProps = ComponentProps;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const KanbanBoard = (props: KanbanBoardProps) => {
   const activeBoardStore = useActiveBoardStore();
+  console.log(activeBoardStore);
   return (
     <div class="kanban-board">
-      {activeBoardStore.columns.map((columnData) => {
+      {activeBoardStore.columns.map((columnData, idx) => {
         return (
-          <KanbanColumn
-            key={`column_${columnData.id}`}
-            columnId={columnData.id}
-          />
+          <KanbanColumn key={`column_${columnData.id}`} columnIndex={idx} />
         );
       })}
       {activeBoardStore.myPermissions.canWrite && (
