@@ -1,9 +1,6 @@
 import { ActiveBoard } from '@/types/activeBoard';
 import { defineStore } from '@/jsxCore/hooks';
+import { activeBoardMock } from '@/api/mocks/activeBoard';
 
 export const [useActiveBoardStore, setActiveBoardStore] =
-  defineStore<ActiveBoard>('activeBoardStore', {
-    columns: [],
-    id: 0,
-    title: 'Моя самая любимая доска',
-  });
+  defineStore<ActiveBoard>('activeBoardStore', activeBoardMock);

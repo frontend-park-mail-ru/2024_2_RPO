@@ -3,11 +3,11 @@ import { KanbanCard } from '@/components/KanbanCard';
 import { useActiveBoardStore } from '@/stores/activeBoardStore';
 
 interface KanbanColumnProps extends ComponentProps {
-  columnId: number;
+  columnIndex: number;
 }
 export const KanbanColumn = (props: KanbanColumnProps) => {
   const activeBoardStore = useActiveBoardStore();
-  const columnData = activeBoardStore.columns[props.columnId];
+  const columnData = activeBoardStore.columns[props.columnIndex];
   return (
     <div class="kanban-column">
       <div class="kanban-column__header">
@@ -20,7 +20,13 @@ export const KanbanColumn = (props: KanbanColumnProps) => {
         </div>
       </div>
       {columnData.cards.map((cardData) => {
-        return <KanbanCard key={`card_${cardData.id}`} text={cardData.title} />;
+        return (
+          <KanbanCard
+            key={`card_${cardData.id}`}
+            text={cardData.title}
+            coverUrl={cardData.coverImageUrl}
+          />
+        );
       })}
     </div>
   );

@@ -18,11 +18,13 @@ export const ModalDialog = (props: ModalDialogProps) => {
     return <div style="display:none" />;
   }
   return (
-    <div class="modal-dialog__container">
+    <div class="full-screen-dark">
       <div class="modal-dialog">
         <div class="modal-dialog__header-block">
-          <span class="modal-dialog__title">{props.title}</span>
-          <Button key="close_btn" icon="bi-x" callback={props.closeCallback} />
+          <div className="modal-dialog__title-wrapper">
+            <div class="modal-dialog__title">{props.title}</div>
+          </div>
+          <Button key="close_btn" icon="bi-x-lg" callback={props.closeCallback} />
         </div>
         <hr class="mb-16px" />
         {props.children}
