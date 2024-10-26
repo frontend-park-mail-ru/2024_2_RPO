@@ -13,6 +13,7 @@ const App: IComponentFunction = () => {
   console.log('Router store: ', routerStore);
   return (
     <>
+      <div class="display-none"></div>
       {routerStore.isApp ? (
         <MainApp key="main_app" />
       ) : (
