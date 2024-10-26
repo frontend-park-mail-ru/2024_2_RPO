@@ -1,8 +1,10 @@
 import {
-  getApiUrl,
   HTTP_STATUS_OK,
-  HTTP_STATUS_INTERNAL_ERROR,
   useMocks,
+  apiGet,
+  HTTP_STATUS_UNAUTHORIZED,
+  apiPost,
+  HTTP_STATUS_CONFLICT,
 } from '@/api/apiHelper';
 import { User } from '@/types/user';
 import { userMeMock } from './mocks/user';
@@ -16,13 +18,19 @@ export const getUserMe = async (): Promise<User | undefined> => {
     return userMeMock;
   }
   try {
-    const response = await fetch(getApiUrl('/users/me'), {
-      credentials: 'include',
-    });
+    const response = await apiGet('/users/me');
 
-    if (response.status === HTTP_STATUS_OK) {
-      const json = await response.json();
-      return { name: json.name, id: json.id, email: json.email };
+    switch (response.status) {
+      case HTTP_STATUS_OK:
+        return {
+          name: response.body.name,
+          id: response.body.id,
+          email: response.body.email,
+        };
+      case HTTP_STATUS_UNAUTHORIZED:
+        return undefined;
+      default:
+        alert('Неожиданная ошибка');
     }
     return undefined;
   } catch {
@@ -43,22 +51,19 @@ export const registerUser = async (
   password: string
 ) => {
   try {
-    const response = await fetch(getApiUrl('/auth/register'), {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-      body: JSON.stringify({ name: nickname, email, password }),
+    const response = await apiPost('/auth/register', {
+      name: nickname,
+      email,
+      password,
     });
 
-    if (response.status === HTTP_STATUS_OK) {
-      return 'Успешная регистрация';
-    } else if (response.status === HTTP_STATUS_INTERNAL_ERROR) {
-      alert('Ошибка на бэке');
-      throw new Error('Ошибка на бэке');
-    } else {
-      throw new Error('Логин или email заняты');
+    switch (response.status) {
+      case HTTP_STATUS_OK:
+        return 'Успешная регистрация';
+      case HTTP_STATUS_CONFLICT:
+        throw new Error('Логин или email заняты');
+      default:
+        throw new Error('Неизвестная ошибка');
     }
   } catch (error) {
     alert('Отвалился бэк, попробуйте перезагрузиться');
@@ -71,11 +76,8 @@ export const registerUser = async (
  * @returns промис, который разлогинится и обновит интерфейс
  */
 export const logout = async () => {
-  const headers = await fetch(getApiUrl('/auth/logout'), {
-    method: 'POST',
-    credentials: 'include',
-  });
-  if (headers.status !== HTTP_STATUS_OK) {
+  const response = await apiPost('/auth/logout');
+  if (response.status !== HTTP_STATUS_OK) {
     alert('Ошибка при logout');
   }
 };
@@ -84,15 +86,11 @@ export const logout = async () => {
  * Залогиниться
  * @returns промис, который логинит и вызывает или onResolve(), или onReject(reason)
  */
-export const loginUser = async (nickname: string, password: string) => {
+export const loginUser = async (email: string, password: string) => {
   try {
-    const response = await fetch(getApiUrl('/auth/login'), {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-      body: JSON.stringify({ email: nickname, password }),
+    const response = await apiPost('/auth/login', {
+      email: email,
+      password,
     });
 
     if (response.status !== HTTP_STATUS_OK) {

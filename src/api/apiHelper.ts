@@ -18,11 +18,22 @@ const getApiUrl = (addr: string): string => {
   }
   return apiRoot + '/' + addr;
 };
-const fetchApi = async (addr: string, method: string): Promise<IResponce> => {
-  const response = await fetch(getApiUrl(addr), {
+const fetchApi = async (
+  addr: string,
+  method: string,
+  body?: any
+): Promise<IResponce> => {
+  const requestHeaders = new Headers({});
+  const requestOptions: RequestInit = {
     credentials: 'include',
     method: method,
-  });
+    headers: requestHeaders,
+  };
+  if (body !== undefined) {
+    requestOptions.body = JSON.stringify(body);
+    requestHeaders.set('Content-Type', 'application/json');
+  }
+  const response = await fetch(getApiUrl(addr), requestOptions);
   const contentType = response.headers.get('Content-Type') as string;
   let returnValue: any = undefined;
   if (contentType === 'application/json') {
@@ -40,14 +51,14 @@ const fetchApi = async (addr: string, method: string): Promise<IResponce> => {
 export const apiGet = async (addr: string) => {
   return fetchApi(addr, 'GET');
 };
-export const apiPost = async (addr: string) => {
-  return fetchApi(addr, 'POST');
+export const apiPost = async (addr: string, body?: any) => {
+  return fetchApi(addr, 'POST', body);
 };
-export const apiPatch = async (addr: string) => {
-  return fetchApi(addr, 'PATCH');
+export const apiPatch = async (addr: string, body?: any) => {
+  return fetchApi(addr, 'PATCH', body);
 };
-export const apiPut = async (addr: string) => {
-  return fetchApi(addr, 'PUT');
+export const apiPut = async (addr: string, body?: any) => {
+  return fetchApi(addr, 'PUT', body);
 };
 export const apiDelete = async (addr: string) => {
   return fetchApi(addr, 'DELETE');
@@ -61,7 +72,9 @@ export const setUseMocks = (newUseMocks: boolean) => {
 };
 
 export const HTTP_STATUS_OK = 200;
+export const HTTP_STATUS_BAD_REQUEST = 400;
 export const HTTP_STATUS_UNAUTHORIZED = 401;
 export const HTTP_STATUS_FORBIDDEN = 403;
 export const HTTP_STATUS_NOT_FOUND = 404;
+export const HTTP_STATUS_CONFLICT = 409;
 export const HTTP_STATUS_INTERNAL_ERROR = 500;
