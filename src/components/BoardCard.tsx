@@ -1,6 +1,3 @@
-import { boardsStore } from '@/stores/boardsStore';
-import { interfaceStateStore } from '@/stores/interfaceStateStore';
-
 interface BoardCardProps {
   title?: string;
   lastVisit?: string;
@@ -19,19 +16,6 @@ export const BoardCardComponent = (props: BoardCardProps) => {
       {props.title !== undefined ? (
         <div class="left-menu__board-card__title">{props.title}</div>
       ) : undefined}
-
-      <span
-        class="board-delete-link"
-        ON_click={() => {
-          interfaceStateStore.appState.isBoardDeleteDialogOpened = true;
-          interfaceStateStore.appState.boardDeleteDialogCallback = () => {
-            boardsStore.deleteBoard(props.boardId);
-          };
-          interfaceStateStore?.update();
-        }}
-      >
-        Удалить доску
-      </span>
 
       {props.lastVisit !== undefined ? (
         <div class="left-menu__board-card__subtext">
