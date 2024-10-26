@@ -5,7 +5,7 @@ interface ButtonProps extends ComponentProps {
   icon?: string;
   callback?: (event: PointerEvent) => void;
   variant?: 'default' | 'negative' | 'positive' | 'accent' | 'transparent';
-  fullWidth?: ''; // Флаг; указывает, должна ли кнопка принимать ширину родителя
+  fullWidth?: true; // Флаг; указывает, должна ли кнопка принимать ширину родителя
 }
 
 /**
@@ -14,11 +14,12 @@ interface ButtonProps extends ComponentProps {
  * @returns JSX кнопки
  */
 export const Button = (props: ButtonProps) => {
+  console.log('Full width: ', JSON.stringify(props.fullWidth));
   return (
     <div>
       <div
         className={['button', `button__${props.variant ?? 'default'}`]}
-        style={props.fullWidth === '' ? 'width: 100%' : ''}
+        style={props.fullWidth === true ? 'width: 100%' : ''}
         ON_click={props.callback}
       >
         {props.icon !== undefined ? (

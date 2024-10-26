@@ -1,8 +1,7 @@
 import { BoardCardComponent } from '@/components/BoardCard';
 import { Button } from '@/components/Button';
 import { ComponentProps } from '@/jsxCore/types';
-import { boardsStore } from '@/stores/boardsStore';
-import { interfaceStateStore } from '@/stores/interfaceStateStore';
+import { useBoardsStore } from '@/stores/boardsStore';
 
 /**
  * Компонент левой панели
@@ -13,18 +12,11 @@ import { interfaceStateStore } from '@/stores/interfaceStateStore';
 type LeftPanelProps = ComponentProps;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const LeftPanel = (props: LeftPanelProps) => {
+  const boardsStore = useBoardsStore();
   return (
     <aside class="left-menu">
       <div class="left-menu__header">
-        <div class="left-menu__left-elements">
-          <div
-            class="x-lg"
-            ON_click={() => {
-              interfaceStateStore.appState.isLeftPanelOpened = false;
-              interfaceStateStore?.update();
-            }}
-          ></div>
-        </div>
+        <div class="left-menu__left-elements"></div>
       </div>
       <div class="left-menu__body">
         <div class="left-menu__first-level">
@@ -34,7 +26,7 @@ export const LeftPanel = (props: LeftPanelProps) => {
           </div>
         </div>
         <div class="cards" style="flex-direction: column;">
-          {boardsStore.getWithFilters().map((board) => {
+          {boardsStore.map((board) => {
             return BoardCardComponent({
               title: board.title,
               lastUpdate: 'N/A',
@@ -48,8 +40,7 @@ export const LeftPanel = (props: LeftPanelProps) => {
           icon="bi-plus-square"
           text="Добавить доску"
           callback={() => {
-            interfaceStateStore.appState.isNewBoardDialogOpened = true;
-            interfaceStateStore?.update();
+            //TODO добавление доски
           }}
         />
       </div>

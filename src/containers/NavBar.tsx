@@ -1,5 +1,5 @@
 import { Button } from '@/components/Button';
-import { ModeSelect } from '@/components/ModeSelect';
+import { ModeSelect } from '@/components/SelectBox';
 import { ComponentProps } from '@/jsxCore/types';
 import { EditableText } from '@/components/EditableText';
 import { useActiveBoardStore } from '@/stores/activeBoardStore';
@@ -61,6 +61,7 @@ export const NavBar = (props: NavBarProps) => {
           </div>
           <div class="flex-grow"></div>
           <div class="navbar__group">
+            {/* Для будущего функционала: уведомлений и поиска
             <input
               class="search-input"
               type="text"
