@@ -6,6 +6,7 @@ import { useActiveBoardStore } from '@/stores/activeBoardStore';
 import { UserPopup } from './UserPopup';
 import { useState } from '@/jsxCore/hooks';
 import { noop } from '@/utils/noop';
+import { goToUrl } from '@/stores/routerStore';
 
 interface NavBarProps extends ComponentProps {
   leftPanelOpened: boolean;
@@ -38,7 +39,12 @@ export const NavBar = (props: NavBarProps) => {
               style="font-size: 22px"
             ></i>
           </div>
-          <a class="navbar__logo-link" href="/">
+          <span
+            class="navbar__logo-link"
+            ON_click={() => {
+              goToUrl('/');
+            }}
+          >
             <div class="navbar__logo-icon">
               <img
                 draggable="false"
@@ -50,7 +56,7 @@ export const NavBar = (props: NavBarProps) => {
                 Pumpkin
               </div>
             </div>
-          </a>
+          </span>
         </div>
         <div class="navbar__rest navbar__group">
           <div class="navbar__group">
@@ -70,6 +76,7 @@ export const NavBar = (props: NavBarProps) => {
           </div>
           <div class="flex-grow"></div>
           <div class="navbar__group">
+            {/* <Button key="notification_btn" icon="bi-bell" /> */}
             {/* Для будущего функционала: уведомлений и поиска
             <input
               class="search-input"
@@ -81,7 +88,7 @@ export const NavBar = (props: NavBarProps) => {
               class="search-input__search-icon bi-search"
               style="position: absolute;"
             ></i>
-            <Button key="notification_btn" icon="bi-bell" /> */}
+            */}
             <div
               class="navbar__profile-picture"
               ON_click={() => {
