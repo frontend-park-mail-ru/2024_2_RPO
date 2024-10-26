@@ -512,3 +512,30 @@
 .display-none {
   display: none !important;
 }
+
+.toast-container {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  z-index: 1000;
+}
+
+.toast-message {
+  padding: 8px 16px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+  color: #fff;
+  transition: opacity 0.5s ease;
+}
+
+.toast-success {
+  background-color: green;
+}
+
+.toast-error {
+  background-color: red;
+}
+
+.toast-warning {
+  background-color: orange;
+}
