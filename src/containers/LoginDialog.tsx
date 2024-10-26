@@ -1,8 +1,6 @@
 import { loginUser } from '@/api/users';
 import { ModalDialog } from '@/components/ModalDialog';
 import { ComponentProps } from '@/jsxCore/types';
-import { interfaceStateStore } from '@/stores/interfaceStateStore';
-import { AppState } from '@/types/appState';
 import { getInputElementById } from '@/utils/domHelper';
 
 interface LoginDialogProps extends ComponentProps {
@@ -11,7 +9,11 @@ interface LoginDialogProps extends ComponentProps {
 
 export const LoginDialog = (props: LoginDialogProps) => {
   return (
-    <ModalDialog key="login_dialog" closeCallback={props.closeCallback} isOpened={true}>
+    <ModalDialog
+      key="login_dialog"
+      closeCallback={props.closeCallback}
+      isOpened={true}
+    >
       <div>
         <form id="reg_data">
           <div class="form-field">
@@ -56,11 +58,7 @@ export const LoginDialog = (props: LoginDialogProps) => {
               // Если валидация прошла, отправляем данные на сервер
               loginUser(nickname, password).then(
                 () => {
-                  if (typeof interfaceStateStore !== 'undefined') {
-                    interfaceStateStore.mode = 'app';
-                    interfaceStateStore.appState = new AppState();
-                    interfaceStateStore.updateRegAndApp();
-                  }
+                  //TODO бизнес-логика
                 },
                 (reason) => {
                   passwordElem.setCustomValidity(reason);
