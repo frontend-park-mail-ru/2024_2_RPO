@@ -6,9 +6,13 @@ import { Button } from '@/components/Button';
 const NewColumnButton = () => {
   return (
     <div class="kanban-column">
-      <div class="kanban-column__header">
-        <Button key="new_column" text="Новая колонка" icon="bi-plus-square" />
-      </div>
+      <Button
+        key="new_column"
+        text="Новая колонка"
+        icon="bi-plus-square"
+        variant="transparent"
+        fullWidth
+      />
     </div>
   );
 };

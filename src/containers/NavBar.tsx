@@ -1,5 +1,5 @@
 import { Button } from '@/components/Button';
-import { ModeSelect } from '@/components/ModeSelect';
+import { ModeSelect } from '@/components/SelectBox';
 import { ComponentProps } from '@/jsxCore/types';
 import { EditableText } from '@/components/EditableText';
 import { useActiveBoardStore } from '@/stores/activeBoardStore';
@@ -61,6 +61,7 @@ export const NavBar = (props: NavBarProps) => {
           </div>
           <div class="flex-grow"></div>
           <div class="navbar__group">
+            {/* Для будущего функционала: уведомлений и поиска
             <input
               class="search-input"
               type="text"
@@ -71,7 +72,7 @@ export const NavBar = (props: NavBarProps) => {
               class="search-input__search-icon bi-search"
               style="position: absolute;"
             ></i>
-            <Button key="notification_btn" icon="bi-bell" />
+            <Button key="notification_btn" icon="bi-bell" /> */}
             <div
               class="navbar__profile-picture"
               ON_click={() => {
