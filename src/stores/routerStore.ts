@@ -11,22 +11,24 @@ const handlerFunc = () => {
 window.addEventListener('hashchange', handlerFunc);
 window.addEventListener('popstate', handlerFunc);
 
-if (typeof window !== 'undefined') {
-  const originalPushState = history.pushState;
-  const originalReplaceState = history.replaceState;
+const originalPushState = history.pushState;
+const originalReplaceState = history.replaceState;
 
-  history.pushState = (state, title, url) => {
-    const result = originalPushState.call(history, state, title, url);
-    window.dispatchEvent(new Event('popstate'));
-    return result;
-  };
+history.pushState = (state, title, url) => {
+  const result = originalPushState.call(history, state, title, url);
+  window.dispatchEvent(new Event('popstate'));
+  return result;
+};
 
-  history.replaceState = (state, title, url) => {
-    const result = originalReplaceState.call(history, state, title, url);
-    window.dispatchEvent(new Event('popstate'));
-    return result;
-  };
-}
+history.replaceState = (state, title, url) => {
+  const result = originalReplaceState.call(history, state, title, url);
+  window.dispatchEvent(new Event('popstate'));
+  return result;
+};
+
+export const goToUrl = (url: string) => {
+  history.pushState(null, '', url);
+};
 
 export const [useRouterStore, setRouterStore] = defineStore<RouterFlags>(
   'router',

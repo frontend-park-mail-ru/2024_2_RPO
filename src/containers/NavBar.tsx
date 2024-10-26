@@ -6,6 +6,7 @@ import { useActiveBoardStore } from '@/stores/activeBoardStore';
 import { UserPopup } from './UserPopup';
 import { useState } from '@/jsxCore/hooks';
 import { noop } from '@/utils/noop';
+import { goToUrl } from '@/stores/routerStore';
 
 interface NavBarProps extends ComponentProps {
   leftPanelOpened: boolean;
@@ -36,7 +37,7 @@ export const NavBar = (props: NavBarProps) => {
           <span
             class="navbar__logo-link"
             ON_click={() => {
-              history.pushState(null, '', '/');
+              goToUrl('/');
             }}
           >
             <div class="navbar__logo-icon">
@@ -66,7 +67,7 @@ export const NavBar = (props: NavBarProps) => {
           </div>
           <div class="flex-grow"></div>
           <div class="navbar__group">
-            <Button key="notification_btn" icon="bi-bell" />
+            {/* <Button key="notification_btn" icon="bi-bell" /> */}
             {/* Для будущего функционала: уведомлений и поиска
             <input
               class="search-input"
