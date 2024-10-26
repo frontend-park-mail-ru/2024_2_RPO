@@ -6,14 +6,18 @@ import { IComponentFunction } from './jsxCore/types';
 import { setUseMocks } from './api/apiHelper';
 import { MainApp } from './screens/MainApp';
 import { loadBoard } from './stores/activeBoardStore';
-
-const isMainPage = true; // TODO убрать, это для дебага
+import { useRouterStore } from './stores/routerStore';
 
 const App: IComponentFunction = () => {
+  const routerStore = useRouterStore();
+  console.log('Router store: ', routerStore);
   return (
     <>
-      {!isMainPage ? <HomePage key="home_page" /> : undefined}
-      {isMainPage ? <MainApp key="main_app" /> : undefined}
+      {routerStore.isApp ? (
+        <MainApp key="main_app" />
+      ) : (
+        <HomePage key="home_page" />
+      )}
     </>
   );
 };

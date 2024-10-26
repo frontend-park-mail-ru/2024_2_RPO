@@ -33,7 +33,12 @@ export const NavBar = (props: NavBarProps) => {
               style="font-size: 22px"
             ></i>
           </div>
-          <a class="navbar__logo-link" href="/">
+          <span
+            class="navbar__logo-link"
+            ON_click={() => {
+              history.pushState(null, '', '/');
+            }}
+          >
             <div class="navbar__logo-icon">
               <img
                 draggable="false"
@@ -45,7 +50,7 @@ export const NavBar = (props: NavBarProps) => {
                 Pumpkin
               </div>
             </div>
-          </a>
+          </span>
         </div>
         <div class="navbar__rest navbar__group">
           <div class="navbar__group">
@@ -61,6 +66,7 @@ export const NavBar = (props: NavBarProps) => {
           </div>
           <div class="flex-grow"></div>
           <div class="navbar__group">
+            <Button key="notification_btn" icon="bi-bell" />
             {/* Для будущего функционала: уведомлений и поиска
             <input
               class="search-input"
@@ -72,9 +78,7 @@ export const NavBar = (props: NavBarProps) => {
               class="search-input__search-icon bi-search"
               style="position: absolute;"
             ></i>
-            <Button key="notification_btn" icon="bi-bell" callback={() => {
-              history.pushState(123, 'Update', '/divan');
-            }} />
+            */}
             <div
               class="navbar__profile-picture"
               ON_click={() => {

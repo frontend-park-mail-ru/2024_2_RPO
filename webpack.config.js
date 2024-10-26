@@ -32,6 +32,7 @@ module.exports = {
   devServer: {
     static: [path.resolve(__dirname)],
     liveReload: true,
+    historyApiFallback: true,
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
