@@ -1,5 +1,5 @@
 import { Button } from '@/components/Button';
-import { ModeSelect } from '@/components/SelectBox';
+import { SelectBox, SelectBoxOption } from '@/components/SelectBox';
 import { ComponentProps } from '@/jsxCore/types';
 import { EditableText } from '@/components/EditableText';
 import { useActiveBoardStore } from '@/stores/activeBoardStore';
@@ -11,6 +11,11 @@ interface NavBarProps extends ComponentProps {
   leftPanelOpened: boolean;
   setLeftPanelOpened: (state: boolean) => void;
 }
+
+const modeOptions: SelectBoxOption[] = [
+  { title: 'Канбан', icon: 'bi-kanban' },
+  { title: 'Список', icon: 'bi-ui-checks' },
+];
 
 /**
  * Компонент навбара, который отображается, когда открыта доска
@@ -49,7 +54,11 @@ export const NavBar = (props: NavBarProps) => {
         </div>
         <div class="navbar__rest navbar__group">
           <div class="navbar__group">
-            <ModeSelect key="mode_select" currentMode="kanban" />
+            <SelectBox
+              key="mode_select"
+              options={modeOptions}
+              currentIndex={0}
+            />
             <EditableText
               key="board_name_text"
               text={activeBoardStore.title}
