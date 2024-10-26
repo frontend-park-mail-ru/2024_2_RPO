@@ -25,8 +25,8 @@ type JSXChildrenType =
 const normalizeChildren = (children: JSXChildrenType): JsxSubtree => {
   if (Array.isArray(children)) {
     const normalizedChildren = children
-      .filter((vNode) => {
-        return vNode !== undefined;
+      .filter((vNode: any) => {
+        return vNode !== undefined && vNode !== false;
       })
       .map((vNode) => {
         if (typeof vNode === 'string') {

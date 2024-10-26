@@ -1,7 +1,6 @@
 import { ComponentProps } from '@/jsxCore/types';
 import {
-  setModalDialogsStore,
-  useModalDialogsStore,
+  openUserProfileModalDialog,
 } from '@/stores/modalDialogsStore';
 
 interface PopupButtonProps extends ComponentProps {
@@ -30,7 +29,6 @@ const PopupButton = (props: PopupButtonProps) => {
 
 interface UserPopupProps extends ComponentProps {
   closeCallback: (event: Event) => void;
-  isOpened: boolean;
 }
 /**
  * Компонент попапа, который всплывает при нажатии на аватарку текущего пользователя на навбаре.
@@ -39,7 +37,7 @@ interface UserPopupProps extends ComponentProps {
 export const UserPopup = (props: UserPopupProps) => {
   return (
     <>
-      <div className={'user-popup ' + (props.isOpened ? '' : 'display-none')}>
+      <div class="user-popup">
         <div class="user-popup__profile-info">
           <div class="user-popup__avatar">
             <img
@@ -69,17 +67,13 @@ export const UserPopup = (props: UserPopupProps) => {
           icon="bi-gear"
           callback={(event) => {
             props.closeCallback(event);
-            const modalDialogsStore = useModalDialogsStore();
-            modalDialogsStore.isUserProfileOpened = true;
-            setModalDialogsStore(modalDialogsStore);
+            openUserProfileModalDialog();
           }}
         />
         <PopupButton key="logout_btn" title="Выйти" icon="bi-box-arrow-right" />
       </div>
       <div
-        className={
-          'user-popup__wrapper ' + (props.isOpened ? '' : 'display-none')
-        }
+        class="full-screen-dark"
         ON_click={(event: PointerEvent) => {
           if (props.closeCallback !== undefined) {
             props.closeCallback(event);

@@ -20,11 +20,11 @@ export const MainApp = (props: MainAppProps) => {
         setLeftPanelOpened={setLeftPanelOpened}
         key="nav_bar"
       />
-      {modalDialogsStore.isUserProfileOpened ? (
+      {modalDialogsStore.isUserProfileOpened && (
         <UserProfile key="user_profile" />
-      ) : undefined}
+      )}
 
-      {leftPanelOpened ? <LeftPanel key="left_panel" /> : undefined}
+      {leftPanelOpened && <LeftPanel key="left_panel" />}
 
       <main>
         <img

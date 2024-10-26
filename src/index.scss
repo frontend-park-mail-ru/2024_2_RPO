@@ -14,6 +14,19 @@
   --color-transparent: #c15df3;
 }
 
+.full-screen-dark {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 100;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
 .mode-select {
   display: flex;
   align-items: center;
@@ -61,6 +74,7 @@
 }
 .button__accent {
   background-color: var(--color-accent);
+  color: white;
 }
 .button__transparent {
   background-color: var(--color-transparent);
@@ -88,18 +102,6 @@
   padding-right: 20px;
   padding-bottom: 10px;
   border-radius: 12px;
-}
-.modal-dialog__container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 100;
-  background-color: rgba(0, 0, 0, 0.2);
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
 }
 .modal-dialog__header-block {
   padding-left: 20px;
@@ -420,15 +422,6 @@
   right: 10px;
   z-index: 102;
   border-radius: 12px;
-}
-.user-popup__wrapper {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.89);
-  z-index: 100;
 }
 .user-popup__profile-info {
   margin-top: 20px;

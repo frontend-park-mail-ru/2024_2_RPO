@@ -17,4 +17,10 @@ export const activeBoardMock: ActiveBoard = {
       ],
     },
   ],
+  myPermissions: {
+    canInviteMembers: true,
+    canShare: true,
+    canWrite: true,
+    isAdmin: true,
+  },
 };
