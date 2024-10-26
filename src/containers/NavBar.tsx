@@ -71,7 +71,9 @@ export const NavBar = (props: NavBarProps) => {
               class="search-input__search-icon bi-search"
               style="position: absolute;"
             ></i>
-            <Button key="notification_btn" icon="bi-bell" />
+            <Button key="notification_btn" icon="bi-bell" callback={() => {
+              history.pushState(123, 'Update', '/divan');
+            }} />
             <div
               class="navbar__profile-picture"
               ON_click={() => {
