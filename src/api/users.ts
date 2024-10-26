@@ -61,6 +61,7 @@ export const registerUser = async (
       case HTTP_STATUS_OK:
         return 'Успешная регистрация';
       case HTTP_STATUS_CONFLICT:
+        //TODO определить, занят логин, мыло или оба
         throw new Error('Логин или email заняты');
       default:
         throw new Error('Неизвестная ошибка');
@@ -77,8 +78,14 @@ export const registerUser = async (
  */
 export const logout = async () => {
   const response = await apiPost('/auth/logout');
-  if (response.status !== HTTP_STATUS_OK) {
-    alert('Ошибка при logout');
+  switch (response.status) {
+    case HTTP_STATUS_OK:
+      return;
+    case HTTP_STATUS_UNAUTHORIZED:
+      alert('Вы уже разлогинены, Вам мало?');
+      break;
+    default:
+      alert('Беды на бэке');
   }
 };
 
@@ -89,17 +96,21 @@ export const logout = async () => {
 export const loginUser = async (email: string, password: string) => {
   try {
     const response = await apiPost('/auth/login', {
-      email: email,
+      email,
       password,
     });
 
-    if (response.status !== HTTP_STATUS_OK) {
-      throw new Error('Неверные учетные данные');
+    switch (response.status) {
+      case HTTP_STATUS_OK:
+        return;
+      case HTTP_STATUS_UNAUTHORIZED:
+        alert('Неверные креды');
+        throw new Error('Неверные учетные данные');
+      default:
+        alert('Беды на бэке');
+        throw new Error('Беды на бэке');
     }
-
-    return 'Успешный вход';
-  } catch (error) {
-    alert('Отвалился бэк, попробуйте перезагрузиться');
-    throw error;
+  } catch {
+    alert('Неизвестная ошибка');
   }
 };
