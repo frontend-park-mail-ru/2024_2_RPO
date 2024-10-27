@@ -13,9 +13,9 @@ export const HomePage = (props: HomePageProps) => {
   const [isLoginOpened, setIsLoginOpened] = useState(false);
 
   useEffect(() => {
-    showToast('Вы не сохранили изменения!', 'warning');
+    showToast('Вам пришло уведомление', 'warning');
     showToast('Изменения успешно сохранены!', 'success');
-    showToast('Вам пришло уведомление', 'error');
+    showToast('Вы не сохранили изменения!', 'error');
   });
 
   return (

@@ -1,15 +1,21 @@
 import { ComponentProps } from '@/jsxCore/types';
-import { useToastNotificationStore } from '@/stores/toastNotificationStore';
-import { Toast } from '@/stores/toastNotificationStore';
+import {
+  useToastNotificationStore,
+  setToastNotificationStore,
+  Toast,
+  ToastVariant,
+} from '@/stores/toastNotificationStore';
+import { useEffectRefs } from '@/jsxCore/hooks';
 
 interface ToastMessageProps extends ComponentProps {
   title: string;
   id: number;
-  variant: 'success' | 'error' | 'warning';
+  variant: ToastVariant;
 }
 
 export const ToastContainer = () => {
   const toasts = useToastNotificationStore();
+
   return (
     <div className="toast-container">
       {toasts.map((toast: Toast) => (
@@ -24,8 +30,28 @@ export const ToastContainer = () => {
   );
 };
 
-const ToastMessage = ({ title, variant }: ToastMessageProps) => {
-  const variantClass = `toast-message toast-${variant}`;
+const ToastMessage = ({ title, id, variant }: ToastMessageProps) => {
+  // Автоматическое удаление уведомления через 6 секунд
+  setTimeout(() => {
+    setToastNotificationStore(
+      useToastNotificationStore().filter((toastMsg) => toastMsg.id !== id)
+    );
+  }, 6000);
 
-  return <div className={variantClass}>{title}</div>;
+  // Используем useEffectRefs для добавления класса с задержкой
+  useEffectRefs((refs) => {
+    const div = refs.get('message_div') as HTMLDivElement;
+    setTimeout(() => {
+      div.classList.add('toast-notification__delay');
+    }, 5000);
+  });
+
+  return (
+    <div
+      ref="message_div" // Устанавливаем реф
+      className={['toast-message', `toast-notification__${variant}`].join(' ')}
+    >
+      {title}
+    </div>
+  );
 };
