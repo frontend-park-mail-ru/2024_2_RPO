@@ -17,7 +17,7 @@ export const HomePage = (props: HomePageProps) => {
         <i class="bi-kanban home-page-bg__icon2"></i>
       </div>
       <div class="homepage">
-        <img src="static/img/logo.svg" class="logo_image" />
+        <img src="static/img/logo.svg" class="home-page__logo" />
         <h1 class="homepage__pumpkin">Pumpkin</h1>
         <span style="margin-bottom: 30px">
           Облачный канбан со сверхспособностями

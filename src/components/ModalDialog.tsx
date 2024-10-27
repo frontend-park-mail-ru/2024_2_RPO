@@ -1,4 +1,3 @@
-import { Button } from '@/components/Button';
 import { ComponentProps, JsxNode } from '@/jsxCore/types';
 
 interface ModalDialogProps extends ComponentProps {
@@ -24,9 +23,14 @@ export const ModalDialog = (props: ModalDialogProps) => {
           <div className="modal-dialog__title-wrapper">
             <div class="modal-dialog__title">{props.title}</div>
           </div>
-          <Button key="close_btn" icon="bi-x-lg" callback={props.closeCallback} />
+          <div
+            class="modal-dialog__close-button"
+            ON_click={props.closeCallback}
+          >
+            <i class="bi-x-lg" />
+          </div>
         </div>
-        <hr class="mb-16px" />
+        <hr style="margin-bottom: 10px;" />
         {props.children}
       </div>
     </div>

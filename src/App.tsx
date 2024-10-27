@@ -8,6 +8,8 @@ import { MainApp } from './screens/MainApp';
 import { loadBoard } from './stores/activeBoardStore';
 import { useRouterStore } from './stores/routerStore';
 
+setUseMocks(true);
+
 const App: IComponentFunction = () => {
   const routerStore = useRouterStore();
   console.log('Router store: ', routerStore);
@@ -22,8 +24,6 @@ const App: IComponentFunction = () => {
     </>
   );
 };
-
-setUseMocks(true);
 
 const appRoot = document.getElementById('app_root') as HTMLDivElement;
 createApp(App, appRoot);

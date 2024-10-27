@@ -1,7 +1,6 @@
 import { ComponentProps } from '@/jsxCore/types';
-import {
-  openUserProfileModalDialog,
-} from '@/stores/modalDialogsStore';
+import { useMeStore } from '@/stores/meStore';
+import { openUserProfileModalDialog } from '@/stores/modalDialogsStore';
 
 interface PopupButtonProps extends ComponentProps {
   icon: string;
@@ -35,6 +34,7 @@ interface UserPopupProps extends ComponentProps {
  */
 
 export const UserPopup = (props: UserPopupProps) => {
+  const meStore = useMeStore();
   return (
     <>
       <div class="user-popup">
@@ -47,9 +47,9 @@ export const UserPopup = (props: UserPopupProps) => {
             />
           </div>
           <div class="user-popup__info">
-            <div class="user-popup__nickname">@KarlMarkssss</div>
+            <div class="user-popup__nickname">@{meStore.name}</div>
 
-            <div class="user-popup__info">kmarx@mail.ru</div>
+            <div class="user-popup__info">{meStore.email}</div>
           </div>
         </div>
 
