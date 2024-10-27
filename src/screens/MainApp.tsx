@@ -5,6 +5,7 @@ import { useState } from '@/jsxCore/hooks';
 import { UserProfile } from '@/containers/UserProfile';
 import { KanbanBoard } from '@/containers/KanbanBoard';
 import { useModalDialogsStore } from '@/stores/modalDialogsStore';
+import { BoardSettings } from '@/containers/BoardSettings';
 
 type MainAppProps = ComponentProps;
 
@@ -22,6 +23,9 @@ export const MainApp = (props: MainAppProps) => {
       />
       {modalDialogsStore.isUserProfileOpened && (
         <UserProfile key="user_profile" />
+      )}
+      {modalDialogsStore.isBoardSettingsOpened && (
+        <BoardSettings key="board_settings" />
       )}
 
       {leftPanelOpened && <LeftPanel key="left_panel" />}

@@ -12,7 +12,7 @@ export const activeBoardMock: ActiveBoard = {
         {
           id: 1337,
           title: 'Пример задачи, для которой задана обложка',
-          coverImageUrl: '/static/image/lada_vesta.png',
+          coverImageUrl: 'static/img/lada_vesta.png',
         },
       ],
     },

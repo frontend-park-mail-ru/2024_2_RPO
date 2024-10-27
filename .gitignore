@@ -3,3 +3,4 @@ build
 serverConfig.json
 dist
 .vscode
+bun.lockb

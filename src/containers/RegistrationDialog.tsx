@@ -1,8 +1,6 @@
 import { registerUser } from '@/api/users';
 import { ModalDialog } from '@/components/ModalDialog';
 import { ComponentProps } from '@/jsxCore/types';
-import { interfaceStateStore } from '@/stores/interfaceStateStore';
-import { AppState } from '@/types/appState';
 import { getInputElementById } from '@/utils/domHelper';
 
 interface RegistrationDialogProps extends ComponentProps {
@@ -143,11 +141,7 @@ export const RegistrationDialog = (props: RegistrationDialogProps) => {
               // Если валидация прошла, отправляем данные на сервер
               registerUser(nickname, email, password).then(
                 () => {
-                  if (typeof interfaceStateStore !== 'undefined') {
-                    interfaceStateStore.mode = 'app';
-                    interfaceStateStore.appState = new AppState();
-                    interfaceStateStore.updateRegAndApp();
-                  }
+                  //TODO обновить бизнес-логику
                 },
                 (reason: string) => {
                   allErrors.innerText += reason + '\n';

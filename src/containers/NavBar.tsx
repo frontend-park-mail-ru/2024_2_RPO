@@ -1,16 +1,22 @@
 import { Button } from '@/components/Button';
-import { ModeSelect } from '@/components/ModeSelect';
+import { SelectBox, SelectBoxOption } from '@/components/SelectBox';
 import { ComponentProps } from '@/jsxCore/types';
 import { EditableText } from '@/components/EditableText';
 import { useActiveBoardStore } from '@/stores/activeBoardStore';
 import { UserPopup } from './UserPopup';
 import { useState } from '@/jsxCore/hooks';
 import { noop } from '@/utils/noop';
+import { goToUrl } from '@/stores/routerStore';
 
 interface NavBarProps extends ComponentProps {
   leftPanelOpened: boolean;
   setLeftPanelOpened: (state: boolean) => void;
 }
+
+const modeOptions: SelectBoxOption[] = [
+  { title: 'Канбан', icon: 'bi-kanban' },
+  { title: 'Список', icon: 'bi-ui-checks' },
+];
 
 /**
  * Компонент навбара, который отображается, когда открыта доска
@@ -33,7 +39,12 @@ export const NavBar = (props: NavBarProps) => {
               style="font-size: 22px"
             ></i>
           </div>
-          <a class="navbar__logo-link" href="/">
+          <span
+            class="navbar__logo-link"
+            ON_click={() => {
+              goToUrl('/');
+            }}
+          >
             <div class="navbar__logo-icon">
               <img
                 draggable="false"
@@ -45,11 +56,15 @@ export const NavBar = (props: NavBarProps) => {
                 Pumpkin
               </div>
             </div>
-          </a>
+          </span>
         </div>
         <div class="navbar__rest navbar__group">
           <div class="navbar__group">
-            <ModeSelect key="mode_select" currentMode="kanban" />
+            <SelectBox
+              key="mode_select"
+              options={modeOptions}
+              currentIndex={0}
+            />
             <EditableText
               key="board_name_text"
               text={activeBoardStore.title}
@@ -61,6 +76,8 @@ export const NavBar = (props: NavBarProps) => {
           </div>
           <div class="flex-grow"></div>
           <div class="navbar__group">
+            {/* <Button key="notification_btn" icon="bi-bell" /> */}
+            {/* Для будущего функционала: уведомлений и поиска
             <input
               class="search-input"
               type="text"
@@ -71,7 +88,7 @@ export const NavBar = (props: NavBarProps) => {
               class="search-input__search-icon bi-search"
               style="position: absolute;"
             ></i>
-            <Button key="notification_btn" icon="bi-bell" />
+            */}
             <div
               class="navbar__profile-picture"
               ON_click={() => {

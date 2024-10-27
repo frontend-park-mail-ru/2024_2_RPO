@@ -5,21 +5,28 @@ import { HomePage } from './screens/HomePage';
 import { IComponentFunction } from './jsxCore/types';
 import { setUseMocks } from './api/apiHelper';
 import { MainApp } from './screens/MainApp';
-import { ToastContainer } from './containers/ToastContainer'; // Импорт ToastContainer
 
-const isMainPage = true; // TODO убрать, это для дебага
+import { loadBoard } from './stores/activeBoardStore';
+import { useRouterStore } from './stores/routerStore';
+
+setUseMocks(true);
 
 const App: IComponentFunction = () => {
+  const routerStore = useRouterStore();
+  console.log('Router store: ', routerStore);
   return (
     <>
-      {!isMainPage ? <HomePage key="home_page" /> : undefined}
-      {isMainPage ? <MainApp key="main_app" /> : undefined}
-      <ToastContainer key="toast_container" /> {/* Добавляем ToastContainer */}
+      <div class="display-none"></div>
+      {routerStore.isApp ? (
+        <MainApp key="main_app" />
+      ) : (
+        <HomePage key="home_page" />
+      )}
     </>
   );
 };
 
-setUseMocks(true);
-
 const appRoot = document.getElementById('app_root') as HTMLDivElement;
 createApp(App, appRoot);
+
+loadBoard(2);
