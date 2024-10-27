@@ -34,17 +34,23 @@ const ToastMessage = ({ title, id, variant }: ToastMessageProps) => {
   useEffectRefs((refs) => {
     const div = refs.get('message_div') as HTMLDivElement;
 
-    // Запускаем анимацию затухания через 3.5 секунды
+    // Анимация появления
+    div.classList.add('toast-notification__appear');
+    setTimeout(() => {
+      div.classList.remove('toast-notification__appear');
+    }, 500); // Снимаем класс после завершения анимации появления
+
+    // Анимация затухания через 3.5 секунды
     setTimeout(() => {
       div.classList.add('toast-notification__decay');
     }, 3500);
 
-    // Запускаем анимацию схлопывания через 6 секунд
+    // Анимация схлопывания через 6 секунд
     setTimeout(() => {
       div.classList.add('toast-notification__collapse');
     }, 6000);
 
-    // Удаляем уведомление из хранилища через 7 секунд
+    // Удаление уведомления из хранилища через 7 секунд
     setTimeout(() => {
       setToastNotificationStore(
         useToastNotificationStore().filter((toastMsg) => toastMsg.id !== id)

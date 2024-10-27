@@ -598,9 +598,9 @@
   padding: 8px 16px;
   margin-bottom: 8px;
   border-radius: 4px;
-  transition: opacity 0.5s ease, height 0.5s ease;
   opacity: 1;
-  height: auto;
+  max-height: 100px;
+  transition: opacity 0.5s ease, max-height 0.5s ease;
   overflow: hidden;
 }
 
@@ -618,6 +618,13 @@
 
 .toast-notification__decay {
   opacity: 0;
+}
+
+.toast-notification__appear {
+  opacity: 0;
+  max-height: 0;
+  transform: scale(0.9); /* Легкое уменьшение размера */
+  transition: opacity 0.5s ease, max-height 0.5s ease, transform 0.5s ease;
 }
 
 .toast-notification__collapse {
