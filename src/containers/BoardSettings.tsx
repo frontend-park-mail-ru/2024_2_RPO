@@ -36,8 +36,12 @@ export const BoardSettings = (props: ComponentProps) => {
     >
       <div class="board-settings">
         <div class="board-settings__firstpart">
-          <div class="board-settings__image">
-            <img src="" alt="" />
+          <div class="board-settings__left">
+            <img
+              class="board-settings__image"
+              src="static/img/KarlMarks.jpg"
+              alt=""
+            />
             <Button
               key="change_background_btn"
               text="Сменить фон"
@@ -49,31 +53,28 @@ export const BoardSettings = (props: ComponentProps) => {
             <div class="add-participiants__text">Добавить участников</div>
             <div class="add-participiants__main">
               <div class="main__link-text">Моя ссылка:</div>
-              <div class="main__link">
-                <div class="main__link-input">
-                  <input
-                    type="text"
-                    value="https://pumpkin.com/board/228/join_by_invite/9992"
-                    readonly
-                  />
-                </div>
-                <div class="main__link-input__btn">
-                  <Button key="copy-link" icon="bi-copy" variant="accent" />
-                  <Button
-                    key="delete-link"
-                    text="Удалить ссылку"
-                    icon="bi-x-lg"
-                    variant="default"
-                  />
-                </div>
+              <input
+                class="main__link-input"
+                type="text"
+                value="https://pumpkin.com/board/228/join_by_invite/9992"
+                readonly
+              />
+              <div class="main__link-input__btn">
+                <Button key="copy-link" icon="bi-copy" variant="accent" />
+                <Button
+                  key="delete-link"
+                  text="Удалить ссылку"
+                  icon="bi-x-lg"
+                  variant="default"
+                />
               </div>
               <div class="main__add-collaborator-text">
-                Добавить коллаборатора
+                Добавить коллаборатора:
               </div>
               <div class="main__add-collaborator-input">
                 <input type="text" placeholder="Введите Pull-токен" />
               </div>
-              <div class="main__notifications-text">Уведомления</div>
+              <div class="main__notifications-text">Уведомления:</div>
               <div class="main__notificatons">
                 <div class="main__notifications-input">
                   <SelectBox
@@ -87,20 +88,22 @@ export const BoardSettings = (props: ComponentProps) => {
           </div>
         </div>
         <div class="board-settings__secondpart">
+          <div class="secondpart-title">Права пользователей</div>
+          <hr class="mb-16px" />
           <div class="board-settings__secondpart-main">
-            <div class="secondpart-title"></div>
-            <div class="secondpart-line"></div>
-            <div class="secondpart-name"></div>
-            <div class="secondpart-add"></div>
+            <div class="secondpart-name">Имя</div>
+            <div class="secondpart-add">Добавил</div>
             {users.map((user) => {
               return (
                 <>
-                  <img
-                    src={user.avatar}
-                    alt=""
-                    class="navbar__profile-picture"
-                  />
-                  <div class="secondpart__user-title">{user.title}</div>
+                  <div class="secondpart-user">
+                    <img
+                      src={user.avatar}
+                      alt=""
+                      class="navbar__profile-picture"
+                    />
+                    <div class="secondpart__user-title">{user.title}</div>
+                  </div>
                   <div class="secondpart__user-add">{user.add}</div>
                 </>
               );
@@ -112,7 +115,9 @@ export const BoardSettings = (props: ComponentProps) => {
                 currentIndex={0}
               />
             </div>
-            <Button key="cros-redactor" icon="bi-x-lg" variant="default" />
+            <div class="button__cross-redactor">
+              <Button key="cross-redactor" icon="bi-x-lg" variant="default" />
+            </div>
           </div>
           <div class="board-settings_secondpart-save">
             <Button
