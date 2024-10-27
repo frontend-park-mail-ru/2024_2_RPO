@@ -1,27 +1,25 @@
-type ToastVariant = "success" | "error" | "warning";
+import { defineStore } from '@/jsxCore/hooks';
 
-interface Toast {
+export type ToastVariant = "success" | "error" | "warning";
+
+export interface Toast { 
     id: number;
     title: string;
     variant: ToastVariant;
 }
 
 let toastId = 0;
-const toasts: Toast[] = [];
 
-export const useToastNotificationStore = () => ({
-    toasts,
-    addToast: (toast: Toast) => {
-        toasts.push(toast);
-    },
-    removeToast: (id: number) => {
-        const index = toasts.findIndex(t => t.id === id);
-        if (index !== -1) toasts.splice(index, 1);
-    }
-});
+export const [useToastNotificationStore, setToastNotificationStore] = defineStore<Toast[]>("toast", []);
 
 export const showToast = (message: string, variant: ToastVariant = "success") => {
-    const store = useToastNotificationStore();
+    const currentToasts = useToastNotificationStore();
     const newToast: Toast = { id: toastId++, title: message, variant };
-    store.addToast(newToast);
+    setToastNotificationStore([...currentToasts, newToast]); 
+};
+
+export const removeToast = (id: number) => {
+    const currentToasts = useToastNotificationStore();
+    const updatedToasts = currentToasts.filter((toast) => toast.id !== id);
+    setToastNotificationStore(updatedToasts); 
 };

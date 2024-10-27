@@ -1,6 +1,6 @@
-// ToastContainer.tsx
 import { ComponentProps } from '@/jsxCore/types';
 import { useToastNotificationStore } from '@/stores/toastNotificationStore';
+import { Toast } from '@/stores/toastNotificationStore';
 
 interface ToastMessageProps extends ComponentProps {
   title: string;
@@ -9,19 +9,23 @@ interface ToastMessageProps extends ComponentProps {
 }
 
 export const ToastContainer = () => {
-  const store = useToastNotificationStore();
-
+  const toasts = useToastNotificationStore();
   return (
     <div className="toast-container">
-      {store.toasts.map((toast) => (
-        <ToastMessage key={toast.id.toString()} {...toast} />
+      {toasts.map((toast: Toast) => (
+        <ToastMessage
+          key={toast.id.toString()}
+          title={toast.title}
+          id={toast.id}
+          variant={toast.variant}
+        />
       ))}
     </div>
   );
 };
 
 const ToastMessage = ({ title, variant }: ToastMessageProps) => {
-  const variantClass = `toast-message toast-${variant}`; // Присваиваем класс в зависимости от типа уведомления
+  const variantClass = `toast-message toast-${variant}`;
 
   return <div className={variantClass}>{title}</div>;
 };

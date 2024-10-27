@@ -531,15 +531,15 @@
   overflow: hidden;
 }
 
-.toast-success {
+.toast-notification__success {
   background-color: green;
 }
 
-.toast-error {
+.toast-notification__error {
   background-color: red;
 }
 
-.toast-warning {
+.toast-notification__warning {
   background-color: orange;
 }
 
