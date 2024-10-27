@@ -31,24 +31,30 @@ export const ToastContainer = () => {
 };
 
 const ToastMessage = ({ title, id, variant }: ToastMessageProps) => {
-  // Автоматическое удаление уведомления через 6 секунд
-  setTimeout(() => {
-    setToastNotificationStore(
-      useToastNotificationStore().filter((toastMsg) => toastMsg.id !== id)
-    );
-  }, 6000);
-
-  // Используем useEffectRefs для добавления класса с задержкой
   useEffectRefs((refs) => {
     const div = refs.get('message_div') as HTMLDivElement;
+
+    // Запускаем анимацию затухания через 3.5 секунды
     setTimeout(() => {
-      div.classList.add('toast-notification__delay');
-    }, 5000);
+      div.classList.add('toast-notification__decay');
+    }, 3500);
+
+    // Запускаем анимацию схлопывания через 6 секунд
+    setTimeout(() => {
+      div.classList.add('toast-notification__collapse');
+    }, 6000);
+
+    // Удаляем уведомление из хранилища через 7 секунд
+    setTimeout(() => {
+      setToastNotificationStore(
+        useToastNotificationStore().filter((toastMsg) => toastMsg.id !== id)
+      );
+    }, 7000);
   });
 
   return (
     <div
-      ref="message_div" // Устанавливаем реф
+      ref="message_div"
       className={['toast-message', `toast-notification__${variant}`].join(' ')}
     >
       {title}
