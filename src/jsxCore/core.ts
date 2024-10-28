@@ -42,11 +42,12 @@ function patchProps(props: any, elem: DOMElementRepr) {
   });
   elem.eventListeners = [];
   Object.entries(props).forEach(([key, value]) => {
+    if (value === undefined) {
+      return;
+    }
     if (key === 'className') {
       let newValue: string = '';
-      if (value === undefined) {
-        return;
-      } else if (Array.isArray(value)) {
+      if (Array.isArray(value)) {
         newValue = value.join(' ');
       } else if (typeof value === 'string') {
         newValue = value;

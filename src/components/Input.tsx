@@ -2,9 +2,10 @@ import { ComponentProps } from '@/jsxCore/types';
 
 interface InputProps extends ComponentProps {
   onEnter?: () => void;
+  onChanged?: (newValue: string) => void;
   initialValue?: string;
   readOnly?: boolean;
-  validationMessage?: string;
+  validationMessage?: string | undefined;
   copyOnClick?: boolean;
 }
 
@@ -14,7 +15,7 @@ export const Input = (props: InputProps) => {
     <div className="input__wrapper">
       <input
         className="input"
-        readonly={props.readOnly === true ? true : false}
+        readonly={props.readOnly === true ? true : undefined}
         placeholder={props.initialValue}
         ON_click={
           props.copyOnClick === true
@@ -25,9 +26,16 @@ export const Input = (props: InputProps) => {
               }
             : undefined
         }
+        ON_change={(event: InputEvent) => {
+          if (props.onChanged !== undefined) {
+            props.onChanged((event.target as HTMLInputElement).value);
+          }
+        }}
       />
       {props.validationMessage !== undefined && (
-        <div className="input__validation-message">Неправильный ввод!</div>
+        <div className="input__validation-message">
+          {props.validationMessage}
+        </div>
       )}
     </div>
   );
