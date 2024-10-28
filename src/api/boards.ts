@@ -9,24 +9,27 @@ import {
 } from '@/api/apiHelper';
 import { ActiveBoard } from '@/types/activeBoard';
 import { activeBoardMock } from './mocks/activeBoard';
+import { myBoardsMock } from './mocks/myBoards';
 
 /**
  * Получить все доступные пользователю доски
  * @returns Промис, который сходит на бэк и получит список доступных пользователю досок и вернёт их массивом
  */
 export const getBoards = async (): Promise<Board[]> => {
+  if (useMocks) {
+    return myBoardsMock;
+  }
   try {
     const response = await apiGet('boards/my');
     const json = await response.body;
 
     switch (response.status) {
-      case HTTP_STATUS_OK:
-        {
-          const boards: Board[] = json.map((el: any): Board => {
-            return { id: el.id, title: el.name };
-          });
-          return boards;
-        }
+      case HTTP_STATUS_OK: {
+        const boards: Board[] = json.map((el: any): Board => {
+          return { id: el.id, title: el.name };
+        });
+        return boards;
+      }
       case HTTP_STATUS_NOT_FOUND:
         alert('Board not found');
         break;

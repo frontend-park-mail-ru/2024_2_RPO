@@ -328,6 +328,7 @@
 
 .login-form {
   display: grid;
+  width: 270px;
   grid-template-columns: auto 1fr;
   justify-items: end;
   align-items: center;
@@ -346,6 +347,11 @@
   display: flex;
   margin-top: 40px;
   justify-content: end;
+}
+.login-form__wrapper{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .header::after {
@@ -584,6 +590,55 @@
 
 .display-none {
   display: none !important;
+}
+
+.toast-container {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  z-index: 1000;
+}
+
+.toast-message {
+  color: #fff;
+  padding: 8px 16px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+  opacity: 1;
+  max-height: 100px;
+  transition: opacity 0.5s ease, max-height 0.5s ease;
+  overflow: hidden;
+}
+
+.toast-message__success {
+  background-color: #0dc268;
+}
+
+.toast-message__error {
+  background-color: red;
+}
+
+.toast-message__warning {
+  background-color: orange;
+}
+
+.toast-message__decay {
+  opacity: 0;
+}
+
+.toast-message__appear {
+  opacity: 0;
+  max-height: 0;
+  transform: scale(0.9); /* Легкое уменьшение размера */
+  transition: opacity 0.5s ease, max-height 0.5s ease, transform 0.5s ease;
+}
+
+.toast-message__collapse {
+  height: 0;
+  padding: 0;
+  margin: 0;
+  max-height: 0;
+  overflow: hidden;
 }
 
 .board-settings {
