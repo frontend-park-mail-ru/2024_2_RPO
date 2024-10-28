@@ -1,13 +1,21 @@
-import { registerUser } from '@/api/users';
+import { Button } from '@/components/Button';
+import { Input } from '@/components/Input';
 import { ModalDialog } from '@/components/ModalDialog';
 import { ComponentProps } from '@/jsxCore/types';
-import { getInputElementById } from '@/utils/domHelper';
+import { noop } from '@/utils/noop';
 
 interface RegistrationDialogProps extends ComponentProps {
   closeCallback?: () => any;
 }
 
 export const RegistrationDialog = (props: RegistrationDialogProps) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const data = {
+    login: '',
+    email: '',
+    password: '',
+    repeatPassword: '',
+  };
   return (
     <ModalDialog
       key="modal_dialog"
@@ -15,145 +23,33 @@ export const RegistrationDialog = (props: RegistrationDialogProps) => {
       title="Добро пожаловать в Pumpkin!"
       isOpened={true}
     >
-      <div>
-        <form id="reg_data">
-          <div class="form-field">
-            <label for="nickname" class="login__label">
-              Никнейм:
-            </label>
-            <input
-              type="text"
-              id="nickname"
-              name="nickname"
-              placeholder="Ваш никнейм"
-            />
+      <div className="login-form__wrapper">
+        <div class="login-form">
+          <div style="display: flex; justify-content: end">
+            <label for="nickname">Логин:</label>
           </div>
-          <div class="form-field">
-            <label for="email" class="login__label">
-              Email:
-            </label>
-            <input type="email" id="email" name="email" placeholder="Email" />
+          <Input key="nickname_input" />
+          <div style="display: flex; justify-content: end">
+            <label for="nickname">Email:</label>
           </div>
-          <div class="form-field">
-            <label for="password" class="login__label">
-              Пароль:
-            </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              placeholder="Пароль"
-            />
+          <Input key="email_input" />
+          <div style="display: flex; justify-content: end">
+            <label for="nickname">Пароль:</label>
           </div>
-          <div class="form-field">
-            <label for="confirm-password" class="login__label">
-              Повторите пароль:
-            </label>
-            <input
-              type="password"
-              id="confirm-password"
-              name="confirm-password"
-              placeholder="Пароль"
-            />
+          <Input key="password_input" />
+          <div style="display: flex; justify-content: end">
+            <label for="password">Повторите пароль:</label>
           </div>
-          <span id="allErrors"></span>
-          <div style="height:50px;"></div>;
-        </form>
-        <button
-          class="submit-btn"
-          ON_click={() => {
-            const nicknameElem = getInputElementById('nickname');
-            const emailElem = getInputElementById('email');
-            const passwordElem = getInputElementById('password');
-            const confirmPasswordElem = getInputElementById('confirm-password');
-
-            const allErrors = document.getElementById(
-              'allErrors'
-            ) as HTMLSpanElement;
-
-            allErrors.innerText = '';
-
-            let failFlag = false;
-
-            const MIN_PASSWD_LENGTH = 8;
-            const MAX_LENGTH = 60;
-
-            const nickname = nicknameElem.value;
-            const email = emailElem.value;
-            const password = passwordElem.value;
-            const confirmPassword = confirmPasswordElem.value;
-
-            if (!nickname) {
-              failFlag = true;
-              nicknameElem.style.borderColor = 'red';
-              allErrors.innerText += 'Пустой ник\n';
-            } else if (nickname.length > MAX_LENGTH) {
-              failFlag = true;
-              nicknameElem.style.borderColor = 'red';
-              allErrors.innerText += 'Слишком длинное имя\n';
-            } else {
-              nicknameElem.style.borderColor = 'gray';
-              nicknameElem.setCustomValidity('');
-            }
-            allErrors.style.color = 'red';
-
-            const emailRegex =
-              /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-            if (!email) {
-              failFlag = true;
-              emailElem.style.borderColor = 'red';
-              allErrors.innerText += 'Пустой email\n';
-            } else if (!email.match(emailRegex)) {
-              failFlag = true;
-              emailElem.style.borderColor = 'red';
-              allErrors.innerText += 'Инвалидный email\n';
-            } else if (email.length > MAX_LENGTH) {
-              failFlag = true;
-              emailElem.style.borderColor = 'red';
-              allErrors.innerText += 'Слишком длинный email\n';
-            } else {
-              emailElem.style.borderColor = 'gray';
-            }
-
-            if (!password || password.length < MIN_PASSWD_LENGTH) {
-              failFlag = true;
-              allErrors.innerText += 'Пароль должен быть не менее 8 символов\n';
-              passwordElem.style.borderColor = 'red';
-            } else if (password.length > MAX_LENGTH) {
-              failFlag = true;
-              allErrors.innerText +=
-                'Слишком длинный пароль, bcrypt не сможет его хешировать\n';
-              passwordElem.style.borderColor = 'red';
-            } else {
-              passwordElem.style.borderColor = 'gray';
-              allErrors.innerText += '';
-            }
-
-            if (password !== confirmPassword) {
-              failFlag = true;
-              allErrors.innerText += 'Пароли должны совпадать\n';
-              confirmPasswordElem.style.borderColor = 'red';
-            } else {
-              confirmPasswordElem.style.borderColor = 'gray';
-            }
-            if (!failFlag) {
-              // Если валидация прошла, отправляем данные на сервер
-              registerUser(nickname, email, password).then(
-                () => {
-                  //TODO обновить бизнес-логику
-                },
-                (reason: string) => {
-                  allErrors.innerText += reason + '\n';
-                  allErrors.innerText +=
-                    'Попробуйте другие email и логин взять';
-                }
-              );
-            }
-          }}
-        >
-          Зарегистрироваться!
-        </button>
+          <Input key="repeat_password_input" />
+        </div>
+        <div class="login-form__button-container">
+          <Button
+            key="submit_btn"
+            variant="positive"
+            callback={noop}
+            text="Войти!"
+          />
+        </div>
       </div>
     </ModalDialog>
   );
