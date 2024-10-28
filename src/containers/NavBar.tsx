@@ -7,6 +7,7 @@ import { UserPopup } from './UserPopup';
 import { useState } from '@/jsxCore/hooks';
 import { noop } from '@/utils/noop';
 import { goToUrl } from '@/stores/routerStore';
+import { openBoardSettingsModalDialog } from '@/stores/modalDialogsStore';
 
 interface NavBarProps extends ComponentProps {
   leftPanelOpened: boolean;
@@ -72,7 +73,11 @@ export const NavBar = (props: NavBarProps) => {
               wrapperClassName="navbar__board-name-wrapper"
               setText={noop}
             />
-            <Button key="settings" icon="bi-gear" />
+            <Button
+              key="settings"
+              icon="bi-gear"
+              callback={openBoardSettingsModalDialog}
+            />
           </div>
           <div class="flex-grow"></div>
           <div class="navbar__group">
