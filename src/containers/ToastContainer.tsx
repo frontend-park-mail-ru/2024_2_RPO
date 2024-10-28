@@ -35,19 +35,19 @@ const ToastMessage = ({ title, id, variant }: ToastMessageProps) => {
     const div = refs.get('message_div') as HTMLDivElement;
 
     // Анимация появления
-    div.classList.add('toast-notification__appear');
+    div.classList.add('toast-message__appear');
     setTimeout(() => {
-      div.classList.remove('toast-notification__appear');
+      div.classList.remove('toast-message__appear');
     }, 500); // Снимаем класс после завершения анимации появления
 
     // Анимация затухания через 3.5 секунды
     setTimeout(() => {
-      div.classList.add('toast-notification__decay');
+      div.classList.add('toast-message__decay');
     }, 3500);
 
     // Анимация схлопывания через 6 секунд
     setTimeout(() => {
-      div.classList.add('toast-notification__collapse');
+      div.classList.add('toast-message__collapse');
     }, 6000);
 
     // Удаление уведомления из хранилища через 7 секунд
@@ -61,7 +61,7 @@ const ToastMessage = ({ title, id, variant }: ToastMessageProps) => {
   return (
     <div
       ref="message_div"
-      className={['toast-message', `toast-notification__${variant}`].join(' ')}
+      className={['toast-message', `toast-message__${variant}`].join(' ')}
     >
       {title}
     </div>
