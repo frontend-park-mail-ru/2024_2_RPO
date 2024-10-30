@@ -39,7 +39,7 @@ export const UserPopup = (props: UserPopupProps) => {
     <>
       <div class="user-popup">
         <div class="user-popup__profile-info">
-          <div class="user-popup__avatar">
+          <div>
             <img
               src="static/img/KarlMarks.jpg"
               alt="Profile Image"

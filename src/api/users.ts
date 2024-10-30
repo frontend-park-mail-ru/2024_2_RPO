@@ -15,7 +15,6 @@ import { userMeMock } from './mocks/user';
  */
 export const getUserMe = async (): Promise<User | undefined> => {
   if (useMocks) {
-    console.log("MOCK MOCK MOCK")
     return userMeMock;
   }
   try {

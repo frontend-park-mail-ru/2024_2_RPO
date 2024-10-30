@@ -1,6 +1,6 @@
 import { Board } from './board';
 import { Card } from './card';
-import { UserPermissions, UserToBoard } from './user';
+import { UserToBoard } from './user';
 
 export interface BoardColumn {
   id: number;
@@ -10,6 +10,6 @@ export interface BoardColumn {
 
 export interface ActiveBoard extends Board {
   columns: BoardColumn[];
-  myPermissions: UserPermissions;
+  myRole: 'viewer' | 'editor' | 'editor_chief' | 'admin';
   users?: UserToBoard[];
 }
