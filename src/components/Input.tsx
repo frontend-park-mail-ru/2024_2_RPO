@@ -7,9 +7,9 @@ interface InputProps extends ComponentProps {
   readOnly?: boolean;
   validationMessage?: string | undefined;
   copyOnClick?: boolean;
+  type?: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const Input = (props: InputProps) => {
   return (
     <div className="input__wrapper">

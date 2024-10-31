@@ -8,7 +8,7 @@ import { MainApp } from './screens/MainApp';
 
 import { loadBoard } from './stores/activeBoardStore';
 import { useRouterStore } from './stores/routerStore';
-import { ToastContainer } from './containers/ToastContainer'; // Импортируем ToastContainer
+import { ToastContainer } from './containers/ToastContainer'; 
 
 setUseMocks(true);
 
@@ -24,7 +24,7 @@ const App: IComponentFunction = () => {
       ) : (
         <HomePage key="home_page" />
       )}
-      <ToastContainer key="toast_container" /> {/* Добавляем ToastContainer */}
+      <ToastContainer key="toast_container" /> 
     </>
   );
 };
