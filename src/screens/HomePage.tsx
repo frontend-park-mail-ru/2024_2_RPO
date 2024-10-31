@@ -16,6 +16,10 @@ export const HomePage = (props: HomePageProps) => {
     showToast('Вам пришло уведомление', 'warning');
     showToast('Изменения успешно сохранены!', 'success');
     showToast('Вы не сохранили изменения!', 'error');
+    showToast(
+      'Упс! Страницы, на которую Вы хотите перейти не существует!',
+      'error'
+    );
   });
 
   return (
