@@ -24,7 +24,9 @@ export interface BoardInfoResponse {
   id: number;
   name: string;
   description: string;
-  //TODO background
+  backgroundImageUrl: string; 
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface BoardResponse {
