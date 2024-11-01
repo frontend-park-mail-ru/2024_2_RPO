@@ -5,8 +5,6 @@ import { HomePage } from './screens/HomePage';
 import { IComponentFunction } from './jsxCore/types';
 import { setApiUrl } from './api/apiHelper';
 import { MainApp } from './screens/MainApp';
-
-import { loadBoard } from './stores/activeBoardStore';
 import { useRouterStore } from './stores/routerStore';
 import { ToastContainer } from './containers/ToastContainer';
 import { apiUrl } from './config';
@@ -32,5 +30,3 @@ const App: IComponentFunction = () => {
 
 const appRoot = document.getElementById('app_root') as HTMLDivElement;
 createApp(App, appRoot);
-
-loadBoard(2);

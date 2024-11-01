@@ -18,10 +18,11 @@ const getApiUrl = (addr: string): string => {
   }
   return apiRoot + '/' + addr;
 };
-const fetchApi = async (
+
+const fetchApi = (
   addr: string,
   method: string,
-  body?: any
+  requestBody?: any
 ): Promise<IResponce> => {
   const requestHeaders = new Headers({});
   const requestOptions: RequestInit = {
@@ -29,23 +30,53 @@ const fetchApi = async (
     method: method,
     headers: requestHeaders,
   };
-  if (body !== undefined) {
-    requestOptions.body = JSON.stringify(body);
+
+  if (requestBody !== undefined) {
+    requestOptions.body = JSON.stringify(requestBody);
     requestHeaders.set('Content-Type', 'application/json');
   }
-  const response = await fetch(getApiUrl(addr), requestOptions);
-  const contentType = response.headers.get('Content-Type') as string;
-  let returnValue: any = undefined;
-  if (contentType === 'application/json') {
-    returnValue = await response.json();
-  } else {
-    returnValue = await response.text();
-  }
-  return {
-    status: response.status,
-    body: returnValue,
-    contentType,
-  };
+
+  return fetch(getApiUrl(addr), requestOptions)
+    .then((response: Response) => {
+      const contentType = response.headers.get('Content-Type') as string;
+
+      return response.text().then((text) => {
+        let returnValue: any;
+
+        if (contentType.includes('application/json')) {
+          returnValue = JSON.parse(text);
+        } else {
+          returnValue = text;
+        }
+
+        return {
+          status: response.status,
+          body: returnValue,
+          contentType,
+        };
+      });
+    })
+    .catch((response: Response) => {
+      if (response.status >= 400 && response.status < 600) {
+        console.warn(`Error: Received status code ${response.status}`);
+      }
+      const contentType = response.headers.get('Content-Type') as string;
+      return response.text().then((text: string) => {
+        let returnValue: any;
+
+        if (contentType.includes('application/json')) {
+          returnValue = JSON.parse(text);
+        } else {
+          returnValue = text;
+        }
+
+        return {
+          status: response.status,
+          body: returnValue,
+          contentType,
+        };
+      });
+    });
 };
 
 /**

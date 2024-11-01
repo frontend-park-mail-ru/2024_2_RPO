@@ -4,12 +4,13 @@ import { useActiveBoardStore } from '@/stores/activeBoardStore';
 import { Button } from './Button';
 import { EditableText } from './EditableText';
 import { useState } from '@/jsxCore/hooks';
+import { ActiveBoard } from '@/types/activeBoard';
 
 interface KanbanColumnProps extends ComponentProps {
   columnIndex: number;
 }
 export const KanbanColumn = (props: KanbanColumnProps) => {
-  const activeBoardStore = useActiveBoardStore();
+  const activeBoardStore = useActiveBoardStore() as ActiveBoard;
   const columnData = activeBoardStore.columns[props.columnIndex];
   const [title, setTitle] = useState('Апокалипсис');
   return (
@@ -19,7 +20,7 @@ export const KanbanColumn = (props: KanbanColumnProps) => {
           text={title}
           setText={setTitle}
           key="title_editable_text"
-          textClassName='kanban-column__title'
+          textClassName="kanban-column__title"
         />
         <div class="kanban-column__dots-button">
           <i
@@ -37,7 +38,7 @@ export const KanbanColumn = (props: KanbanColumnProps) => {
           />
         );
       })}
-      {activeBoardStore.myPermissions.canWrite && (
+      {activeBoardStore?.myRole !== 'viewer' && (
         <Button
           key="new_card"
           text="Добавить карточку"

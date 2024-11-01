@@ -6,6 +6,10 @@ import { UserProfile } from '@/containers/UserProfile';
 import { KanbanBoard } from '@/containers/KanbanBoard';
 import { useModalDialogsStore } from '@/stores/modalDialogsStore';
 import { BoardSettings } from '@/containers/BoardSettings';
+import { useActiveBoardStore } from '@/stores/activeBoardStore';
+import { setBoardsStore, useBoardsStore } from '@/stores/boardsStore';
+import { getBoards } from '@/api/boards';
+import { Board } from '@/types/board';
 
 type MainAppProps = ComponentProps;
 
@@ -13,6 +17,13 @@ type MainAppProps = ComponentProps;
 export const MainApp = (props: MainAppProps) => {
   const [leftPanelOpened, setLeftPanelOpened] = useState(false);
   const modalDialogsStore = useModalDialogsStore();
+  const activeBoard = useActiveBoardStore();
+  const boards=useBoardsStore()
+  if(boards===undefined){
+    getBoards().then((newBoards: Board[]) => {
+      setBoardsStore(newBoards);
+    });
+  }
 
   return (
     <>
@@ -37,7 +48,7 @@ export const MainApp = (props: MainAppProps) => {
           alt=""
         />
 
-        <KanbanBoard key="kanban-board" />
+        {activeBoard !== undefined && <KanbanBoard key="kanban-board" />}
       </main>
     </>
   );

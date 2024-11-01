@@ -10,6 +10,7 @@ import {
 } from '@/api/apiHelper';
 import { User } from '@/types/user';
 import { userMeMock } from './mocks/user';
+import { showToast } from '@/stores/toastNotificationStore';
 /**
  * Получить информацию о текущем пользователе
  * @returns промис, который возвращает или User (если залогинен), или undefined (если не залогинен)
@@ -31,7 +32,7 @@ export const getUserMe = async (): Promise<User | undefined> => {
       case HTTP_STATUS_UNAUTHORIZED:
         return undefined;
       default:
-        alert('Неожиданная ошибка');
+        showToast('Неожиданная ошибка', 'error');
     }
     return undefined;
   } catch {
@@ -124,9 +125,9 @@ export const loginUser = async (email: string, password: string) => {
 export const updateUserAvatar = async (avatar: File): Promise<User> => {
   const formData = new FormData();
   formData.append('avatar', avatar);
-  
+
   const response = await apiPutFormData('/users/me/avatar', formData);
-  
+
   if (response.status === HTTP_STATUS_OK) {
     return response.body as User;
   } else {
@@ -140,8 +141,14 @@ export const updateUserAvatar = async (avatar: File): Promise<User> => {
  * @param newPassword Новый пароль пользователя
  * @returns Промис, который возвращает сообщение об успехе или ошибке
  */
-export const changeUserPassword = async (oldPassword: string, newPassword: string): Promise<void> => {
-  const response = await apiPost('/auth/changePassword', { oldPassword, newPassword });
+export const changeUserPassword = async (
+  oldPassword: string,
+  newPassword: string
+): Promise<void> => {
+  const response = await apiPost('/auth/changePassword', {
+    oldPassword,
+    newPassword,
+  });
 
   if (response.status !== HTTP_STATUS_OK) {
     if (response.status === HTTP_STATUS_BAD_REQUEST) {

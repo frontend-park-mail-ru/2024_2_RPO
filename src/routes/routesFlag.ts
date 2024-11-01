@@ -1,20 +1,21 @@
 export interface RouterFlags {
   isHome: boolean;
   isApp: boolean;
+  boardId: number | undefined;
 }
 
 export const getFlagRoutes = (currentPath: string): RouterFlags => {
   console.log('Current path: ', currentPath);
-  console.log('Я отработала');
-  if (currentPath.startsWith('http')) throw new Error('fadfasdfasfd');
-  // const matchBoard = currentPath.match(/\/app\/boardId_(\d+)/);
-  // const boardId = matchBoard ? parseInt(matchBoard[1]) : null;
-
-  // const matchMethod = currentPath.match(/\/app\/boardId_(\d+)\/method_(\w+)/);
-  // const Method = matchMethod ? matchMethod[2] : null;
+  let boardId: number | undefined = undefined;
+  if (currentPath.startsWith('/app')) {
+    if (currentPath.startsWith('/app/board_')) {
+      boardId = parseInt(currentPath.slice('/app/board_'.length));
+    }
+  }
 
   return {
-    isHome: !currentPath.startsWith('/app'),
+    isHome: ['/login', '/register', '/'].indexOf(currentPath) !== -1,
     isApp: currentPath.startsWith('/app'),
+    boardId,
   };
 };

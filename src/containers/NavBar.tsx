@@ -68,7 +68,7 @@ export const NavBar = (props: NavBarProps) => {
             />
             <EditableText
               key="board_name_text"
-              text={activeBoardStore.title}
+              text={activeBoardStore?.title ?? 'Загрузка'}
               textClassName="navbar__board-name"
               wrapperClassName="navbar__board-name-wrapper"
               setText={noop}

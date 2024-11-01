@@ -6,6 +6,7 @@ import { defineStore } from '@/jsxCore/hooks';
 const handlerFunc = () => {
   const pathName = window.location.pathname;
   setRouterStore(getFlagRoutes(pathName));
+
 };
 
 window.addEventListener('hashchange', handlerFunc);

@@ -1,9 +1,8 @@
 import { Button } from '@/components/Button';
 import { LoginDialog } from '@/containers/LoginDialog';
 import { RegistrationDialog } from '@/containers/RegistrationDialog';
-import { useState, useEffect } from '@/jsxCore/hooks';
+import { useState } from '@/jsxCore/hooks';
 import { ComponentProps } from '@/jsxCore/types';
-import { showToast } from '@/stores/toastNotificationStore';
 
 type HomePageProps = ComponentProps;
 
@@ -11,16 +10,6 @@ type HomePageProps = ComponentProps;
 export const HomePage = (props: HomePageProps) => {
   const [isRegistrationOpened, setIsRegistrationOpened] = useState(false);
   const [isLoginOpened, setIsLoginOpened] = useState(false);
-
-  useEffect(() => {
-    showToast('Вам пришло уведомление', 'warning');
-    showToast('Изменения успешно сохранены!', 'success');
-    showToast('Вы не сохранили изменения!', 'error');
-    showToast(
-      'Упс! Страницы, на которую Вы хотите перейти не существует!',
-      'error'
-    );
-  });
 
   return (
     <>

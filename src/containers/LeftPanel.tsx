@@ -12,7 +12,7 @@ import { useBoardsStore } from '@/stores/boardsStore';
 type LeftPanelProps = ComponentProps;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const LeftPanel = (props: LeftPanelProps) => {
-  const boardsStore = useBoardsStore();
+  const boardsStore = useBoardsStore() ?? [];
   return (
     <aside class="left-menu">
       <div class="left-menu__header">
