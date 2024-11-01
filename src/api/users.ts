@@ -74,11 +74,11 @@ export const registerUser = async (
       case HTTP_STATUS_CONFLICT:
         {
           switch (response.body.text) {
-            case 'Email is busy':
+            case 'Nickname is busy':
               return 'email_busy';
             case 'Login is busy':
               return 'login_busy';
-            case 'Email and login are busy':
+            case 'Email and nickname are busy':
               return 'login_and_email_busy';
           }
         }
@@ -114,7 +114,10 @@ export const logout = async () => {
  * Залогиниться
  * @returns промис, который логинит и вызывает или onResolve(), или onReject(reason)
  */
-export const loginUser = async (email: string, password: string) => {
+export const loginUser = async (
+  email: string,
+  password: string
+): Promise<boolean> => {
   try {
     const response = await apiPost('/auth/login', {
       email,
@@ -123,17 +126,18 @@ export const loginUser = async (email: string, password: string) => {
 
     switch (response.status) {
       case HTTP_STATUS_OK:
-        return;
+        return true;
       case HTTP_STATUS_UNAUTHORIZED:
-        alert('Неверные креды');
+        showToast('Неверные креды', 'error');
         throw new Error('Неверные учетные данные');
       default:
-        alert('Беды на бэке');
+        showToast('Неизвестная ошибка', 'error');
         throw new Error('Беды на бэке');
     }
   } catch {
-    alert('Неизвестная ошибка');
+    showToast('Неизвестная ошибка', 'error');
   }
+  return false;
 };
 
 /**

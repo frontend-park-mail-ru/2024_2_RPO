@@ -40,7 +40,6 @@ export const EditableText = (props: EditableTextProps) => {
         inpElem.value = props.text;
         inpElem.style.width = inpElem.value.length + 'ch';
       }
-      console.log(inpElem);
       saveCb = () => {
         setIsInput(false);
         const newText = inpElem.value;
@@ -49,7 +48,6 @@ export const EditableText = (props: EditableTextProps) => {
         } else {
           props.setText(newText);
         }
-        console.log(inpElem.value);
       };
     });
     return (

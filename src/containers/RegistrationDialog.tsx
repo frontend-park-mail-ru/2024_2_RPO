@@ -4,6 +4,7 @@ import { Input } from '@/components/Input';
 import { ModalDialog } from '@/components/ModalDialog';
 import { useState } from '@/jsxCore/hooks';
 import { ComponentProps } from '@/jsxCore/types';
+import { updateMe } from '@/stores/meStore';
 import { goToUrl } from '@/stores/routerStore';
 import { showToast } from '@/stores/toastNotificationStore';
 import {
@@ -66,6 +67,7 @@ export const RegistrationDialog = (props: RegistrationDialogProps) => {
       switch (response) {
         case 'ok':
           showToast('Успешная регистрация', 'success');
+          updateMe();
           goToUrl('/app');
           break;
         case 'email_busy':
@@ -101,6 +103,7 @@ export const RegistrationDialog = (props: RegistrationDialogProps) => {
           </div>
           <Input
             key="nickname_input"
+            onEnter={submitFunction}
             onChanged={(newNickname) => {
               setIsNicknameTaken(false);
               setData({ ...data, nickname: newNickname });
@@ -116,6 +119,7 @@ export const RegistrationDialog = (props: RegistrationDialogProps) => {
               setIsEmailTaken(false);
               setData({ ...data, email: newEmail });
             }}
+            onEnter={submitFunction}
             validationMessage={validationData.email.validationMessage}
           />
           <div style="display: flex; justify-content: end">
@@ -123,6 +127,8 @@ export const RegistrationDialog = (props: RegistrationDialogProps) => {
           </div>
           <Input
             key="password_input"
+            isPassword
+            onEnter={submitFunction}
             onChanged={(newPassword) => {
               setData({ ...data, password: newPassword });
             }}
@@ -134,6 +140,7 @@ export const RegistrationDialog = (props: RegistrationDialogProps) => {
           <Input
             key="repeat_password_input"
             isPassword
+            onEnter={submitFunction}
             onChanged={(newRepeatPassword) => {
               setData({ ...data, repeatPassword: newRepeatPassword });
             }}

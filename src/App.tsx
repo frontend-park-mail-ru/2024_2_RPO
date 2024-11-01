@@ -8,8 +8,9 @@ import { MainApp } from './screens/MainApp';
 import { useRouterStore } from './stores/routerStore';
 import { ToastContainer } from './containers/ToastContainer';
 import { apiUrl } from './config';
+import { updateMe } from './stores/meStore';
 
-setApiUrl(apiUrl)
+setApiUrl(apiUrl);
 
 const App: IComponentFunction = () => {
   const routerStore = useRouterStore();
@@ -28,5 +29,6 @@ const App: IComponentFunction = () => {
   );
 };
 
+updateMe();
 const appRoot = document.getElementById('app_root') as HTMLDivElement;
 createApp(App, appRoot);

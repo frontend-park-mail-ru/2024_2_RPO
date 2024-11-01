@@ -16,7 +16,6 @@ interface SelectBoxProps extends ComponentProps {
   currentIndex: number;
   onChange?: (newIndex: number) => void;
 }
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const SelectBox = (props: SelectBoxProps) => {
   const [isOpened, setIsOpened] = useState(false);
   const currentOption = props.options[props.currentIndex];
@@ -24,7 +23,6 @@ export const SelectBox = (props: SelectBoxProps) => {
     <div
       class="select-box"
       ON_click={() => {
-        console.log('dfdsfsff', isOpened);
         setIsOpened(!isOpened);
       }}
     >

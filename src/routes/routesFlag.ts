@@ -5,7 +5,6 @@ export interface RouterFlags {
 }
 
 export const getFlagRoutes = (currentPath: string): RouterFlags => {
-  console.log('Current path: ', currentPath);
   let boardId: number | undefined = undefined;
   if (currentPath.startsWith('/app')) {
     if (currentPath.startsWith('/app/board_')) {

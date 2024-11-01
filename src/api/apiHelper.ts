@@ -23,7 +23,8 @@ const getApiUrl = (addr: string): string => {
 const fetchApi = async (
   addr: string,
   method: string,
-  requestBody?: any
+  requestBody?: any,
+  retry: boolean = false
 ): Promise<IResponce> => {
   const requestHeaders = new Headers();
   const requestOptions: RequestInit = {
@@ -31,7 +32,6 @@ const fetchApi = async (
     method: method,
   };
   requestHeaders.set('X-CSRF-Token', csrfToken);
-  console.log('CSRF token: ', csrfToken);
   if (requestBody !== undefined) {
     requestOptions.body = JSON.stringify(requestBody);
     requestHeaders.set('Content-Type', MIME_TYPE_JSON);
@@ -58,12 +58,23 @@ const fetchApi = async (
   } else {
     returnValue = text;
   }
-  console.log(response.headers);
   const newCsrfToken = response.headers.get('x-csrf-token');
   if (newCsrfToken !== null) {
     csrfToken = newCsrfToken;
   } else {
-    console.error('No CSRF token provided');
+    if (retry) {
+      console.warn('No CSRF token provided at csrf retry request');
+    }
+    console.warn('No CSRF token provided');
+  }
+  if (
+    response.status === HTTP_STATUS_FORBIDDEN &&
+    JSON.stringify(returnValue).toLowerCase().indexOf('csrf') !== -1 &&
+    !retry
+  ) {
+    // Повторить запрос, если сбился CSRF-токен
+    await fetchApi('/users/me', 'GET', undefined, true);
+    return await fetchApi(addr, method, requestBody);
   }
   return {
     status: response.status,

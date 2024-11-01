@@ -1,5 +1,8 @@
+import { createBoard } from '@/api/boards';
 import { BoardCardComponent } from '@/components/BoardCard';
 import { Button } from '@/components/Button';
+import { Input } from '@/components/Input';
+import { useState } from '@/jsxCore/hooks';
 import { ComponentProps } from '@/jsxCore/types';
 import { useBoardsStore } from '@/stores/boardsStore';
 
@@ -12,6 +15,7 @@ import { useBoardsStore } from '@/stores/boardsStore';
 type LeftPanelProps = ComponentProps;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const LeftPanel = (props: LeftPanelProps) => {
+  const [inputOpened, setInputOpened] = useState(false);
   const boardsStore = useBoardsStore() ?? [];
   return (
     <aside class="left-menu">
@@ -27,22 +31,42 @@ export const LeftPanel = (props: LeftPanelProps) => {
         </div>
         <div class="cards" style="flex-direction: column;">
           {boardsStore.map((board) => {
-            return BoardCardComponent({
-              title: board.title,
-              lastUpdate: 'N/A',
-              lastVisit: 'N/A',
-              boardId: board.id,
-            });
+            return (
+              <BoardCardComponent
+                key={`board_${board.id}`}
+                title={board.title}
+                lastUpdate="N/A"
+                lastVisit="N/A"
+                boardId={board.id}
+              />
+            );
           })}
         </div>
-        <Button
-          key="add_board_btn"
-          icon="bi-plus-square"
-          text="Добавить доску"
-          callback={() => {
-            //TODO добавление доски
-          }}
-        />
+        <div>
+          {inputOpened && (
+            <Input
+              key="newBoardName"
+              focusOnInstance
+              onEscape={() => {
+                setInputOpened(false);
+              }}
+              onEnter={(value: string) => {
+                setInputOpened(false);
+                createBoard(value);
+              }}
+            />
+          )}
+          {!inputOpened && (
+            <Button
+              key="add_board_btn"
+              icon="bi-plus-square"
+              text="Добавить доску"
+              callback={() => {
+                setInputOpened(true);
+              }}
+            />
+          )}
+        </div>
       </div>
     </aside>
   );

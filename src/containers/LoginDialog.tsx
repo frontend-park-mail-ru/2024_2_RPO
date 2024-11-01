@@ -1,14 +1,29 @@
+import { loginUser } from '@/api/users';
 import { Button } from '@/components/Button';
 import { Input } from '@/components/Input';
 import { ModalDialog } from '@/components/ModalDialog';
+import { useState } from '@/jsxCore/hooks';
 import { ComponentProps } from '@/jsxCore/types';
-import { noop } from '@/utils/noop';
+import { updateMe } from '@/stores/meStore';
+import { goToUrl } from '@/stores/routerStore';
+import { showToast } from '@/stores/toastNotificationStore';
 
 interface LoginDialogProps extends ComponentProps {
   closeCallback?: () => any;
 }
 
 export const LoginDialog = (props: LoginDialogProps) => {
+  const [data, setData] = useState({ email: '', password: '' });
+  const submitFunction = () => {
+    loginUser(data.email, data.password).then((ok) => {
+      if (ok) {
+        updateMe();
+        goToUrl('/app');
+      } else {
+        showToast('Ошибка при входе', 'error');
+      }
+    });
+  };
   return (
     <ModalDialog
       key="login_dialog"
@@ -17,16 +32,29 @@ export const LoginDialog = (props: LoginDialogProps) => {
       isOpened={true}
     >
       <div class="login-form">
-        <label for="nickname">Email:</label>
-        <Input key="nickname_input" />
+        <label for="email">Email:</label>
+        <Input
+          key="email_input"
+          onEnter={submitFunction}
+          onChanged={(newValue) => {
+            setData({ ...data, email: newValue });
+          }}
+        />
         <label for="password">Пароль:</label>
-        <Input key="password_input" />
+        <Input
+          key="password_input"
+          isPassword
+          onEnter={submitFunction}
+          onChanged={(newValue) => {
+            setData({ ...data, password: newValue });
+          }}
+        />
       </div>
       <div class="login-form__button-container">
         <Button
           key="submit_btn"
           variant="positive"
-          callback={noop}
+          callback={submitFunction}
           text="Войти!"
         />
       </div>

@@ -3,22 +3,22 @@ import { defineStore } from '@/jsxCore/hooks';
 import { User } from '@/types/user';
 import { goToUrl, useRouterStore } from './routerStore';
 
-export const [useMeStore, setMeStore] = defineStore<User>('me', {
-  email: 'Загрузка',
-  id: 12345,
-  name: 'Загрузка',
-});
+export const [useMeStore, setMeStore] = defineStore<User | undefined>(
+  'me',
+  undefined
+);
 
-setTimeout(() => {
-  getUserMe().then((user) => {
-    console.log('User', user);
-    if (user !== undefined) {
-      setMeStore(user);
-    } else {
-      if (useRouterStore().isApp) {
-        goToUrl('/');
+export const updateMe = () => {
+  setTimeout(() => {
+    getUserMe().then((user) => {
+      if (user !== undefined) {
+        setMeStore(user);
+      } else {
+        if (useRouterStore().isApp) {
+          goToUrl('/');
+        }
       }
-    }
-    return null;
-  });
-}, 0);
+      return null;
+    });
+  }, 0);
+};

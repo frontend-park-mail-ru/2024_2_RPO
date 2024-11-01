@@ -3,6 +3,7 @@ import { LoginDialog } from '@/containers/LoginDialog';
 import { RegistrationDialog } from '@/containers/RegistrationDialog';
 import { useState } from '@/jsxCore/hooks';
 import { ComponentProps } from '@/jsxCore/types';
+import { useMeStore } from '@/stores/meStore';
 
 type HomePageProps = ComponentProps;
 
@@ -10,6 +11,7 @@ type HomePageProps = ComponentProps;
 export const HomePage = (props: HomePageProps) => {
   const [isRegistrationOpened, setIsRegistrationOpened] = useState(false);
   const [isLoginOpened, setIsLoginOpened] = useState(false);
+  const userMe = useMeStore();
 
   return (
     <>
@@ -24,39 +26,43 @@ export const HomePage = (props: HomePageProps) => {
           Облачный канбан со сверхспособностями
         </span>
 
-        {Button({
-          key: 'dfdsff',
-          text: 'Зарегистрироваться',
-          callback: () => {
-            setIsRegistrationOpened(true);
-          },
-        })}
+        {userMe === undefined && (
+          <Button
+            key="reg_button"
+            text="Зарегистрироваться"
+            callback={() => {
+              setIsRegistrationOpened(true);
+            }}
+          />
+        )}
 
-        <Button
-          key="LoginButton"
-          text="Войти"
-          callback={() => {
-            setIsLoginOpened(true);
-          }}
-        />
+        {userMe === undefined && (
+          <Button
+            key="login_button"
+            text="Войти"
+            callback={() => {
+              setIsLoginOpened(true);
+            }}
+          />
+        )}
       </div>
 
-      {isRegistrationOpened ? (
+      {isRegistrationOpened && (
         <RegistrationDialog
           key="reg_dialog"
           closeCallback={() => {
             setIsRegistrationOpened(false);
           }}
         />
-      ) : undefined}
-      {isLoginOpened ? (
+      )}
+      {isLoginOpened && (
         <LoginDialog
           key="login_dialog"
           closeCallback={() => {
             setIsLoginOpened(false);
           }}
         />
-      ) : undefined}
+      )}
     </>
   );
 };

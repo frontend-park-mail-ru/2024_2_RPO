@@ -14,7 +14,6 @@ interface ButtonProps extends ComponentProps {
  * @returns JSX кнопки
  */
 export const Button = (props: ButtonProps) => {
-  console.log('Full width: ', JSON.stringify(props.fullWidth));
   return (
     <div>
       <div

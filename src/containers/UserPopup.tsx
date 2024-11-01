@@ -1,6 +1,8 @@
+import { logout } from '@/api/users';
 import { ComponentProps } from '@/jsxCore/types';
-import { useMeStore } from '@/stores/meStore';
+import { updateMe, useMeStore } from '@/stores/meStore';
 import { openUserProfileModalDialog } from '@/stores/modalDialogsStore';
+import { User } from '@/types/user';
 
 interface PopupButtonProps extends ComponentProps {
   icon: string;
@@ -34,7 +36,7 @@ interface UserPopupProps extends ComponentProps {
  */
 
 export const UserPopup = (props: UserPopupProps) => {
-  const meStore = useMeStore();
+  const meStore = useMeStore() as User;
   return (
     <>
       <div class="user-popup">
@@ -70,7 +72,16 @@ export const UserPopup = (props: UserPopupProps) => {
             openUserProfileModalDialog();
           }}
         />
-        <PopupButton key="logout_btn" title="Выйти" icon="bi-box-arrow-right" />
+        <PopupButton
+          key="logout_btn"
+          title="Выйти"
+          icon="bi-box-arrow-right"
+          callback={() => {
+            logout().then(() => {
+              updateMe();
+            });
+          }}
+        />
       </div>
       <div
         class="full-screen-dark"

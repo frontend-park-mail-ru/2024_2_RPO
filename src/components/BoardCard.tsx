@@ -1,4 +1,6 @@
-interface BoardCardProps {
+import { ComponentProps } from "@/jsxCore/types";
+
+interface BoardCardProps extends ComponentProps {
   title?: string;
   lastVisit?: string;
   lastUpdate?: string;
