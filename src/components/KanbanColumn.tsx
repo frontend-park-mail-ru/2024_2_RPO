@@ -3,8 +3,8 @@ import { KanbanCard } from '@/components/KanbanCard';
 import { useActiveBoardStore } from '@/stores/activeBoardStore';
 import { Button } from './Button';
 import { EditableText } from './EditableText';
-import { useState } from '@/jsxCore/hooks';
 import { ActiveBoard } from '@/types/activeBoard';
+import { noop } from '@/utils/noop';
 
 interface KanbanColumnProps extends ComponentProps {
   columnIndex: number;
@@ -12,13 +12,12 @@ interface KanbanColumnProps extends ComponentProps {
 export const KanbanColumn = (props: KanbanColumnProps) => {
   const activeBoardStore = useActiveBoardStore() as ActiveBoard;
   const columnData = activeBoardStore.columns[props.columnIndex];
-  const [title, setTitle] = useState('Апокалипсис');
   return (
     <div class="kanban-column">
       <div class="kanban-column__header">
         <EditableText
-          text={title}
-          setText={setTitle}
+          text={columnData.title}
+          setText={noop}
           key="title_editable_text"
           textClassName="kanban-column__title"
         />
