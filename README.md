@@ -25,6 +25,12 @@
 
 ### Запуск Development Server
 
+Перед запуском надо создать файл `src/config.ts` и в нём разместить конфигурацию:
+
+```ts
+export const apiUrl="https://mysite.com" // Без замыкающего слеша! Если значение будет 'mock', будут использованы моки
+```
+
 `npm i` - установить все зависимости
 
 `npm run start` - запустить Development Server

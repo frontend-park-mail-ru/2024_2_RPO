@@ -3,14 +3,15 @@ import './fonts.scss';
 import { createApp } from './jsxCore/core';
 import { HomePage } from './screens/HomePage';
 import { IComponentFunction } from './jsxCore/types';
-import { setUseMocks } from './api/apiHelper';
+import { setApiUrl } from './api/apiHelper';
 import { MainApp } from './screens/MainApp';
 
 import { loadBoard } from './stores/activeBoardStore';
 import { useRouterStore } from './stores/routerStore';
-import { ToastContainer } from './containers/ToastContainer'; 
+import { ToastContainer } from './containers/ToastContainer';
+import { apiUrl } from './config';
 
-setUseMocks(true);
+setApiUrl(apiUrl)
 
 const App: IComponentFunction = () => {
   const routerStore = useRouterStore();
@@ -24,7 +25,7 @@ const App: IComponentFunction = () => {
       ) : (
         <HomePage key="home_page" />
       )}
-      <ToastContainer key="toast_container" /> 
+      <ToastContainer key="toast_container" />
     </>
   );
 };

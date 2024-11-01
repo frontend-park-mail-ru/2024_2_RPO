@@ -48,14 +48,16 @@ const fetchApi = async (
   };
 };
 
-
 /**
  * Выполняет PUT-запрос с использованием formData
  * @param addr адрес ресурса в API
  * @param formData объект FormData с данными для отправки
  * @returns Promise с ответом, содержащим статус, тело и тип контента
  */
-export const apiPutFormData = async (addr: string, formData: FormData): Promise<IResponce> => {
+export const apiPutFormData = async (
+  addr: string,
+  formData: FormData
+): Promise<IResponce> => {
   const requestHeaders = new Headers({});
   const requestOptions: RequestInit = {
     credentials: 'include',
@@ -67,7 +69,7 @@ export const apiPutFormData = async (addr: string, formData: FormData): Promise<
   const response = await fetch(getApiUrl(addr), requestOptions);
   const contentType = response.headers.get('Content-Type') as string;
   let returnValue: any = undefined;
-  
+
   if (contentType === 'application/json') {
     returnValue = await response.json();
   } else {
@@ -80,7 +82,6 @@ export const apiPutFormData = async (addr: string, formData: FormData): Promise<
     contentType,
   };
 };
-
 
 export const apiGet = async (addr: string) => {
   return fetchApi(addr, 'GET');
@@ -98,11 +99,13 @@ export const apiDelete = async (addr: string) => {
   return fetchApi(addr, 'DELETE');
 };
 
-export const setApiUrl = (apiRoot_: string) => {
-  apiRoot = apiRoot_;
-};
-export const setUseMocks = (newUseMocks: boolean) => {
-  useMocks = newUseMocks;
+export const setApiUrl = (newApiRoot: string) => {
+  apiRoot = newApiRoot;
+  if (newApiRoot === 'mock') {
+    useMocks = true;
+  } else {
+    useMocks = false;
+  }
 };
 
 export const HTTP_STATUS_OK = 200;
