@@ -7,7 +7,7 @@ interface InputProps extends ComponentProps {
   readOnly?: boolean;
   validationMessage?: string | undefined;
   copyOnClick?: boolean;
-  type?: string;
+  isPassword?: boolean;
 }
 
 export const Input = (props: InputProps) => {

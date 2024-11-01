@@ -34,11 +34,10 @@ const ToastMessage = ({ title, id, variant }: ToastMessageProps) => {
   useEffectRefs((refs) => {
     const div = refs.get('message_div') as HTMLDivElement;
 
-    // Анимация появления
-    div.classList.add('toast-message__appear');
+    // Анимация затухания через 3.5 секунды
     setTimeout(() => {
-      div.classList.remove('toast-message__appear');
-    }, 500); // Снимаем класс после завершения анимации появления
+      div.classList.remove('toast-message__collapse');
+    }, 30);
 
     // Анимация затухания через 3.5 секунды
     setTimeout(() => {
@@ -61,7 +60,7 @@ const ToastMessage = ({ title, id, variant }: ToastMessageProps) => {
   return (
     <div
       ref="message_div"
-      className={['toast-message', `toast-message__${variant}`].join(' ')}
+      className={['toast-message', 'toast-message__collapse', `toast-message__${variant}`].join(' ')}
     >
       {title}
     </div>

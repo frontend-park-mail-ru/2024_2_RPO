@@ -630,7 +630,7 @@
   opacity: 0;
   max-height: 0;
   transform: scale(0.9); /* Легкое уменьшение размера */
-  transition: opacity 0.5s ease, max-height 0.5s ease, transform 0.5s ease;
+  transition: opacity 0.5s, height 0.5s, transform 0.5s;
 }
 
 .toast-message__collapse {

@@ -40,6 +40,13 @@ export const getUserMe = async (): Promise<User | undefined> => {
   }
 };
 
+type RegStatus =
+  | 'ok'
+  | 'error'
+  | 'login_busy'
+  | 'email_busy'
+  | 'login_and_email_busy';
+
 /**
  * Зарегистрировать пользователя
  * @param nickname никнейм
@@ -51,7 +58,7 @@ export const registerUser = async (
   nickname: string,
   email: string,
   password: string
-) => {
+): Promise<RegStatus> => {
   try {
     const response = await apiPost('/auth/register', {
       name: nickname,
@@ -61,10 +68,22 @@ export const registerUser = async (
 
     switch (response.status) {
       case HTTP_STATUS_OK:
-        return 'Успешная регистрация';
+        return 'ok';
+      case HTTP_STATUS_BAD_REQUEST:
+        return 'error';
       case HTTP_STATUS_CONFLICT:
-        //TODO определить, занят логин, мыло или оба
-        throw new Error('Логин или email заняты');
+        {
+          switch (response.body.text) {
+            case 'Email is busy':
+              return 'email_busy';
+            case 'Login is busy':
+              return 'login_busy';
+            case 'Email and login are busy':
+              return 'login_and_email_busy';
+          }
+        }
+        showToast('Неизвестная ошибка 409', 'error');
+        throw new Error('unknown error');
       default:
         throw new Error('Неизвестная ошибка');
     }

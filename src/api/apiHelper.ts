@@ -1,4 +1,5 @@
 let apiRoot: string = '';
+let csrfToken: string = '';
 export let useMocks = false;
 
 interface IResponce {
@@ -19,64 +20,56 @@ const getApiUrl = (addr: string): string => {
   return apiRoot + '/' + addr;
 };
 
-const fetchApi = (
+const fetchApi = async (
   addr: string,
   method: string,
   requestBody?: any
 ): Promise<IResponce> => {
-  const requestHeaders = new Headers({});
+  const requestHeaders = new Headers();
   const requestOptions: RequestInit = {
     credentials: 'include',
     method: method,
-    headers: requestHeaders,
   };
-
+  requestHeaders.set('X-CSRF-Token', csrfToken);
+  console.log('CSRF token: ', csrfToken);
   if (requestBody !== undefined) {
     requestOptions.body = JSON.stringify(requestBody);
-    requestHeaders.set('Content-Type', 'application/json');
+    requestHeaders.set('Content-Type', MIME_TYPE_JSON);
   }
+  requestOptions.headers = requestHeaders;
 
-  return fetch(getApiUrl(addr), requestOptions)
-    .then((response: Response) => {
-      const contentType = response.headers.get('Content-Type') as string;
+  let response: Response;
+  try {
+    response = await fetch(getApiUrl(addr), requestOptions);
+  } catch (responseWithError) {
+    if (responseWithError instanceof Response) {
+      response = responseWithError;
+      console.warn(addr, 'response has status', responseWithError.status);
+    } else {
+      throw responseWithError;
+    }
+  }
+  const contentType = response.headers.get('Content-Type') as string;
+  const text = await response.text();
+  let returnValue: any;
 
-      return response.text().then((text) => {
-        let returnValue: any;
-
-        if (contentType.includes('application/json')) {
-          returnValue = JSON.parse(text);
-        } else {
-          returnValue = text;
-        }
-
-        return {
-          status: response.status,
-          body: returnValue,
-          contentType,
-        };
-      });
-    })
-    .catch((response: Response) => {
-      if (response.status >= 400 && response.status < 600) {
-        console.warn(`Error: Received status code ${response.status}`);
-      }
-      const contentType = response.headers.get('Content-Type') as string;
-      return response.text().then((text: string) => {
-        let returnValue: any;
-
-        if (contentType.includes('application/json')) {
-          returnValue = JSON.parse(text);
-        } else {
-          returnValue = text;
-        }
-
-        return {
-          status: response.status,
-          body: returnValue,
-          contentType,
-        };
-      });
-    });
+  if (contentType.includes(MIME_TYPE_JSON)) {
+    returnValue = JSON.parse(text);
+  } else {
+    returnValue = text;
+  }
+  console.log(response.headers);
+  const newCsrfToken = response.headers.get('x-csrf-token');
+  if (newCsrfToken !== null) {
+    csrfToken = newCsrfToken;
+  } else {
+    console.error('No CSRF token provided');
+  }
+  return {
+    status: response.status,
+    body: returnValue,
+    contentType,
+  };
 };
 
 /**
@@ -101,7 +94,7 @@ export const apiPutFormData = async (
   const contentType = response.headers.get('Content-Type') as string;
   let returnValue: any = undefined;
 
-  if (contentType === 'application/json') {
+  if (contentType === MIME_TYPE_JSON) {
     returnValue = await response.json();
   } else {
     returnValue = await response.text();
@@ -147,3 +140,4 @@ export const HTTP_STATUS_FORBIDDEN = 403;
 export const HTTP_STATUS_NOT_FOUND = 404;
 export const HTTP_STATUS_CONFLICT = 409;
 export const HTTP_STATUS_INTERNAL_ERROR = 500;
+export const MIME_TYPE_JSON = 'application/json';

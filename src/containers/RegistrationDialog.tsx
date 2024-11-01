@@ -1,9 +1,16 @@
+import { registerUser } from '@/api/users';
 import { Button } from '@/components/Button';
 import { Input } from '@/components/Input';
 import { ModalDialog } from '@/components/ModalDialog';
 import { useState } from '@/jsxCore/hooks';
 import { ComponentProps } from '@/jsxCore/types';
-import { validateNickname } from '@/utils/validation';
+import { goToUrl } from '@/stores/routerStore';
+import { showToast } from '@/stores/toastNotificationStore';
+import {
+  validateEmail,
+  validateNickname,
+  validatePassword,
+} from '@/utils/validation';
 
 interface RegistrationDialogProps extends ComponentProps {
   closeCallback?: () => any;
@@ -21,8 +28,8 @@ export const RegistrationDialog = (props: RegistrationDialogProps) => {
 
   const validationData = {
     nickname: validateNickname(data.nickname),
-    email: validateNickname(data.email),
-    password: validateNickname(data.password),
+    email: validateEmail(data.email),
+    password: validatePassword(data.password),
     repeatPassword: {
       allowed: data.repeatPassword === data.password,
       validationMessage:
@@ -50,7 +57,35 @@ export const RegistrationDialog = (props: RegistrationDialogProps) => {
     };
   }
 
-  const submitFunction = () => {};
+  const submitFunction = () => {
+    if (!validationOk) {
+      showToast('Ошибки в форме регистрации', 'error');
+      return;
+    }
+    registerUser(data.nickname, data.email, data.password).then((response) => {
+      switch (response) {
+        case 'ok':
+          showToast('Успешная регистрация', 'success');
+          goToUrl('/app');
+          break;
+        case 'email_busy':
+          setIsEmailTaken(true);
+          showToast('Email занят', 'warning');
+          break;
+        case 'login_busy':
+          setIsNicknameTaken(true);
+          showToast('Никнейм занят', 'warning');
+          break;
+        case 'login_and_email_busy':
+          setIsNicknameTaken(true);
+          setIsEmailTaken(true);
+          showToast('Email и никнейм заняты', 'warning');
+          break;
+        default:
+          showToast('Неизвестная ошибка', 'error');
+      }
+    });
+  };
 
   return (
     <ModalDialog
@@ -98,7 +133,7 @@ export const RegistrationDialog = (props: RegistrationDialogProps) => {
           </div>
           <Input
             key="repeat_password_input"
-            type="password" // добавлен атрибут type для скрытия ввода
+            isPassword
             onChanged={(newRepeatPassword) => {
               setData({ ...data, repeatPassword: newRepeatPassword });
             }}

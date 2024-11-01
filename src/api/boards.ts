@@ -35,7 +35,7 @@ export const getBoards = async (): Promise<Board[]> => {
         (el: BoardInfoResponse): Board => ({ id: el.id, title: el.name })
       );
     } else {
-      handleErrors(response.status, 'Get boards');
+      handleErrors(response.status, 'Получение списка досок');
     }
 
     return [];
@@ -149,14 +149,19 @@ export const setBoardBackgroundImage = async (
 const handleErrors = (status: number, action: string) => {
   switch (status) {
     case HTTP_STATUS_NOT_FOUND:
-      alert(`${action}: Board not found`);
+      showToast(
+        `${action}: Запрашиваемый элемент не найден или не существует`,
+        'error'
+      );
       break;
     case HTTP_STATUS_UNAUTHORIZED:
+      showToast(`${action}: Войдите в аккаунт сперва!`, 'error');
+      break;
     case HTTP_STATUS_FORBIDDEN:
-      alert(`${action}: User not authorized`);
+      showToast(`${action}: У Вас нет прав на это действие`, 'error');
       break;
     default:
-      alert(`${action}: Unexpected error`);
+      showToast(`${action}: Неизвестная ошибка`, 'error');
       break;
   }
 };

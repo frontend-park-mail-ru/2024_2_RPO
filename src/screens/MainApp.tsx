@@ -18,8 +18,8 @@ export const MainApp = (props: MainAppProps) => {
   const [leftPanelOpened, setLeftPanelOpened] = useState(false);
   const modalDialogsStore = useModalDialogsStore();
   const activeBoard = useActiveBoardStore();
-  const boards=useBoardsStore()
-  if(boards===undefined){
+  const boards = useBoardsStore();
+  if (boards === undefined) {
     getBoards().then((newBoards: Board[]) => {
       setBoardsStore(newBoards);
     });
@@ -43,7 +43,11 @@ export const MainApp = (props: MainAppProps) => {
 
       <main>
         <img
-          src="/static/img/backgroundPicture.png"
+          src={
+            activeBoard !== undefined
+              ? '/static/img/backgroundPicture.png'
+              : '/static/img/inviteBackgroundPicture.png'
+          }
           class="app__background-image"
           alt=""
         />
