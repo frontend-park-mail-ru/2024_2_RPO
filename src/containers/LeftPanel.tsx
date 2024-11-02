@@ -1,10 +1,11 @@
 import { createBoard } from '@/api/boards';
-import { BoardCardComponent } from '@/components/BoardCard';
+import { BoardCard } from '@/components/BoardCard';
 import { Button } from '@/components/Button';
 import { Input } from '@/components/Input';
 import { useState } from '@/jsxCore/hooks';
 import { ComponentProps } from '@/jsxCore/types';
 import { useBoardsStore } from '@/stores/boardsStore';
+import './leftPanel.scss';
 
 /**
  * Компонент левой панели
@@ -29,17 +30,9 @@ export const LeftPanel = (props: LeftPanelProps) => {
             <Button key="favourite_btn" icon="bi-star" />
           </div>
         </div>
-        <div class="cards" style="flex-direction: column;">
+        <div class="left-menu__card-list" style="flex-direction: column;">
           {boardsStore.map((board) => {
-            return (
-              <BoardCardComponent
-                key={`board_${board.id}`}
-                title={board.title}
-                lastUpdate="N/A"
-                lastVisit="N/A"
-                boardId={board.id}
-              />
-            );
+            return <BoardCard key={`board_${board.id}`} board={board} />;
           })}
         </div>
         <div>

@@ -9,6 +9,8 @@ export const getFlagRoutes = (currentPath: string): RouterFlags => {
   if (currentPath.startsWith('/app')) {
     if (currentPath.startsWith('/app/board_')) {
       boardId = parseInt(currentPath.slice('/app/board_'.length));
+    } else {
+      boardId = undefined;
     }
   }
 

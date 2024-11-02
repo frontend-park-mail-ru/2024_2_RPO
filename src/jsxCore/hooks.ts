@@ -68,7 +68,11 @@ export function defineStore<S>(
   const useStore = () => {
     if (activeInstance !== undefined) {
       // Подписать инстанс на store
-      if (!storeSubscribersIndex.has(activeInstance)) {
+      console.log('SUBSCRIBE', storeName, activeInstance);
+      if (
+        !storeSubscribersIndex.has(activeInstance) ||
+        !storeSubscribersIndex.get(activeInstance)?.has(storeName)
+      ) {
         storeSubscribersIndex.set(activeInstance, new Set());
         storeSubscribersIndex.get(activeInstance)?.add(storeName);
         storeSubscribers.get(storeName)?.add(activeInstance);

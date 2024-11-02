@@ -1,12 +1,13 @@
 import { getFlagRoutes } from '@/routes/routesFlag';
 import { RouterFlags } from '@/routes/routesFlag';
 import { defineStore } from '@/jsxCore/hooks';
+import { loadBoard } from './activeBoardStore';
 
 // реагировать на изменения url
 const handlerFunc = () => {
   const pathName = window.location.pathname;
   setRouterStore(getFlagRoutes(pathName));
-
+  loadBoard(useRouterStore().boardId);
 };
 
 window.addEventListener('hashchange', handlerFunc);

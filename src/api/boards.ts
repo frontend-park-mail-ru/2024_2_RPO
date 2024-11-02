@@ -32,7 +32,13 @@ export const getBoards = async (): Promise<Board[]> => {
 
     if (response.status === HTTP_STATUS_OK) {
       return json.map(
-        (el: BoardInfoResponse): Board => ({ id: el.id, title: el.name })
+        (el: BoardInfoResponse): Board => ({
+          id: el.id,
+          title: el.name,
+          lastUpdate: new Date(el.updatedAt),
+          lastVisit: new Date(el.updatedAt), // TODO избавиться от недоразумения
+          backgroundImageUrl: el.backgroundImageUrl,
+        })
       );
     } else {
       handleErrors(response.status, 'Получение списка досок');
@@ -53,7 +59,7 @@ export const getBoardContent = async (
   if (useMocks) return activeBoardMock;
 
   try {
-    const response = await apiGet(`/boards/${boardId}/allContent`);
+    const response = await apiGet(`/cards/board_${boardId}/allContent`);
     if (response.status === HTTP_STATUS_OK) {
       const boardContentResponse: BoardContentResponse = response.body;
 
@@ -69,6 +75,9 @@ export const getBoardContent = async (
         title: boardContentResponse.boardInfo.name,
         columns, // обновленный массив columns с пустыми cards
         myRole: boardContentResponse.myRole,
+        lastUpdate: new Date(boardContentResponse.boardInfo.updatedAt),
+        lastVisit: new Date(boardContentResponse.boardInfo.updatedAt),
+        backgroundImageUrl: boardContentResponse.boardInfo.backgroundImageUrl,
       };
     } else {
       handleErrors(response.status, 'Get board content');
@@ -89,7 +98,13 @@ export const createBoard = async (boardName: string): Promise<Board> => {
       response.status === HTTP_STATUS_CREATED
     ) {
       const boardInfo: BoardResponse = response.body;
-      return { id: boardInfo.id, title: boardInfo.name };
+      return {
+        id: boardInfo.id,
+        title: boardInfo.name,
+        lastUpdate: new Date(boardInfo.updatedAt),
+        lastVisit: new Date(boardInfo.updatedAt), // TODO избавиться от недоразумения
+        backgroundImageUrl: boardInfo.backgroundImageUrl,
+      };
     } else {
       throw new Error('Unexpected error in createBoard');
     }
@@ -109,7 +124,13 @@ export const updateBoard = async (
 
   if (response.status === HTTP_STATUS_OK) {
     const updatedBoard: BoardResponse = response.body;
-    return { id: updatedBoard.id, title: updatedBoard.name };
+    return {
+      id: updatedBoard.id,
+      title: updatedBoard.name,
+      lastUpdate: new Date(updatedBoard.updatedAt),
+      lastVisit: new Date(updatedBoard.updatedAt), //TODO избавиться от неоднозначности
+      backgroundImageUrl: updatedBoard.backgroundImageUrl,
+    };
   } else {
     handleErrors(response.status, 'Update board');
     throw new Error('Ошибка при обновлении доски');

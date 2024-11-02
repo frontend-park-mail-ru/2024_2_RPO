@@ -8,14 +8,21 @@ export const [useActiveBoardStore, setActiveBoardStore] = defineStore<
   ActiveBoard | undefined
 >('activeBoardStore', useMocks ? activeBoardMock : undefined);
 
-export const loadBoard = (boardId: number) => {
-  const abStore = useActiveBoardStore();
-  if (abStore !== undefined) {
-    if (abStore.id === boardId) {
-      return;
+export const loadBoard = (boardId: number | undefined) => {
+  console.log('===> loadBoard');
+  if (boardId === undefined) {
+    setActiveBoardStore(undefined);
+    return;
+  } else {
+    const abStore = useActiveBoardStore();
+    if (abStore !== undefined) {
+      if (abStore.id === boardId) {
+        return;
+      }
     }
+    getBoardContent(boardId).then((board) => {
+      setActiveBoardStore(board);
+      console.log('===> setActiveBoardStore');
+    });
   }
-  getBoardContent(boardId).then((board) => {
-    setActiveBoardStore(board);
-  });
 };

@@ -4,6 +4,7 @@ import { RegistrationDialog } from '@/containers/RegistrationDialog';
 import { useState } from '@/jsxCore/hooks';
 import { ComponentProps } from '@/jsxCore/types';
 import { useMeStore } from '@/stores/meStore';
+import { goToUrl } from '@/stores/routerStore';
 
 type HomePageProps = ComponentProps;
 
@@ -42,6 +43,16 @@ export const HomePage = (props: HomePageProps) => {
             text="Войти"
             callback={() => {
               setIsLoginOpened(true);
+            }}
+          />
+        )}
+        {userMe !== undefined && (
+          <Button
+            key="login_button"
+            text="Перейти в приложение"
+            variant="positive"
+            callback={() => {
+              goToUrl('/app');
             }}
           />
         )}
