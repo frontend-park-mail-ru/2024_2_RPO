@@ -5,6 +5,7 @@
 
 import { useState } from '@/jsxCore/hooks';
 import { ComponentProps } from '@/jsxCore/types';
+import "./selectBox.scss"
 
 export interface SelectBoxOption {
   title: string;

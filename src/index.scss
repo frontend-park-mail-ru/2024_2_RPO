@@ -28,36 +28,6 @@
   justify-content: space-around;
 }
 
-.select-box {
-  user-select: none;
-  cursor: pointer;
-  height: 32px;
-  overflow: visible;
-}
-.select-box__button {
-  display: flex;
-  align-items: center;
-  height: 32px;
-}
-.select-box__content {
-  padding-right: 5px;
-  padding-left: 5px;
-  border-radius: 3px;
-}
-.select-box__content__closed {
-  background-color: var(--color-background-secondary);
-}
-.select-box__content__opened {
-  background-color: white;
-}
-.select-box__chevron-icon {
-  margin-top: 2px;
-  margin-left: 4px;
-}
-.select-box__dropdown {
-  width: 100%;
-}
-
 .button {
   margin-top: 4px;
   margin-bottom: 4px;
@@ -215,6 +185,7 @@
   flex-direction: column;
   height: fit-content;
   width: 272px;
+  min-width: 272px;
   row-gap: 6px;
   background-color: var(--color-background-secondary);
   border-radius: 12px;
@@ -234,20 +205,29 @@
   padding-left: 10px;
   padding-top: 6px;
 }
-.kanban-column__dots-button {
+.kanban-column__button {
   cursor: pointer;
   position: absolute;
-  right: 10px;
   top: 6px;
   width: 20px;
   border-radius: 3px;
   box-shadow: 0px 0px 10px 7px rgba(34, 60, 80, 0.1);
+  padding-top: 2px;
+  padding-left: 2px;
+}
+.kanban-column__dots-button {
+  right: 6px;
+}
+.kanban-column__trash-button {
+  right: 32px;
 }
 
 .kanban-board {
   display: flex;
   flex-direction: row;
   height: 100vh;
+  overflow-x: auto;
+  overflow-y: auto;
 }
 
 .home-page__logo {

@@ -9,7 +9,7 @@ import {
   JsxTextNode,
   RefsMap,
 } from './types';
-import { markDirty } from './updateQueue';
+import { _removeFromUpdateQueue, markDirty } from './updateQueue';
 import { _unsubscribeFromStores } from './hooks';
 
 // Тип нужен для хранения информации о существующих DOM-узлах, связанных именно с этим инстансом
@@ -374,7 +374,11 @@ export class ComponentInstance<
     this.getMountNodes().forEach((node) => {
       node.parentElement?.removeChild(node);
     });
+    this.instanceMap.forEach((instance) => {
+      instance.destroy();
+    });
     _unsubscribeFromStores(this);
+    _removeFromUpdateQueue(this);
   }
   /** Вывести информацию о том, в каком инстансе мы сейчас находимся */
   private _errorInfo() {

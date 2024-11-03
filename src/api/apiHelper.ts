@@ -51,13 +51,11 @@ const fetchApi = async (
   }
   const contentType = response.headers.get('Content-Type') as string;
   const text = await response.text();
-  let returnValue: any;
 
-  if (contentType.includes(MIME_TYPE_JSON)) {
-    returnValue = JSON.parse(text);
-  } else {
-    returnValue = text;
-  }
+  const returnValue = contentType.includes(MIME_TYPE_JSON)
+    ? JSON.parse(text)
+    : text;
+
   const newCsrfToken = response.headers.get('x-csrf-token');
   if (newCsrfToken !== null) {
     csrfToken = newCsrfToken;

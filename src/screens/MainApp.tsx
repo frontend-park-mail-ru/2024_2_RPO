@@ -15,7 +15,6 @@ type MainAppProps = ComponentProps;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const MainApp = (props: MainAppProps) => {
-  console.log("update")
   const [leftPanelOpened, setLeftPanelOpened] = useState(false);
   const modalDialogsStore = useModalDialogsStore();
   const activeBoard = useActiveBoardStore();

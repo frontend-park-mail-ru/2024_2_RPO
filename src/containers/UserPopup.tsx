@@ -2,6 +2,7 @@ import { logout } from '@/api/users';
 import { ComponentProps } from '@/jsxCore/types';
 import { updateMe, useMeStore } from '@/stores/meStore';
 import { openUserProfileModalDialog } from '@/stores/modalDialogsStore';
+import { goToUrl } from '@/stores/routerStore';
 import { User } from '@/types/user';
 
 interface PopupButtonProps extends ComponentProps {
@@ -43,7 +44,7 @@ export const UserPopup = (props: UserPopupProps) => {
         <div class="user-popup__profile-info">
           <div>
             <img
-              src="static/img/KarlMarks.jpg"
+              src="/static/img/KarlMarks.jpg"
               alt="Profile Image"
               class="user-popup__avatar"
             />
@@ -78,6 +79,7 @@ export const UserPopup = (props: UserPopupProps) => {
           icon="bi-box-arrow-right"
           callback={() => {
             logout().then(() => {
+              goToUrl('/');
               updateMe();
             });
           }}

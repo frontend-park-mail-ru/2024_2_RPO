@@ -14,6 +14,7 @@ export const updateMe = () => {
       if (user !== undefined) {
         setMeStore(user);
       } else {
+        setMeStore(undefined);
         if (useRouterStore().isApp) {
           goToUrl('/');
         }

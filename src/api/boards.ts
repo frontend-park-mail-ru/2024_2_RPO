@@ -63,17 +63,25 @@ export const getBoardContent = async (
     if (response.status === HTTP_STATUS_OK) {
       const boardContentResponse: BoardContentResponse = response.body;
 
+      const columnIndex = new Map<number, number>();
       const columns: BoardColumn[] = boardContentResponse.allColumns.map(
-        (column) => ({
-          ...column,
-          cards: [], // инициализация пустым массивом для типа BoardColumn
-        })
+        (column, idx) => {
+          columnIndex.set(column.id, idx);
+          return {
+            ...column,
+            cards: [], // инициализация пустым массивом для типа BoardColumn
+          };
+        }
       );
+      boardContentResponse.allCards.forEach((card) => {
+        const colIdx = columnIndex.get(card.columnId) ?? 0;
+        columns[colIdx].cards.push(card);
+      });
 
       return {
         id: boardContentResponse.boardInfo.id,
         title: boardContentResponse.boardInfo.name,
-        columns, // обновленный массив columns с пустыми cards
+        columns, // обновленный массив columns
         myRole: boardContentResponse.myRole,
         lastUpdate: new Date(boardContentResponse.boardInfo.updatedAt),
         lastVisit: new Date(boardContentResponse.boardInfo.updatedAt),

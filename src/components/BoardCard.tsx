@@ -3,6 +3,7 @@ import './boardCard.scss';
 import { Board } from '@/types/board';
 import { formatTime } from '@/utils/time';
 import { goToUrl } from '@/stores/routerStore';
+import { useActiveBoardStore } from '@/stores/activeBoardStore';
 
 interface BoardCardProps extends ComponentProps {
   board: Board;
@@ -14,9 +15,14 @@ interface BoardCardProps extends ComponentProps {
  * @returns JSX карточки доски для левого меню
  */
 export const BoardCard = (props: BoardCardProps) => {
+  const activeBoard = useActiveBoardStore();
+
   return (
     <div
-      class="board-card"
+      className={[
+        'board-card',
+        activeBoard?.id === props.board.id ? 'board-card__active' : '',
+      ]}
       ON_click={() => {
         goToUrl(`/app/board_${props.board.id}/kanban`);
       }}

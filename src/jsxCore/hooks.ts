@@ -11,6 +11,7 @@ export function _setUpdatedInstance(instance: ComponentInstance<any>) {
 }
 export function _unsetUpdatedInstance() {
   activeInstance = undefined;
+  stateNum = -1;
 }
 
 export function useState<S>(
@@ -21,7 +22,7 @@ export function useState<S>(
       'Active instance is undefined; maybe wrongly used useState'
     );
   }
-  const currentInstance = activeInstance as ComponentInstance;
+  const currentInstance = activeInstance;
   const idx = stateNum;
   const setState = (newState: S): void => {
     currentInstance.state[idx] = newState;
@@ -68,7 +69,6 @@ export function defineStore<S>(
   const useStore = () => {
     if (activeInstance !== undefined) {
       // Подписать инстанс на store
-      console.log('SUBSCRIBE', storeName, activeInstance);
       if (
         !storeSubscribersIndex.has(activeInstance) ||
         !storeSubscribersIndex.get(activeInstance)?.has(storeName)
@@ -92,7 +92,10 @@ export function defineStore<S>(
 export function _unsubscribeFromStores(instance: ComponentInstance<any>) {
   if (storeSubscribersIndex.has(instance)) {
     storeSubscribersIndex.get(instance)?.forEach((storeName) => {
-      storeSubscribers.get(storeName)?.delete(instance);
+      const storeSubs = storeSubscribers.get(storeName);
+      if (storeSubs !== undefined) {
+        storeSubs.delete(instance);
+      }
     });
     storeSubscribersIndex.delete(instance);
   }

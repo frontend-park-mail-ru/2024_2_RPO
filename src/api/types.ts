@@ -1,8 +1,12 @@
 export interface BoardContentResponse {
-  myRole: "viewer" | "editor" | "editor_chief" | "admin";
+  myRole: 'viewer' | 'editor' | 'editor_chief' | 'admin';
   boardInfo: BoardInfoResponse;
   allColumns: ColumnResponse[];
   allCards: CardResponse[];
+}
+
+export interface ColumnRequest {
+  title: string;
 }
 
 export interface ColumnResponse {
@@ -24,7 +28,7 @@ export interface BoardInfoResponse {
   id: number;
   name: string;
   description: string;
-  backgroundImageUrl: string; 
+  backgroundImageUrl: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -49,7 +53,7 @@ export interface UserResponse {
 export interface UserPermissionsResponse {
   user: UserResponse;
   addedAt: string;
-  role: "viewer" | "editor" | "editor_chief" | "admin";
+  role: 'viewer' | 'editor' | 'editor_chief' | 'admin';
   updatedAt: string;
   addedBy: UserResponse;
   updatedBy: UserResponse;

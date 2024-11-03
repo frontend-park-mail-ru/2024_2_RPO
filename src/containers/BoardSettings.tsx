@@ -4,10 +4,13 @@ import { closeBoardSettingsModalDialog } from '@/stores/modalDialogsStore';
 import { Button } from '@/components/Button';
 import { SelectBox, SelectBoxOption } from '@/components/SelectBox';
 // import { User } from '@/types/user';
-import { Input } from '@/components/Input';
+import { useActiveBoardStore } from '@/stores/activeBoardStore';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const modeOptions: SelectBoxOption[] = [
+  { title: 'Все задачи', icon: 'bi-bell' },
   { title: 'Только мои задачи', icon: 'bi-person-badge' },
+  { title: 'Нет уведомлений', icon: 'bi-bell-slash' },
 ];
 
 const modeOptionsRedactor: SelectBoxOption[] = [
@@ -39,6 +42,7 @@ const users = [
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const BoardSettings = (props: ComponentProps) => {
+  const activeBoard = useActiveBoardStore();
   return (
     <ModalDialog
       key="modal_dialog"
@@ -51,8 +55,8 @@ export const BoardSettings = (props: ComponentProps) => {
           <div class="board-settings__left">
             <img
               class="board-settings__background-image"
-              src="static/img/KarlMarks.jpg"
-              alt=""
+              src={activeBoard?.backgroundImageUrl}
+              alt="Задний фон доски"
             />
             <Button
               key="change_background_btn"
@@ -64,7 +68,7 @@ export const BoardSettings = (props: ComponentProps) => {
           <div class="board-settings__add-participants">
             <div class="add-participiants__text">Добавить участников</div>
             <div class="add-participiants__main">
-              <div class="main__link-text">Моя ссылка:</div>
+              {/* <div class="main__link-text">Моя ссылка:</div>
               <div class="main__link-input">
                 <Input
                   key="board-settings-link"
@@ -81,14 +85,15 @@ export const BoardSettings = (props: ComponentProps) => {
                   icon="bi-x-lg"
                   variant="default"
                 />
-              </div>
+              </div> */}
               <div class="main__add-collaborator-text">
                 Добавить коллаборатора:
               </div>
               <div class="main__add-collaborator-input">
                 <input type="text" placeholder="Введите Pull-токен" />
               </div>
-              <div class="main__notifications-text">Уведомления:</div>
+              {/* На будущее - настройки уведомлений */
+              /* <div class="main__notifications-text">Уведомления:</div>
               <div class="main__notificatons">
                 <div class="main__notifications-input">
                   <SelectBox
@@ -97,7 +102,7 @@ export const BoardSettings = (props: ComponentProps) => {
                     currentIndex={0}
                   />
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

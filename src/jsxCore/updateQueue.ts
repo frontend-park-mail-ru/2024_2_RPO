@@ -58,3 +58,9 @@ export function popDirty(): ComponentInstance<any> | null {
   }
   return null;
 }
+
+export function _removeFromUpdateQueue(instance: ComponentInstance<any>) {
+  if (queue.length > instance.depth) {
+    queue[instance.depth].delete(instance);
+  }
+}
