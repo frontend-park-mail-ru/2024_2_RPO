@@ -7,10 +7,12 @@ import {
   apiPost,
   HTTP_STATUS_UNAUTHORIZED,
   HTTP_STATUS_CONFLICT,
+  apiPut,
 } from '@/api/apiHelper';
 import { User } from '@/types/user';
 import { userMeMock } from './mocks/user';
 import { showToast } from '@/stores/toastNotificationStore';
+import { UserRequest, UserResponse } from './types';
 /**
  * Получить информацию о текущем пользователе
  * @returns промис, который возвращает или User (если залогинен), или undefined (если не залогинен)
@@ -23,12 +25,15 @@ export const getUserMe = async (): Promise<User | undefined> => {
     const response = await apiGet('/users/me');
 
     switch (response.status) {
-      case HTTP_STATUS_OK:
+      case HTTP_STATUS_OK: {
+        const data: UserResponse = response.body;
         return {
-          name: response.body.name,
-          id: response.body.id,
-          email: response.body.email,
+          name: data.name,
+          id: data.id,
+          email: data.email,
+          avatarImageUrl: data.avatarImageUrl,
         };
+      }
       case HTTP_STATUS_UNAUTHORIZED:
         return undefined;
       default:
@@ -179,4 +184,31 @@ export const changeUserPassword = async (
     }
     throw new Error('Ошибка при изменении пароля');
   }
+};
+
+export const updateUserProfile = async (
+  newUserProfile: UserRequest
+): Promise<UserResponse> => {
+  try {
+    const response = await apiPut('/users/me', newUserProfile);
+
+    switch (response.status) {
+      case HTTP_STATUS_OK: {
+        const updatedUserProfile: UserResponse = response.body;
+        return updatedUserProfile;
+      }
+      case HTTP_STATUS_BAD_REQUEST:
+        showToast('Не прошло валидацию. Данные точно верные?', 'error');
+        throw new Error('Неверные учетные данные');
+      case HTTP_STATUS_CONFLICT:
+        showToast('Никнейм или email заняты. Попробуйте другие', 'error');
+        break;
+      default:
+        showToast('Неизвестная ошибка', 'error');
+        throw new Error('Беды на бэке');
+    }
+  } catch {
+    showToast('Неизвестная ошибка', 'error');
+  }
+  throw new Error('Неизвестная ошибка');
 };

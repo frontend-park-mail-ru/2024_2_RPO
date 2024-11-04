@@ -47,7 +47,7 @@ export const getBoards = async (): Promise<Board[]> => {
     return [];
   } catch (error) {
     console.error('Error fetching boards:', error);
-    alert('An error occurred while fetching boards');
+    showToast('Ошибка при получении досок', 'error');
     return [];
   }
 };
@@ -92,7 +92,7 @@ export const getBoardContent = async (
     }
   } catch (error) {
     console.error('Error fetching board content:', error);
-    alert('An error occurred while fetching board content');
+    showToast('An error occurred while fetching board content', 'error');
   }
   throw new Error('Error at getBoardContent');
 };

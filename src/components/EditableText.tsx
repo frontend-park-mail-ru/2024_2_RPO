@@ -1,12 +1,14 @@
 import { useEffectRefs, useState } from '@/jsxCore/hooks';
 import { ComponentProps } from '@/jsxCore/types';
 import { noop } from '@/utils/noop';
+import "./editableText.scss"
 
 interface EditableTextProps extends ComponentProps {
   text: string;
   setText: (state: string) => void;
   textClassName?: string;
   wrapperClassName?: string;
+  readOnly?: boolean;
 }
 
 /**
@@ -79,9 +81,15 @@ export const EditableText = (props: EditableTextProps) => {
   }
   return (
     <div
-      className={['editable-text__text-wrapper', props.wrapperClassName ?? '']}
+      className={[
+        'editable-text__text-wrapper',
+        props.wrapperClassName ?? '',
+        !props.readOnly && 'editable-text__text-wrapper_editable',
+      ]}
       ON_click={() => {
-        setIsInput(true);
+        if (!props.readOnly) {
+          setIsInput(true);
+        }
       }}
     >
       <div className={props.textClassName ?? ''}>{props.text}</div>

@@ -1,4 +1,4 @@
-import { useEffectRefs } from '@/jsxCore/hooks';
+import { useEffectRefs, useState } from '@/jsxCore/hooks';
 import { ComponentProps } from '@/jsxCore/types';
 import { showToast } from '@/stores/toastNotificationStore';
 
@@ -7,6 +7,7 @@ interface InputProps extends ComponentProps {
   onEscape?: (value: string) => void;
   onChanged?: (newValue: string) => void;
   initialValue?: string;
+  placeholder?: string;
   readOnly?: boolean;
   validationMessage?: string | undefined;
   copyOnClick?: boolean;
@@ -14,12 +15,84 @@ interface InputProps extends ComponentProps {
   focusOnInstance?: boolean;
 }
 
+interface Callbacks {
+  onKeyPress: (ev: KeyboardEvent) => void;
+  onClick: (ev: MouseEvent) => void;
+  onChanged: (ev: Event) => void;
+}
+
+let globalUid = 0;
+const instMap: Map<number, Callbacks> = new Map();
+
 export const Input = (props: InputProps) => {
+  console.log('UPDATE VDOM');
+  const [activated, setIsActivated] = useState(false);
+  const [uid, setUid] = useState(-1);
   useEffectRefs((refs) => {
     const inp = refs.get('input') as HTMLInputElement;
-    if (!inp.classList.contains('wasActivated') && props.focusOnInstance) {
-      inp.focus();
-      inp.classList.add('wasActivated');
+    if (!activated) {
+      if (props.initialValue) {
+        inp.value = props.initialValue;
+      }
+      setTimeout(() => {
+        if (props.onChanged) {
+          props.onChanged(inp.value);
+        }
+      }, 200);
+      setIsActivated(true);
+      const myUid = globalUid;
+      globalUid++;
+      setUid(myUid);
+      inp.addEventListener('keyup', (ev: KeyboardEvent) => {
+        const CBs = instMap.get(myUid);
+        if (CBs !== undefined) {
+          CBs.onKeyPress(ev);
+        }
+      });
+      inp.addEventListener('click', (ev: MouseEvent) => {
+        const CBs = instMap.get(myUid);
+        if (CBs !== undefined) {
+          CBs.onClick(ev);
+        }
+      });
+      inp.addEventListener('change', (ev: Event) => {
+        const CBs = instMap.get(myUid);
+        if (CBs !== undefined) {
+          CBs.onChanged(ev);
+        }
+      });
+    } else {
+      instMap.set(uid, {
+        onKeyPress: (ev) => {
+          if (ev.key === 'Enter') {
+            if (props.onEnter) {
+              props.onEnter(inp.value);
+            }
+          }
+          if (ev.key === 'Escape') {
+            if (props.onEscape) {
+              props.onEscape(inp.value);
+            }
+          }
+          if (props.onChanged) {
+            props.onChanged(inp.value);
+          }
+        },
+        onClick: () => {
+          if (props.copyOnClick === true) {
+            navigator.clipboard.writeText(inp.value);
+            showToast('Скопировано в буфер обмена!', 'success');
+            if (props.onChanged) {
+              props.onChanged(inp.value);
+            }
+          }
+        },
+        onChanged: () => {
+          if (props.onChanged) {
+            props.onChanged(inp.value);
+          }
+        },
+      });
     }
   });
   return (
@@ -28,36 +101,8 @@ export const Input = (props: InputProps) => {
         ref="input"
         className="input"
         readonly={props.readOnly === true ? true : undefined}
-        placeholder={props.initialValue}
+        placeholder={props.placeholder}
         type={props.isPassword ? 'password' : undefined}
-        ON_keydown={(event: KeyboardEvent) => {
-          const tgt = event.target as HTMLInputElement;
-          if (event.key === 'Enter') {
-            if (props.onEnter) {
-              props.onEnter(tgt.value);
-            }
-          }
-          if (event.key === 'Escape') {
-            if (props.onEscape) {
-              props.onEscape(tgt.value);
-            }
-          }
-        }}
-        ON_click={
-          props.copyOnClick === true
-            ? () => {
-                if (props.initialValue !== undefined) {
-                  navigator.clipboard.writeText(props.initialValue);
-                  showToast('Скопировано в буфер обмена!', 'success');
-                }
-              }
-            : undefined
-        }
-        ON_change={(event: InputEvent) => {
-          if (props.onChanged !== undefined) {
-            props.onChanged((event.target as HTMLInputElement).value);
-          }
-        }}
       />
       {props.validationMessage !== undefined && (
         <div className="input__validation-message">

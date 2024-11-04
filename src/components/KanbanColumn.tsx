@@ -7,25 +7,30 @@ import {
 import { Button } from './Button';
 import { EditableText } from './EditableText';
 import { ActiveBoard } from '@/types/activeBoard';
-import { noop } from '@/utils/noop';
 import { showToast } from '@/stores/toastNotificationStore';
-import { deleteColumn, updateColumn } from '@/api/columnsCards';
+import { createCard, deleteColumn, updateColumn } from '@/api/columnsCards';
+import { useState } from '@/jsxCore/hooks';
+import { Input } from './Input';
 
 interface KanbanColumnProps extends ComponentProps {
   columnIndex: number;
   columnId: number;
 }
 export const KanbanColumn = (props: KanbanColumnProps) => {
-  const activeBoardStore = useActiveBoardStore() as ActiveBoard;
-  const columnData = activeBoardStore.columns[props.columnIndex];
+  const [isInputOpened, setIsInputOpened] = useState(false);
+  const activeBoard = useActiveBoardStore() as ActiveBoard;
+  const columnData = activeBoard.columns[props.columnIndex];
   return (
     <div class="kanban-column">
       <div class="kanban-column__header">
         <EditableText
           text={columnData.title}
           setText={(newText) => {
-            updateColumn(activeBoardStore.id, props.columnId, {
+            updateColumn(activeBoard.id, props.columnId, {
               title: newText,
+            }).then((newCol) => {
+              activeBoard.columns[props.columnIndex].title = newCol.title;
+              setActiveBoardStore(activeBoard);
             });
           }}
           key="title_editable_text"
@@ -41,13 +46,11 @@ export const KanbanColumn = (props: KanbanColumnProps) => {
               );
               return;
             }
-            deleteColumn(activeBoardStore.id, props.columnId).then(() => {
-              activeBoardStore.columns = activeBoardStore.columns.filter(
-                (col) => {
-                  return col.id !== props.columnId;
-                }
-              );
-              setActiveBoardStore(activeBoardStore);
+            deleteColumn(activeBoard.id, props.columnId).then(() => {
+              activeBoard.columns = activeBoard.columns.filter((col) => {
+                return col.id !== props.columnId;
+              });
+              setActiveBoardStore(activeBoard);
             });
           }}
         >
@@ -67,17 +70,40 @@ export const KanbanColumn = (props: KanbanColumnProps) => {
           <KanbanCard
             key={`card_${cardData.id}`}
             text={cardData.title}
-            coverUrl={cardData.coverImageUrl}
+            cardId={cardData.id}
+            coverImageUrl={cardData.coverImageUrl}
           />
         );
       })}
-      {activeBoardStore?.myRole !== 'viewer' && (
+
+      {activeBoard?.myRole !== 'viewer' && !isInputOpened && (
         <Button
           key="new_card"
           text="Добавить карточку"
           icon="bi-plus-square"
           variant="transparent"
+          callback={() => {
+            setIsInputOpened(true);
+          }}
           fullWidth
+        />
+      )}
+
+      {activeBoard?.myRole !== 'viewer' && isInputOpened && (
+        <Input
+          key="new_card_input"
+          onEscape={() => {
+            setIsInputOpened(false);
+          }}
+          onEnter={(text) => {
+            createCard(activeBoard.id, {
+              title: text,
+              columnId: props.columnId,
+            }).then((newCard) => {
+              activeBoard.columns[props.columnIndex].cards.push(newCard);
+              setIsInputOpened(false);
+            });
+          }}
         />
       )}
       <div style="height: 1px" />

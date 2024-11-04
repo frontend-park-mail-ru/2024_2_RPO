@@ -14,6 +14,7 @@ interface LoginDialogProps extends ComponentProps {
 
 export const LoginDialog = (props: LoginDialogProps) => {
   const [data, setData] = useState({ email: '', password: '' });
+  console.log(data);
   const submitFunction = () => {
     loginUser(data.email, data.password).then((ok) => {
       if (ok) {
@@ -37,7 +38,8 @@ export const LoginDialog = (props: LoginDialogProps) => {
           key="email_input"
           onEnter={submitFunction}
           onChanged={(newValue) => {
-            setData({ ...data, email: newValue });
+            data.email = newValue;
+            setData(data);
           }}
         />
         <label for="password">Пароль:</label>
@@ -46,7 +48,8 @@ export const LoginDialog = (props: LoginDialogProps) => {
           isPassword
           onEnter={submitFunction}
           onChanged={(newValue) => {
-            setData({ ...data, password: newValue });
+            data.password = newValue;
+            setData(data);
           }}
         />
       </div>

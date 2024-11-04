@@ -1,10 +1,13 @@
 import { ModalDialog } from '@/components/ModalDialog';
-import { ComponentProps } from '@/jsxCore/types';
 import { closeBoardSettingsModalDialog } from '@/stores/modalDialogsStore';
 import { Button } from '@/components/Button';
 import { SelectBox, SelectBoxOption } from '@/components/SelectBox';
-// import { User } from '@/types/user';
 import { useActiveBoardStore } from '@/stores/activeBoardStore';
+import { Input } from '@/components/Input';
+import { addMember, removeMember, updateMember } from '@/api/members';
+import { ActiveBoard } from '@/types/activeBoard';
+import { setMembersStore, useMembersStore } from '@/stores/members';
+import { showToast } from '@/stores/toastNotificationStore';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const modeOptions: SelectBoxOption[] = [
@@ -20,29 +23,9 @@ const modeOptionsRedactor: SelectBoxOption[] = [
   { title: 'Администратор', icon: 'bi-flag' },
 ];
 
-// interface Users {
-//   user: User;
-//   addedBy: User | 'creatorItself';
-//   addedWhen: string;
-//   iCanEdit: boolean;
-// }
-
-const users = [
-  {
-    title: 'zhugeo',
-    avatar: 'static/img/KarlMarks.jpg',
-    add: 'marks_k (10 д)',
-  },
-  {
-    title: 'marks_k',
-    avatar: 'static/img/KarlMarks.jpg',
-    add: 'Сам создал (15 д)',
-  },
-];
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const BoardSettings = (props: ComponentProps) => {
-  const activeBoard = useActiveBoardStore();
+export const BoardSettings = () => {
+  const activeBoard = useActiveBoardStore() as ActiveBoard;
+  const members = useMembersStore();
   return (
     <ModalDialog
       key="modal_dialog"
@@ -68,7 +51,8 @@ export const BoardSettings = (props: ComponentProps) => {
           <div class="board-settings__add-participants">
             <div class="add-participiants__text">Добавить участников</div>
             <div class="add-participiants__main">
-              {/* <div class="main__link-text">Моя ссылка:</div>
+              {/*На будущее - приглашение по ссылке*/
+              /* <div class="main__link-text">Моя ссылка:</div>
               <div class="main__link-input">
                 <Input
                   key="board-settings-link"
@@ -86,11 +70,19 @@ export const BoardSettings = (props: ComponentProps) => {
                   variant="default"
                 />
               </div> */}
-              <div class="main__add-collaborator-text">
-                Добавить коллаборатора:
-              </div>
+              <div class="main__add-collaborator-text">Добавить зрителя:</div>
               <div class="main__add-collaborator-input">
-                <input type="text" placeholder="Введите Pull-токен" />
+                <Input
+                  key="add_member"
+                  placeholder="Введите никнейм"
+                  onEnter={(nickname) => {
+                    addMember(activeBoard.id, nickname).then((newMember) => {
+                      showToast('Успешно добавлен пользователь', 'success');
+                      members.push(newMember);
+                      setMembersStore(members);
+                    });
+                  }}
+                />
               </div>
               {/* На будущее - настройки уведомлений */
               /* <div class="main__notifications-text">Уведомления:</div>
@@ -113,43 +105,70 @@ export const BoardSettings = (props: ComponentProps) => {
             <div class="permissions-table__table__headers">Имя</div>
             <div class="permissions-table__table__headers">Добавил</div>
             <div class="permissions-table__table__headers">Роль</div>
-            {users.map((user) => {
+            {members.map((user) => {
               return (
                 <>
                   <div class="permissions-table__table__user">
                     <img
-                      src={user.avatar}
+                      src={user.user.avatarImageUrl}
                       alt=""
                       class="navbar__profile-picture"
                     />
                     <div class="permissions-table__table__user-title">
-                      {user.title}
+                      {user.user.name}
                     </div>
                   </div>
                   <div class="permissions-table__table__user-add">
-                    {user.add}
+                    {user.addedBy.name}
+                  </div>
+                  <div class="permissions-table__table__editor">
+                    <SelectBox
+                      key={`edit_member_${user.user.id}`}
+                      options={modeOptionsRedactor}
+                      currentIndex={[
+                        'viewer',
+                        'editor',
+                        'editor_chief',
+                        'admin',
+                      ].indexOf(user.role)}
+                      onChange={(newIndex) => {
+                        updateMember(
+                          activeBoard.id,
+                          user.user.id,
+                          ['viewer', 'editor', 'editor_chief', 'admin'][
+                            newIndex
+                          ]
+                        ).then((patch) => {
+                          showToast('Успешно обновлена роль', 'success');
+                          setMembersStore(
+                            members.map((e) => {
+                              return e.user.id !== user.user.id ? e : patch;
+                            })
+                          );
+                        });
+                      }}
+                    />
+                  </div>
+                  <div class="permissions-table__kick-member-button">
+                    <Button
+                      key={`remove_member_${user.user.id}`}
+                      icon="bi-x-lg"
+                      variant="default"
+                      callback={() => {
+                        removeMember(activeBoard.id, user.user.id).then(() => {
+                          showToast('Успешно изгнан пользователь', 'success');
+                          setMembersStore(
+                            members.filter((a) => {
+                              return a.user.id !== user.user.id;
+                            })
+                          );
+                        });
+                      }}
+                    />
                   </div>
                 </>
               );
             })}
-            <div class="permissions-table__table__editor">
-              <SelectBox
-                key="mode_select-redactor"
-                options={modeOptionsRedactor}
-                currentIndex={0}
-              />
-            </div>
-            <div class="permissions-table__kick-member-button">
-              <Button key="cross-redactor" icon="bi-x-lg" variant="default" />
-            </div>
-          </div>
-          <div class="permissions-table__save">
-            <Button
-              key="board-settings-save"
-              text="Сохранить настройки прав"
-              icon="bi-floppy"
-              variant="positive"
-            />
           </div>
         </div>
       </div>

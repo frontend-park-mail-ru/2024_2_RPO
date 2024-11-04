@@ -8,6 +8,8 @@ import { useState } from '@/jsxCore/hooks';
 import { noop } from '@/utils/noop';
 import { goToUrl } from '@/stores/routerStore';
 import { openBoardSettingsModalDialog } from '@/stores/modalDialogsStore';
+import { useMeStore } from '@/stores/meStore';
+import { updateMembers } from '@/stores/members';
 
 interface NavBarProps extends ComponentProps {
   leftPanelOpened: boolean;
@@ -23,7 +25,8 @@ const modeOptions: SelectBoxOption[] = [
  * Компонент навбара, который отображается, когда открыта доска
  */
 export const NavBar = (props: NavBarProps) => {
-  const activeBoardStore = useActiveBoardStore();
+  const activeBoard = useActiveBoardStore();
+  const me = useMeStore();
   const [userPopupOpened, setUserPopupOpened] = useState(false);
   return (
     <>
@@ -60,25 +63,31 @@ export const NavBar = (props: NavBarProps) => {
           </span>
         </div>
         <div class="navbar__rest navbar__group">
-          <div class="navbar__group">
-            <SelectBox
-              key="mode_select"
-              options={modeOptions}
-              currentIndex={0}
-            />
-            <EditableText
-              key="board_name_text"
-              text={activeBoardStore?.title ?? 'Загрузка'}
-              textClassName="navbar__board-name"
-              wrapperClassName="navbar__board-name-wrapper"
-              setText={noop}
-            />
-            <Button
-              key="settings"
-              icon="bi-gear"
-              callback={openBoardSettingsModalDialog}
-            />
-          </div>
+          {activeBoard !== undefined && (
+            <div class="navbar__group">
+              <SelectBox
+                key="mode_select"
+                options={modeOptions}
+                currentIndex={0}
+              />
+              <div style="width: 140px"></div>
+              <EditableText
+                key="board_name_text"
+                text={activeBoard?.title ?? 'Загрузка'}
+                textClassName="navbar__board-name"
+                wrapperClassName="navbar__board-name-wrapper"
+                setText={noop}
+              />
+              <Button
+                key="settings"
+                icon="bi-gear"
+                callback={() => {
+                  updateMembers();
+                  openBoardSettingsModalDialog();
+                }}
+              />
+            </div>
+          )}
           <div class="flex-grow"></div>
           <div class="navbar__group">
             {/* <Button key="notification_btn" icon="bi-bell" /> */}
@@ -103,7 +112,7 @@ export const NavBar = (props: NavBarProps) => {
               <img
                 class="navbar__profile-picture"
                 draggable="false"
-                src="/static/img/KarlMarks.jpg"
+                src={me?.avatarImageUrl}
                 alt="ProfilePicture"
               />
             </div>

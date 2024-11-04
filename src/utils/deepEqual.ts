@@ -2,9 +2,6 @@ export const deepEqual = (x: any, y: any): boolean => {
   if (x === y) {
     return true;
   }
-  if (typeof x === 'function' || typeof y === 'function') {
-    return false;
-  }
 
   if (
     typeof x !== 'object' ||

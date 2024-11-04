@@ -37,22 +37,22 @@ interface UserPopupProps extends ComponentProps {
  */
 
 export const UserPopup = (props: UserPopupProps) => {
-  const meStore = useMeStore() as User;
+  const me = useMeStore() as User;
   return (
     <>
       <div class="user-popup">
         <div class="user-popup__profile-info">
           <div>
             <img
-              src="/static/img/KarlMarks.jpg"
+              src={me.avatarImageUrl}
               alt="Profile Image"
               class="user-popup__avatar"
             />
           </div>
           <div class="user-popup__info">
-            <div class="user-popup__nickname">@{meStore.name}</div>
+            <div class="user-popup__nickname">@{me.name}</div>
 
-            <div class="user-popup__info">{meStore.email}</div>
+            <div class="user-popup__info">{me.email}</div>
           </div>
         </div>
 

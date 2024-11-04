@@ -11,8 +11,9 @@ import {
   HTTP_STATUS_OK,
   HTTP_STATUS_UNAUTHORIZED,
 } from './apiHelper';
-import { ColumnRequest } from './types';
+import { CardRequest, CardResponse, ColumnRequest } from './types';
 import { BoardColumn } from '@/types/activeBoard';
+import { Card } from '@/types/card';
 
 export const deleteColumn = async (
   boardId: number,
@@ -39,7 +40,7 @@ export const updateColumn = async (
   boardId: number,
   columnId: number,
   columnData: ColumnRequest
-): Promise<BoardColumn | void> => {
+): Promise<BoardColumn> => {
   try {
     const response = await apiPut(
       `/columns/board_${boardId}/column_${columnId}`,
@@ -57,6 +58,7 @@ export const updateColumn = async (
     showToast('Произошла ошибка при изменении колонки.', 'error');
     console.error(error);
   }
+  throw new Error('Неизвестная ошибка');
 };
 export const createColumn = async (
   boardId: number,
@@ -75,12 +77,32 @@ export const createColumn = async (
   showToast('Произошла ошибка при добавлении колонки', 'error');
   throw new Error('Error while creating column');
 };
+export const createCard = async (
+  boardId: number,
+  data: CardRequest
+): Promise<Card> => {
+  try {
+    const response = await apiPost(`/cards/board_${boardId}`, data);
+    switch (response.status) {
+      case HTTP_STATUS_OK:
+      case HTTP_STATUS_CREATED:
+        showToast('Успешно создана карточка', 'success');
+        return response.body as CardResponse;
+      default:
+        handleErrorResponse(response.status, response.body.text);
+    }
+  } catch (error) {
+    showToast('Произошла ошибка при создании карточки.', 'error');
+    console.error(error);
+  }
+  throw new Error('Неизвестная ошибка');
+};
 export const deleteCard = async (
-  boardId: string,
-  cardId: string
+  boardId: number,
+  cardId: number
 ): Promise<void> => {
   try {
-    const response = await apiDelete(`/cards/${boardId}/${cardId}`);
+    const response = await apiDelete(`/cards/board_${boardId}/card_${cardId}`);
     if (response.status === HTTP_STATUS_OK) {
       showToast('Карточка успешно удалена.', 'success');
     } else {

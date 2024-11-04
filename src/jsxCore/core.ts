@@ -43,6 +43,10 @@ function patchProps(props: any, elem: DOMElementRepr) {
   elem.eventListeners = [];
   Object.entries(props).forEach(([key, value]) => {
     if (value === undefined) {
+      const prevValue = elem.existingAttrs.get(key);
+      if (prevValue !== undefined) {
+        elem.node.removeAttribute(key);
+      }
       return;
     }
     if (key === 'className') {
@@ -52,8 +56,9 @@ function patchProps(props: any, elem: DOMElementRepr) {
       } else if (typeof value === 'string') {
         newValue = value;
       }
-      if (elem.node.getAttribute('class') !== newValue) {
-        elem.node.setAttribute('class', newValue);
+      if (elem.existingAttrs.get('className') !== newValue.toString()) {
+        elem.existingAttrs.set('className', newValue.toString());
+        elem.node.className = newValue;
       }
     } else if (key.startsWith('ON_')) {
       if (typeof value !== 'function' && typeof value !== 'undefined') {
@@ -68,13 +73,13 @@ function patchProps(props: any, elem: DOMElementRepr) {
         listener: value as EventListener,
       });
     } else if (key !== 'children') {
+      const stringVal = value as string;
       if (
         !elem.existingAttrs.has(key) ||
-        elem.existingAttrs.get(key) !== value
+        elem.existingAttrs.get(key) !== stringVal.toString()
       ) {
-        const stringVal = value as string;
+        const prevValue = elem.existingAttrs.get(key);
         elem.existingAttrs.set(key, stringVal.toString());
-        const prevValue = elem.node.getAttribute(key);
         if (stringVal.toString() !== prevValue) {
           elem.node.setAttribute(key, stringVal.toString());
         }
@@ -284,11 +289,14 @@ export class ComponentInstance<
         }
         instance.getMountNodes().forEach((node) => {
           if (prevNode === null) {
-            if (parent !== null) {
+            if (parent !== null && node !== parent.firstChild) {
               parent.insertBefore(node, parent.firstChild);
             }
           } else {
-            if (prevNode.parentElement !== null) {
+            if (
+              prevNode.parentElement !== null &&
+              prevNode.nextSibling !== node
+            ) {
               prevNode.parentElement.insertBefore(node, prevNode.nextSibling);
             }
           }

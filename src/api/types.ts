@@ -8,6 +8,10 @@ export interface BoardContentResponse {
 export interface ColumnRequest {
   title: string;
 }
+export interface CardRequest {
+  title: string;
+  columnId: number;
+}
 
 export interface ColumnResponse {
   id: number;
@@ -57,4 +61,18 @@ export interface UserPermissionsResponse {
   updatedAt: string;
   addedBy: UserResponse;
   updatedBy: UserResponse;
+}
+
+export interface UserRequest {
+  name: string;
+  email: string;
+}
+
+export interface MemberWithPermissionsResponse {
+  user: UserResponse;
+  addedAt: string;
+  role: string;
+  updatedAt: string;
+  updatedBy: UserResponse;
+  addedBy: UserResponse;
 }
