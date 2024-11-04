@@ -4,8 +4,9 @@ import { Button } from '@/components/Button';
 import { Input } from '@/components/Input';
 import { useState } from '@/jsxCore/hooks';
 import { ComponentProps } from '@/jsxCore/types';
-import { useBoardsStore } from '@/stores/boardsStore';
+import { updateBoards, useBoardsStore } from '@/stores/boardsStore';
 import './leftPanel.scss';
+import { showToast } from '@/stores/toastNotificationStore';
 
 /**
  * Компонент левой панели
@@ -45,7 +46,10 @@ export const LeftPanel = (props: LeftPanelProps) => {
               }}
               onEnter={(value: string) => {
                 setInputOpened(false);
-                createBoard(value);
+                createBoard(value).then(() => {
+                  showToast('Успешно создана доска', 'success');
+                  updateBoards();
+                });
               }}
             />
           )}

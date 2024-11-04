@@ -1,3 +1,5 @@
+import { updateBoards } from '@/stores/boardsStore';
+
 export interface RouterFlags {
   isHome: boolean;
   isApp: boolean;
@@ -12,6 +14,9 @@ export const getFlagRoutes = (currentPath: string): RouterFlags => {
     } else {
       boardId = undefined;
     }
+  }
+  if (currentPath.startsWith('/app')) {
+    updateBoards();
   }
 
   return {
