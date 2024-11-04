@@ -10,6 +10,7 @@ import { ToastContainer } from './containers/ToastContainer';
 import { apiUrl } from './config';
 import { updateMe } from './stores/meStore';
 import { loadBoard } from './stores/activeBoardStore';
+import { updateBoards } from './stores/boardsStore';
 
 setApiUrl(apiUrl);
 
@@ -30,7 +31,8 @@ const App: IComponentFunction = () => {
   );
 };
 
-updateMe();
 loadBoard(useRouterStore().boardId);
 const appRoot = document.getElementById('app_root') as HTMLDivElement;
 createApp(App, appRoot);
+updateMe();
+updateBoards();

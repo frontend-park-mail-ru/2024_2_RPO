@@ -2,14 +2,18 @@ import { Button } from '@/components/Button';
 import { SelectBox, SelectBoxOption } from '@/components/SelectBox';
 import { ComponentProps } from '@/jsxCore/types';
 import { EditableText } from '@/components/EditableText';
-import { useActiveBoardStore } from '@/stores/activeBoardStore';
+import {
+  setActiveBoardStore,
+  useActiveBoardStore,
+} from '@/stores/activeBoardStore';
 import { UserPopup } from './UserPopup';
 import { useState } from '@/jsxCore/hooks';
-import { noop } from '@/utils/noop';
 import { goToUrl } from '@/stores/routerStore';
 import { openBoardSettingsModalDialog } from '@/stores/modalDialogsStore';
 import { useMeStore } from '@/stores/meStore';
 import { updateMembers } from '@/stores/members';
+import { updateBoard } from '@/api/boards';
+import { showToast } from '@/stores/toastNotificationStore';
 
 interface NavBarProps extends ComponentProps {
   leftPanelOpened: boolean;
@@ -76,7 +80,13 @@ export const NavBar = (props: NavBarProps) => {
                 text={activeBoard?.title ?? 'Загрузка'}
                 textClassName="navbar__board-name"
                 wrapperClassName="navbar__board-name-wrapper"
-                setText={noop}
+                setText={(newText) => {
+                  updateBoard(activeBoard.id, newText, '').then(() => {
+                    showToast('Успешно изменено название доски!', 'success');
+                    activeBoard.title = newText;
+                    setActiveBoardStore(activeBoard);
+                  });
+                }}
               />
               <Button
                 key="settings"

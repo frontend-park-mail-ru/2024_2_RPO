@@ -8,6 +8,10 @@ import { addMember, removeMember, updateMember } from '@/api/members';
 import { ActiveBoard } from '@/types/activeBoard';
 import { setMembersStore, useMembersStore } from '@/stores/members';
 import { showToast } from '@/stores/toastNotificationStore';
+import { useMeStore } from '@/stores/meStore';
+import { User } from '@/types/user';
+import { goToUrl } from '@/stores/routerStore';
+import { deleteBoard } from '@/api/boards';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const modeOptions: SelectBoxOption[] = [
@@ -25,6 +29,7 @@ const modeOptionsRedactor: SelectBoxOption[] = [
 
 export const BoardSettings = () => {
   const activeBoard = useActiveBoardStore() as ActiveBoard;
+  const me = useMeStore() as User;
   const members = useMembersStore();
   return (
     <ModalDialog
@@ -41,12 +46,42 @@ export const BoardSettings = () => {
               src={activeBoard?.backgroundImageUrl}
               alt="Задний фон доски"
             />
+            {activeBoard.myRole !== 'viewer' && (
+              <Button
+                key="change_background_btn"
+                text="Сменить фон"
+                icon="bi-card-image"
+                variant="default"
+              />
+            )}
             <Button
-              key="change_background_btn"
-              text="Сменить фон"
-              icon="bi-card-image"
-              variant="default"
+              key="leave_btn"
+              text="Выйти из доски"
+              icon="bi-box-arrow-right"
+              variant="negative"
+              callback={() => {
+                removeMember(activeBoard.id, me.id).then(() => {
+                  showToast('Вы вышли из этой доски!', 'success');
+                  closeBoardSettingsModalDialog();
+                  goToUrl('/app');
+                });
+              }}
             />
+            {activeBoard.myRole === 'admin' && (
+              <Button
+                key="delete_btn"
+                text="Удалить доску"
+                icon="bi-trash"
+                variant="negative"
+                callback={() => {
+                  deleteBoard(activeBoard.id).then(() => {
+                    showToast('Доска успешно удалена', 'success');
+                    closeBoardSettingsModalDialog();
+                    goToUrl('/app');
+                  });
+                }}
+              />
+            )}
           </div>
           <div class="board-settings__add-participants">
             <div class="add-participiants__text">Добавить участников</div>
@@ -132,6 +167,9 @@ export const BoardSettings = () => {
                         'admin',
                       ].indexOf(user.role)}
                       onChange={(newIndex) => {
+                        if (user.user.id === me.id) {
+                          return;
+                        }
                         updateMember(
                           activeBoard.id,
                           user.user.id,
@@ -152,9 +190,12 @@ export const BoardSettings = () => {
                   <div class="permissions-table__kick-member-button">
                     <Button
                       key={`remove_member_${user.user.id}`}
-                      icon="bi-x-lg"
+                      icon={user.user.id === me.id ? 'bi-person' : 'bi-x-lg'}
                       variant="default"
                       callback={() => {
+                        if (user.user.id === me.id) {
+                          return;
+                        }
                         removeMember(activeBoard.id, user.user.id).then(() => {
                           showToast('Успешно изгнан пользователь', 'success');
                           setMembersStore(

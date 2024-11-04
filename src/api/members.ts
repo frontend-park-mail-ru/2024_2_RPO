@@ -93,7 +93,7 @@ export const updateMember = async (
       return normalizeUser(data);
     }
     default:
-      showToast('Ошибка при изгнании участника', 'error');
+      showToast('Ошибка при изменении прав участника', 'error');
       throw new Error('Неизвестная ошибка');
   }
 };

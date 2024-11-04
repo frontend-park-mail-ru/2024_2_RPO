@@ -24,10 +24,12 @@ import { showToast } from '@/stores/toastNotificationStore';
 
 // Получить все доски пользователя
 export const getBoards = async (): Promise<Board[]> => {
-  if (useMocks) return myBoardsMock;
+  if (useMocks) {
+    return myBoardsMock;
+  }
 
   try {
-    const response = await apiGet('boards/my');
+    const response = await apiGet('/boards/my');
     const json: BoardInfoResponse[] = await response.body;
 
     if (response.status === HTTP_STATUS_OK) {
@@ -124,11 +126,14 @@ export const createBoard = async (boardName: string): Promise<Board> => {
 
 // Изменить информацию о доске
 export const updateBoard = async (
-  boardId: string,
+  boardId: number,
   name: string,
   description: string
 ): Promise<Board> => {
-  const response = await apiPut(`/boards/${boardId}`, { name, description });
+  const response = await apiPut(`/boards/board_${boardId}`, {
+    name,
+    description,
+  });
 
   if (response.status === HTTP_STATUS_OK) {
     const updatedBoard: BoardResponse = response.body;
@@ -146,8 +151,8 @@ export const updateBoard = async (
 };
 
 // Удалить доску
-export const deleteBoard = async (boardId: string): Promise<void> => {
-  const response = await apiDelete(`/boards/${boardId}`);
+export const deleteBoard = async (boardId: number): Promise<void> => {
+  const response = await apiDelete(`/boards/board_${boardId}`);
 
   if (response.status !== HTTP_STATUS_OK) {
     handleErrors(response.status, 'Delete board');

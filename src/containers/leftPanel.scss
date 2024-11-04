@@ -5,6 +5,7 @@
   height: 100vh;
   padding: 0px 10px;
   z-index: 5;
+  overflow-y: auto;
 }
 .left-menu__left-elements {
   display: flex;
@@ -20,7 +21,6 @@
   gap: 10px;
 }
 .left-menu__body {
-  overflow-y: auto;
   padding-bottom: 80px;
 }
 .left-menu__first-level {
