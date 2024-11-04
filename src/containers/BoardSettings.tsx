@@ -2,7 +2,10 @@ import { ModalDialog } from '@/components/ModalDialog';
 import { closeBoardSettingsModalDialog } from '@/stores/modalDialogsStore';
 import { Button } from '@/components/Button';
 import { SelectBox, SelectBoxOption } from '@/components/SelectBox';
-import { useActiveBoardStore } from '@/stores/activeBoardStore';
+import {
+  setActiveBoardStore,
+  useActiveBoardStore,
+} from '@/stores/activeBoardStore';
 import { Input } from '@/components/Input';
 import { addMember, removeMember, updateMember } from '@/api/members';
 import { ActiveBoard } from '@/types/activeBoard';
@@ -11,7 +14,7 @@ import { showToast } from '@/stores/toastNotificationStore';
 import { useMeStore } from '@/stores/meStore';
 import { User } from '@/types/user';
 import { goToUrl } from '@/stores/routerStore';
-import { deleteBoard } from '@/api/boards';
+import { deleteBoard, setBoardBackgroundImage } from '@/api/boards';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const modeOptions: SelectBoxOption[] = [
@@ -46,12 +49,35 @@ export const BoardSettings = () => {
               src={activeBoard?.backgroundImageUrl}
               alt="Задний фон доски"
             />
+            <input
+              id="uploadbg"
+              type="file"
+              style="display:none"
+              ON_change={(event: InputEvent) => {
+                const files = (event.target as HTMLInputElement).files;
+                if (files && files.length > 0) {
+                  setBoardBackgroundImage(activeBoard.id, files[0]).then(
+                    (resp) => {
+                      showToast('Успешно изменён фон!', 'error');
+                      activeBoard.backgroundImageUrl = resp.body.backgroundImageUrl;
+                      setActiveBoardStore(activeBoard);
+                    }
+                  );
+                }
+              }}
+            />
             {activeBoard.myRole !== 'viewer' && (
               <Button
                 key="change_background_btn"
                 text="Сменить фон"
                 icon="bi-card-image"
                 variant="default"
+                callback={() => {
+                  const el = document.getElementById(
+                    'uploadbg'
+                  ) as HTMLInputElement;
+                  el.click();
+                }}
               />
             )}
             <Button

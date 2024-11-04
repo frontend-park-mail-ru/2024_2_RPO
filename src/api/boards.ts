@@ -4,7 +4,6 @@ import {
   apiPost,
   apiPut,
   apiDelete,
-  apiPutFormData,
   HTTP_STATUS_CREATED,
   HTTP_STATUS_FORBIDDEN,
   HTTP_STATUS_NOT_FOUND,
@@ -161,15 +160,12 @@ export const deleteBoard = async (boardId: number): Promise<void> => {
 };
 
 // Установить изображение заднего фона
-export const setBoardBackgroundImage = async (
-  boardId: string,
-  file: File
-): Promise<void> => {
+export const setBoardBackgroundImage = async (boardId: number, file: File) => {
   const formData = new FormData();
-  formData.append('background', file);
+  formData.append('file', file);
 
-  const response = await apiPutFormData(
-    `/boards/${boardId}/backgroundImage`,
+  const response = await apiPut(
+    `/boards/board_${boardId}/backgroundImage`,
     formData
   );
 
@@ -177,6 +173,7 @@ export const setBoardBackgroundImage = async (
     handleErrors(response.status, 'Set board background image');
     throw new Error('Ошибка при изменении фона доски');
   }
+  return response;
 };
 
 // Функция для обработки ошибок

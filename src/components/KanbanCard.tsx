@@ -1,15 +1,17 @@
 import { ComponentProps } from '@/jsxCore/types';
 import './kanbanCard.scss';
-import { deleteCard } from '@/api/columnsCards';
+import { deleteCard, updateCard } from '@/api/columnsCards';
 import {
   setActiveBoardStore,
   useActiveBoardStore,
 } from '@/stores/activeBoardStore';
 import { ActiveBoard } from '@/types/activeBoard';
+import { EditableText } from './EditableText';
 
 interface KanbanCardProps extends ComponentProps {
   text: string;
   cardId: number;
+  columnId: number;
   coverImageUrl?: string;
 }
 
@@ -35,7 +37,25 @@ export const KanbanCard = (props: KanbanCardProps) => {
       {props.coverImageUrl !== undefined ? (
         <img src={props.coverImageUrl} class="kanban-card__cover"></img>
       ) : undefined}
-      {props.text}
+      <EditableText
+        key="editable_text"
+        text={props.text}
+        setText={(newText) => {
+          updateCard(activeBoard.id, props.cardId, {
+            title: newText,
+            columnId: props.columnId,
+          }).then((newCard) => {
+            activeBoard.columns.forEach((col) => {
+              col.cards.forEach((card) => {
+                if (card.id === props.cardId) {
+                  card.title = newCard.title;
+                }
+              });
+            });
+            setActiveBoardStore(activeBoard);
+          });
+        }}
+      />
     </div>
   );
 };

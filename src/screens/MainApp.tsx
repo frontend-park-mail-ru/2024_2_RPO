@@ -45,7 +45,7 @@ export const MainApp = (props: MainAppProps) => {
         <img
           src={
             activeBoard !== undefined
-              ? '/static/img/backgroundPicture.png'
+              ? activeBoard.backgroundImageUrl
               : '/static/img/inviteBackgroundPicture.png'
           }
           class="app__background-image"

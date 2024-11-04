@@ -1,10 +1,14 @@
-import { changeUserPassword, updateUserProfile } from '@/api/users';
+import {
+  changeUserPassword,
+  updateUserAvatar,
+  updateUserProfile,
+} from '@/api/users';
 import { Button } from '@/components/Button';
 import { Input } from '@/components/Input';
 import { ModalDialog } from '@/components/ModalDialog';
 import { useState } from '@/jsxCore/hooks';
 import { ComponentProps } from '@/jsxCore/types';
-import { setMeStore, useMeStore } from '@/stores/meStore';
+import { setMeStore, updateMe, useMeStore } from '@/stores/meStore';
 import { closeUserProfileModalDialog } from '@/stores/modalDialogsStore';
 import { showToast } from '@/stores/toastNotificationStore';
 import { User } from '@/types/user';
@@ -75,11 +79,30 @@ export const UserProfile = (props: UserProfileProps) => {
             alt="Profile Image"
             class="user-profile__avatar"
           />
-
+          <input
+            id="uploadavatar"
+            type="file"
+            style="display:none"
+            ON_change={(event: InputEvent) => {
+              const files = (event.target as HTMLInputElement).files;
+              if (files && files.length > 0) {
+                updateUserAvatar(files[0]).then(() => {
+                  showToast('Успешно обновлена аватарка', 'success');
+                  updateMe();
+                });
+              }
+            }}
+          />
           <Button
             key="change_avatar"
             text="Сменить аватарку"
             icon="bi-images"
+            callback={() => {
+              const el = document.getElementById(
+                'uploadavatar'
+              ) as HTMLInputElement;
+              el.click();
+            }}
           />
         </div>
         <div class="user-profile__main">

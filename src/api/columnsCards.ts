@@ -97,6 +97,30 @@ export const createCard = async (
   }
   throw new Error('Неизвестная ошибка');
 };
+export const updateCard = async (
+  boardId: number,
+  cardId: number,
+  data: CardRequest
+): Promise<Card> => {
+  try {
+    const response = await apiPut(
+      `/cards/board_${boardId}/card_${cardId}`,
+      data
+    );
+    switch (response.status) {
+      case HTTP_STATUS_OK:
+      case HTTP_STATUS_CREATED:
+        showToast('Успешно изменена карточка', 'success');
+        return response.body as CardResponse;
+      default:
+        handleErrorResponse(response.status, response.body.text);
+    }
+  } catch (error) {
+    showToast('Произошла ошибка при изменении карточки.', 'error');
+    console.error(error);
+  }
+  throw new Error('Неизвестная ошибка');
+};
 export const deleteCard = async (
   boardId: number,
   cardId: number

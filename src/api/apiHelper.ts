@@ -32,7 +32,9 @@ const fetchApi = async (
     method: method,
   };
   requestHeaders.set('X-CSRF-Token', csrfToken);
-  if (requestBody !== undefined) {
+  if (requestBody instanceof FormData) {
+    requestOptions.body = requestBody;
+  } else if (requestBody !== undefined) {
     requestOptions.body = JSON.stringify(requestBody);
     requestHeaders.set('Content-Type', MIME_TYPE_JSON);
   }
@@ -74,41 +76,6 @@ const fetchApi = async (
     await fetchApi('/users/me', 'GET', undefined, true);
     return await fetchApi(addr, method, requestBody);
   }
-  return {
-    status: response.status,
-    body: returnValue,
-    contentType,
-  };
-};
-
-/**
- * Выполняет PUT-запрос с использованием formData
- * @param addr адрес ресурса в API
- * @param formData объект FormData с данными для отправки
- * @returns Promise с ответом, содержащим статус, тело и тип контента
- */
-export const apiPutFormData = async (
-  addr: string,
-  formData: FormData
-): Promise<IResponce> => {
-  const requestHeaders = new Headers({});
-  const requestOptions: RequestInit = {
-    credentials: 'include',
-    method: 'PUT',
-    headers: requestHeaders,
-    body: formData,
-  };
-
-  const response = await fetch(getApiUrl(addr), requestOptions);
-  const contentType = response.headers.get('Content-Type') as string;
-  let returnValue: any = undefined;
-
-  if (contentType === MIME_TYPE_JSON) {
-    returnValue = await response.json();
-  } else {
-    returnValue = await response.text();
-  }
-
   return {
     status: response.status,
     body: returnValue,

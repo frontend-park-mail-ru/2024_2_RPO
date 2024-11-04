@@ -3,7 +3,6 @@ import {
   HTTP_STATUS_BAD_REQUEST,
   useMocks,
   apiGet,
-  apiPutFormData,
   apiPost,
   HTTP_STATUS_UNAUTHORIZED,
   HTTP_STATUS_CONFLICT,
@@ -152,9 +151,9 @@ export const loginUser = async (
  */
 export const updateUserAvatar = async (avatar: File): Promise<User> => {
   const formData = new FormData();
-  formData.append('avatar', avatar);
+  formData.append('file', avatar);
 
-  const response = await apiPutFormData('/users/me/avatar', formData);
+  const response = await apiPut('/users/me/avatar', formData);
 
   if (response.status === HTTP_STATUS_OK) {
     return response.body as User;
