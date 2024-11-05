@@ -1,45 +1,79 @@
-import { ButtonComponent } from '/components/Button.js';
-import { LoginDialog } from '/containers/LoginDialog.js';
-import { RegistrationDialog } from '/containers/RegistrationDialog.js';
-import {
-  getHomePageISS,
-  interfaceStateStore,
-} from '/stores/interfaceStateStore.js';
+import { Button } from '@/components/Button';
+import { LoginDialog } from '@/containers/LoginDialog';
+import { RegistrationDialog } from '@/containers/RegistrationDialog';
+import { useState } from '@/jsxCore/hooks';
+import { ComponentProps } from '@/jsxCore/types';
+import { useMeStore } from '@/stores/meStore';
+import { goToUrl } from '@/stores/routerStore';
 
-export const HomePage = () => {
+type HomePageProps = ComponentProps;
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const HomePage = (props: HomePageProps) => {
+  const [isRegistrationOpened, setIsRegistrationOpened] = useState(false);
+  const [isLoginOpened, setIsLoginOpened] = useState(false);
+  const userMe = useMeStore();
+
   return (
     <>
-      <div class="background">
-        <i class="bi-kanban icon1"></i>
-        <i class="bi-kanban icon2"></i>
+      <div class="home-page-bg">
+        <i class="bi-kanban home-page-bg__icon1"></i>
+        <i class="bi-kanban home-page-bg__icon2"></i>
       </div>
-      <div class="landing_contents">
-        <img src="/static/logo.svg" class="logo_image" />
+      <div class="homepage">
+        <img src="static/img/logo.svg" class="home-page__logo" />
         <h1 class="homepage__pumpkin">Pumpkin</h1>
         <span style="margin-bottom: 30px">
           Облачный канбан со сверхспособностями
         </span>
 
-        {ButtonComponent({
-          text: 'Зарегистрироваться',
-          callback: () => {
-            getHomePageISS().isRegistrationDialogOpened = true;
-            interfaceStateStore?.update();
-          },
-        })}
-        {ButtonComponent({
-          text: 'Войти',
-          callback: () => {
-            getHomePageISS().isLoginDialogOpened = true;
-            interfaceStateStore?.update();
-          },
-        })}
+        {userMe === undefined && (
+          <Button
+            key="reg_button"
+            text="Зарегистрироваться"
+            callback={() => {
+              setIsRegistrationOpened(true);
+            }}
+          />
+        )}
+
+        {userMe === undefined && (
+          <Button
+            key="login_button"
+            text="Войти"
+            callback={() => {
+              setIsLoginOpened(true);
+            }}
+          />
+        )}
+        {userMe !== undefined && (
+          <Button
+            key="login_button"
+            text="Перейти в приложение"
+            variant="positive"
+            callback={() => {
+              goToUrl('/app');
+            }}
+          />
+        )}
       </div>
 
-      {getHomePageISS().isRegistrationDialogOpened
-        ? RegistrationDialog()
-        : undefined}
-      {getHomePageISS().isLoginDialogOpened ? LoginDialog() : undefined}
+      {isRegistrationOpened && (
+        <RegistrationDialog
+          key="reg_dialog"
+          closeCallback={() => {
+            setIsRegistrationOpened(false);
+          }}
+        />
+      )}
+      {isLoginOpened && (
+        <LoginDialog
+          key="login_dialog"
+          closeCallback={() => {
+            setIsLoginOpened(false);
+          }}
+        />
+      )}
     </>
   );
 };

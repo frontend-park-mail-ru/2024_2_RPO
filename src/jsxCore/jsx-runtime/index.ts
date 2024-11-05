@@ -1,16 +1,12 @@
 import { JSXInternal as _JSX } from './jsx';
-
-export interface JSXNode {
-  type: string;
-  props: object;
-  children: JSXChildType[];
-  key?: string;
-}
-
-export type JSXChildType = JSXNode | string;
-
-type propsType = _JSX.HTMLAttributes &
-  _JSX.SVGAttributes & { children?: JSXChildType | JSXChildType[] | undefined };
+import {
+  JsxHtmlElement,
+  IComponentFunction,
+  JsxSubtree,
+  JsxComponentElement,
+  JsxNode,
+} from '../types';
+import { flatten } from '@/utils/misc';
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 namespace JSX {
@@ -18,41 +14,89 @@ namespace JSX {
   export interface IntrinsicElements extends _JSX.IntrinsicElements {}
 }
 
-const Fragment = '';
+const Fragment = 'fragment';
 
-const normalizeChildren = (
-  children: JSXChildType | JSXChildType[] | undefined
-): JSXChildType[] => {
-  if (Array.isArray(children)) return children;
-  if (children === undefined) return [];
+// То, что может лежать в props.children
+type JSXChildrenType =
+  | (JsxNode | string)
+  | (JsxNode | string | undefined | JSXChildrenType)[]
+  | undefined;
+
+const normalizeChildren = (children: JSXChildrenType): JsxSubtree => {
+  if (Array.isArray(children)) {
+    const normalizedChildren = children
+      .filter((vNode: any) => {
+        return vNode !== undefined && vNode !== false;
+      })
+      .map((vNode) => {
+        if (typeof vNode === 'string') {
+          return { nodeType: 'TextNode', text: vNode };
+        } else {
+          return vNode;
+        }
+      });
+    return flatten(normalizedChildren);
+  }
+  if (children === undefined) {
+    return [];
+  }
+  if (typeof children === 'string') {
+    return [{ nodeType: 'TextNode', text: children }];
+  }
   return [children];
 };
 
 function jsx(
-  type: string,
-  props: propsType,
+  type: string | IComponentFunction | 'fragment',
+  props: any,
   key?: string
-): JSXNode | JSXChildType[] {
-  if (key !== undefined) {
-    console.log("jsx argument 'key' was provided with value: ", key);
-    throw new Error('not implemented');
-  }
+): JsxSubtree | JsxComponentElement | JsxHtmlElement {
   const children = normalizeChildren(props.children);
+  props.children = children;
+
   if (type === Fragment) {
+    // Фрагмент (несколько веток)
+    if (key !== undefined) {
+      throw new Error('Key should be used for components only');
+    }
     return children;
-  } else {
-    const ret: JSXNode = { type, props, children };
+  } else if (typeof type === 'function') {
+    // Функциональный компонент
+    if (key === undefined) {
+      throw new Error('Every component should have a key');
+    }
+    const ret: JsxComponentElement = {
+      nodeType: 'ComponentElement',
+      func: type,
+      children,
+      props,
+      key,
+    };
+    return ret;
+  } else if (typeof type === 'string') {
+    // Обычный HTML-элемент
+    if (key !== undefined) {
+      throw new Error('Key should be used for components only');
+    }
+    const ret: JsxHtmlElement = {
+      nodeType: 'JSXElement',
+      tagName: type,
+      props,
+      children,
+    };
     return ret;
   }
+
+  throw new Error('Error in JSX function: type is used wrong');
 }
 function jsxTemplate(): void {
-  throw new Error('Not implemented');
+  throw new Error('jsxTemplate(): Not implemented');
 }
 function jsxAttr(): void {
-  throw new Error('Not implemented');
+  throw new Error('jsxAttr(): Not implemented');
 }
 function jsxEscape(): void {
-  throw new Error('Not implemented');
+  throw new Error('jsxEscape(): Not implemented');
 }
 
 export {

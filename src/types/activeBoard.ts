@@ -1,5 +1,6 @@
 import { Board } from './board';
 import { Card } from './card';
+import { UserToBoard } from './user';
 
 export interface BoardColumn {
   id: number;
@@ -9,4 +10,6 @@ export interface BoardColumn {
 
 export interface ActiveBoard extends Board {
   columns: BoardColumn[];
+  myRole: 'viewer' | 'editor' | 'editor_chief' | 'admin';
+  users?: UserToBoard[];
 }

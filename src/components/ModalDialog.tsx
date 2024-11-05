@@ -1,11 +1,10 @@
-import { ButtonComponent } from './Button.js';
-import { JSXChildType } from '/jsxCore/jsx-runtime';
-import { noop } from '/utils/noop.js';
+import { ComponentProps, JsxNode } from '@/jsxCore/types';
 
-interface ModalDialogProps {
+interface ModalDialogProps extends ComponentProps {
   title?: string;
-  content?: JSXChildType;
+  children?: JsxNode;
   closeCallback?: () => void;
+  isOpened: boolean;
 }
 
 /**
@@ -13,19 +12,26 @@ interface ModalDialogProps {
  * @param props Пропсы модального диалога
  * @returns JSX модального диалога
  */
-export const ModalDialog = (props: ModalDialogProps = {}) => {
+export const ModalDialog = (props: ModalDialogProps) => {
+  if (!props.isOpened) {
+    return <div style="display:none" />;
+  }
   return (
-    <div class="modal-dialog__container">
+    <div class="full-screen-dark">
       <div class="modal-dialog">
         <div class="modal-dialog__header-block">
-          <span class="modal-dialog__title">{props.title}</span>
-          {ButtonComponent({
-            icon: 'bi-x',
-            callback: props.closeCallback ?? noop,
-          })}
+          <div className="modal-dialog__title-wrapper">
+            <div class="modal-dialog__title">{props.title}</div>
+          </div>
+          <div
+            class="modal-dialog__close-button"
+            ON_click={props.closeCallback}
+          >
+            <i class="bi-x-lg" />
+          </div>
         </div>
-        <hr class="mb-16px" />
-        {props.content}
+        <hr style="margin-bottom: 10px;" />
+        {props.children}
       </div>
     </div>
   );

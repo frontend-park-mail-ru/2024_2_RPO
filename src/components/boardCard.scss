@@ -1,0 +1,23 @@
+.board-card {
+  border: 1px solid black;
+  border-radius: 5px;
+  background-color: white;
+  padding: 8px 4px;
+  cursor: pointer;
+}
+.board-card__active {
+  border: 2px solid blue !important;
+  border-radius: 5px;
+  padding: 7px 3px;
+}
+.board-card__title {
+  font-weight: bold;
+  font-size: 1.25rem;
+}
+.board-card__subtext {
+  font-size: 0.8rem;
+}
+.board-card__cover {
+  max-width: 100%;
+  object-fit: cover;
+}

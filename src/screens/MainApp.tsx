@@ -1,102 +1,58 @@
-import { LeftPanel } from '/containers/LeftPanel.js';
-import { NavBar } from '/containers/NavBar.js';
-import { ButtonComponent } from '/components/Button.js';
-import { ModalDialog } from '/components/ModalDialog.js';
-import { getAppISS, interfaceStateStore } from '/stores/interfaceStateStore.js';
-import { getApiUrl } from '../api/apiHelper.js';
+import { LeftPanel } from '@/containers/LeftPanel';
+import { NavBar } from '@/containers/NavBar';
+import { ComponentProps } from '@/jsxCore/types';
+import { useState } from '@/jsxCore/hooks';
+import { UserProfile } from '@/containers/UserProfile';
+import { KanbanBoard } from '@/containers/KanbanBoard';
+import { useModalDialogsStore } from '@/stores/modalDialogsStore';
+import { BoardSettings } from '@/containers/BoardSettings';
+import { useActiveBoardStore } from '@/stores/activeBoardStore';
+import { setBoardsStore, useBoardsStore } from '@/stores/boardsStore';
+import { getBoards } from '@/api/boards';
+import { Board } from '@/types/board';
 
-export const MainApp = () => {
+type MainAppProps = ComponentProps;
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const MainApp = (props: MainAppProps) => {
+  const [leftPanelOpened, setLeftPanelOpened] = useState(false);
+  const modalDialogsStore = useModalDialogsStore();
+  const activeBoard = useActiveBoardStore();
+  const boards = useBoardsStore();
+  if (boards === undefined) {
+    getBoards().then((newBoards: Board[]) => {
+      setBoardsStore(newBoards);
+    });
+  }
+
   return (
     <>
-      {getAppISS().isNewBoardDialogOpened
-        ? ModalDialog({
-            title: 'Название новой доски',
-            closeCallback: () => {
-              getAppISS().isNewBoardDialogOpened = false;
-              interfaceStateStore?.update();
-            },
-            content: (
-              <div>
-                <input
-                  ON_keydown={(event: KeyboardEvent) => {
-                    if (event.key === 'Enter') {
-                      const src = event.target;
+      <NavBar
+        leftPanelOpened={leftPanelOpened}
+        setLeftPanelOpened={setLeftPanelOpened}
+        key="nav_bar"
+      />
+      {modalDialogsStore.isUserProfileOpened && (
+        <UserProfile key="user_profile" />
+      )}
+      {modalDialogsStore.isBoardSettingsOpened && (
+        <BoardSettings key="board_settings" />
+      )}
 
-                      if (src instanceof HTMLInputElement) {
-                        fetch(getApiUrl('/boards'), {
-                          method: 'POST',
-                          credentials: 'include',
-                          body: JSON.stringify({
-                            name: src.value,
-                            description: 'Generic desc',
-                          }),
-                          headers: { 'Content-Type': 'application/json' },
-                        })
-                          .then(() => {
-                            interfaceStateStore?.updateRegAndApp();
-                            getAppISS().isNewBoardDialogOpened = false;
-                          })
-                          .catch(() => {
-                            alert('Неизвестная ошибка на бэке');
-                            getAppISS().isNewBoardDialogOpened = false;
-                          });
-                      }
-                    }
-                  }}
-                ></input>
-              </div>
-            ),
-          })
-        : undefined}
-      {getAppISS().isBoardDeleteDialogOpened
-        ? ModalDialog({
-            title: 'Вы точно хотите удалить доску?',
-            content: (
-              <div>
-                {ButtonComponent({
-                  text: 'Да',
-                  callback: () => {
-                    const cb = getAppISS().boardDeleteDialogCallback;
-                    if (cb !== undefined) cb();
-                    getAppISS().isBoardDeleteDialogOpened = false;
-                    interfaceStateStore?.update();
-                  },
-                })}
-                {ButtonComponent({
-                  text: 'Нет',
-                  callback: () => {
-                    getAppISS().isBoardDeleteDialogOpened = false;
-                    interfaceStateStore?.update();
-                  },
-                })}
-              </div>
-            ),
-          })
-        : undefined}
-      <header>{NavBar()}</header>
-
-      {getAppISS().isLeftPanelOpened ? LeftPanel() : undefined}
+      {leftPanelOpened && <LeftPanel key="left_panel" />}
 
       <main>
         <img
-          src="/static/backgroundPicture.png"
-          class="backgroundPicture"
+          src={
+            activeBoard !== undefined
+              ? activeBoard.backgroundImageUrl
+              : '/static/img/inviteBackgroundPicture.png'
+          }
+          class="app__background-image"
           alt=""
         />
 
-        <div class="board">
-          <div class="board__column">
-            <div class="board__column__header">
-              <div class="board__column__title">Апокалипсис</div>
-              <div class="board__column__dots-button">
-                <i
-                  class="bi-three-dots"
-                  style="margin-left: 3px; margin-top: 3px;"
-                ></i>
-              </div>
-            </div>
-          </div>
-        </div>
+        {activeBoard !== undefined && <KanbanBoard key="kanban-board" />}
       </main>
     </>
   );

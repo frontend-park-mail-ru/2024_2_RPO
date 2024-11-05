@@ -1,33 +1,55 @@
 import {
-  getApiUrl,
   HTTP_STATUS_OK,
-  HTTP_STATUS_INTERNAL_ERROR,
-} from './apiHelper.js';
-import { User } from '/types/user.js';
-import { interfaceStateStore } from '/stores/interfaceStateStore.js';
-
+  HTTP_STATUS_BAD_REQUEST,
+  useMocks,
+  apiGet,
+  apiPost,
+  HTTP_STATUS_UNAUTHORIZED,
+  HTTP_STATUS_CONFLICT,
+  apiPut,
+} from '@/api/apiHelper';
+import { User } from '@/types/user';
+import { userMeMock } from './mocks/user';
+import { showToast } from '@/stores/toastNotificationStore';
+import { UserRequest, UserResponse } from './types';
 /**
  * Получить информацию о текущем пользователе
  * @returns промис, который возвращает или User (если залогинен), или undefined (если не залогинен)
  */
-export const getUserMe = (): Promise<User | undefined> => {
-  return fetch(getApiUrl('/users/me'), {
-    credentials: 'include',
-  })
-    .then((response): Promise<User | undefined> => {
-      if (response.status === HTTP_STATUS_OK) {
-        return response.json().then((json): User => {
-          return { name: json.name, id: json.id };
-        });
+export const getUserMe = async (): Promise<User | undefined> => {
+  if (useMocks) {
+    return userMeMock;
+  }
+  try {
+    const response = await apiGet('/users/me');
+
+    switch (response.status) {
+      case HTTP_STATUS_OK: {
+        const data: UserResponse = response.body;
+        return {
+          name: data.name,
+          id: data.id,
+          email: data.email,
+          avatarImageUrl: data.avatarImageUrl,
+        };
       }
-      return Promise.resolve(undefined);
-    })
-    .catch(() => {
-      return undefined;
-    });
+      case HTTP_STATUS_UNAUTHORIZED:
+        return undefined;
+      default:
+        showToast('Неожиданная ошибка', 'error');
+    }
+    return undefined;
+  } catch {
+    return undefined;
+  }
 };
 
-type strong = string;
+type RegStatus =
+  | 'ok'
+  | 'error'
+  | 'login_busy'
+  | 'email_busy'
+  | 'login_and_email_busy';
 
 /**
  * Зарегистрировать пользователя
@@ -36,78 +58,156 @@ type strong = string;
  * @param password пассворд
  * @returns промис, который вызовет фукнцию обратного вызова resolve() в случае успеха или reject(reason: string) в случае неудачной попытки логина
  */
-export const registerUser = (
+export const registerUser = async (
   nickname: string,
   email: string,
-  password: strong
-) => {
-  return new Promise((resolve, reject) => {
-    fetch(getApiUrl('/auth/register'), {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-      body: JSON.stringify({ name: nickname, email, password }),
-    })
-      .then((res) => {
-        if (res.status === HTTP_STATUS_OK) {
-          resolve('Успешная регистрация');
-        } else if (res.status === HTTP_STATUS_INTERNAL_ERROR) {
-          alert('Ошибка на бэке');
-          reject('Ошибка на бэке');
-        } else {
-          reject('Логин или email заняты');
+  password: string
+): Promise<RegStatus> => {
+  try {
+    const response = await apiPost('/auth/register', {
+      name: nickname,
+      email,
+      password,
+    });
+
+    switch (response.status) {
+      case HTTP_STATUS_OK:
+        return 'ok';
+      case HTTP_STATUS_BAD_REQUEST:
+        return 'error';
+      case HTTP_STATUS_CONFLICT:
+        {
+          switch (response.body.text) {
+            case 'Nickname is busy':
+              return 'email_busy';
+            case 'Login is busy':
+              return 'login_busy';
+            case 'Email and nickname are busy':
+              return 'login_and_email_busy';
+          }
         }
-      })
-      .catch(() => {
-        alert('Отвалился бэк, попробуйте перезагрузиться');
-        reject('Отвалился бэк');
-      });
-  });
+        showToast('Неизвестная ошибка 409', 'error');
+        throw new Error('unknown error');
+      default:
+        throw new Error('Неизвестная ошибка');
+    }
+  } catch (error) {
+    alert('Отвалился бэк, попробуйте перезагрузиться');
+    throw error;
+  }
 };
 
 /**
  * Выйти из аккаунта
  * @returns промис, который разлогинится и обновит интерфейс
  */
-export const logout = () => {
-  return fetch(getApiUrl('/auth/logout'), {
-    method: 'POST',
-    credentials: 'include',
-  }).then(() => {
-    if (interfaceStateStore !== undefined) {
-      interfaceStateStore.me = undefined;
-    }
-    history.pushState(null, '', '/');
-    interfaceStateStore?.updateRegAndApp();
-  });
+export const logout = async () => {
+  const response = await apiPost('/auth/logout');
+  switch (response.status) {
+    case HTTP_STATUS_OK:
+      return;
+    case HTTP_STATUS_UNAUTHORIZED:
+      alert('Вы уже разлогинены, Вам мало?');
+      break;
+    default:
+      alert('Беды на бэке');
+  }
 };
 
 /**
  * Залогиниться
  * @returns промис, который логинит и вызывает или onResolve(), или onReject(reason)
  */
-export const loginUser = (nickname: string, password: strong) => {
-  return new Promise((resolve, reject) => {
-    fetch(getApiUrl('/auth/login'), {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-      body: JSON.stringify({ email: nickname, password }),
-    })
-      .then((res) => {
-        if (res.status !== HTTP_STATUS_OK) {
-          reject('Неверные учетные данные');
-        } else {
-          resolve('Успешный вход');
-        }
-      })
-      .catch(() => {
-        alert('Отвалился бэк, попробуйте перезагрузиться');
-        reject('Отвалился бэк');
-      });
+export const loginUser = async (
+  email: string,
+  password: string
+): Promise<boolean> => {
+  try {
+    const response = await apiPost('/auth/login', {
+      email,
+      password,
+    });
+
+    switch (response.status) {
+      case HTTP_STATUS_OK:
+        return true;
+      case HTTP_STATUS_UNAUTHORIZED:
+        showToast('Неверные креды', 'error');
+        throw new Error('Неверные учетные данные');
+      default:
+        showToast('Неизвестная ошибка', 'error');
+        throw new Error('Беды на бэке');
+    }
+  } catch {
+    showToast('Неизвестная ошибка', 'error');
+  }
+  return false;
+};
+
+/**
+ * Обновить аватар пользователя
+ * @param avatar Файл изображения для аватара
+ * @returns Промис, который возвращает User с обновленной аватаркой или ошибку
+ */
+export const updateUserAvatar = async (avatar: File): Promise<User> => {
+  const formData = new FormData();
+  formData.append('file', avatar);
+
+  const response = await apiPut('/users/me/avatar', formData);
+
+  if (response.status === HTTP_STATUS_OK) {
+    return response.body as User;
+  } else {
+    throw new Error('Ошибка при обновлении аватарки');
+  }
+};
+
+/**
+ * Изменить пароль пользователя
+ * @param oldPassword Текущий пароль пользователя
+ * @param newPassword Новый пароль пользователя
+ * @returns Промис, который возвращает сообщение об успехе или ошибке
+ */
+export const changeUserPassword = async (
+  oldPassword: string,
+  newPassword: string
+): Promise<void> => {
+  const response = await apiPost('/auth/changePassword', {
+    oldPassword,
+    newPassword,
   });
+
+  if (response.status !== HTTP_STATUS_OK) {
+    if (response.status === HTTP_STATUS_BAD_REQUEST) {
+      throw new Error('Некорректный запрос');
+    }
+    throw new Error('Ошибка при изменении пароля');
+  }
+};
+
+export const updateUserProfile = async (
+  newUserProfile: UserRequest
+): Promise<UserResponse> => {
+  try {
+    const response = await apiPut('/users/me', newUserProfile);
+
+    switch (response.status) {
+      case HTTP_STATUS_OK: {
+        const updatedUserProfile: UserResponse = response.body;
+        return updatedUserProfile;
+      }
+      case HTTP_STATUS_BAD_REQUEST:
+        showToast('Не прошло валидацию. Данные точно верные?', 'error');
+        throw new Error('Неверные учетные данные');
+      case HTTP_STATUS_CONFLICT:
+        showToast('Никнейм или email заняты. Попробуйте другие', 'error');
+        break;
+      default:
+        showToast('Неизвестная ошибка', 'error');
+        throw new Error('Беды на бэке');
+    }
+  } catch {
+    showToast('Неизвестная ошибка', 'error');
+  }
+  throw new Error('Неизвестная ошибка');
 };

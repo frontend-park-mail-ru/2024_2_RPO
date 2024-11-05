@@ -1,156 +1,161 @@
-import { registerUser } from '/api/users.js';
-import { ModalDialog } from '/components/ModalDialog.js';
+import { registerUser } from '@/api/users';
+import { Button } from '@/components/Button';
+import { Input } from '@/components/Input';
+import { ModalDialog } from '@/components/ModalDialog';
+import { useState } from '@/jsxCore/hooks';
+import { ComponentProps } from '@/jsxCore/types';
+import { updateMe } from '@/stores/meStore';
+import { goToUrl } from '@/stores/routerStore';
+import { showToast } from '@/stores/toastNotificationStore';
 import {
-  getHomePageISS,
-  interfaceStateStore,
-} from '/stores/interfaceStateStore.js';
-import { AppState } from '/types/appState.js';
-import { getInputElementById } from '/utils/domHelper.js';
+  validateEmail,
+  validateNickname,
+  validatePassword,
+} from '@/utils/validation';
 
-export const RegistrationDialog = () => {
-  return ModalDialog({
-    title: 'Добро пожаловать в Pumpkin!',
-    content: (
-      <div>
-        <form id="reg_data">
-          <div class="form-field">
-            <label for="nickname">Никнейм:</label>
-            <input
-              type="text"
-              id="nickname"
-              name="nickname"
-              placeholder="Ваш никнейм"
-            />
-          </div>
-          <div class="form-field">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" placeholder="Email" />
-          </div>
-          <div class="form-field">
-            <label for="password">Пароль:</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              placeholder="Пароль"
-            />
-          </div>
-          <div class="form-field">
-            <label for="confirm-password">Повторите пароль:</label>
-            <input
-              type="password"
-              id="confirm-password"
-              name="confirm-password"
-              placeholder="Пароль"
-            />
-          </div>
-          <span id="allErrors"></span>
-          <div style="height:50px;"></div>;
-        </form>
-        <button
-          class="submit-btn"
-          ON_click={() => {
-            const nicknameElem = getInputElementById('nickname');
-            const emailElem = getInputElementById('email');
-            const passwordElem = getInputElementById('password');
-            const confirmPasswordElem = getInputElementById('confirm-password');
+interface RegistrationDialogProps extends ComponentProps {
+  closeCallback?: () => any;
+}
 
-            const allErrors = document.getElementById(
-              'allErrors'
-            ) as HTMLSpanElement;
-
-            allErrors.innerText = '';
-
-            let failFlag = false;
-
-            const MIN_PASSWD_LENGTH = 8;
-            const MAX_LENGTH = 60;
-
-            const nickname = nicknameElem.value;
-            const email = emailElem.value;
-            const password = passwordElem.value;
-            const confirmPassword = confirmPasswordElem.value;
-
-            if (!nickname) {
-              failFlag = true;
-              nicknameElem.style.borderColor = 'red';
-              allErrors.innerText += 'Пустой ник\n';
-            } else if (nickname.length > MAX_LENGTH) {
-              failFlag = true;
-              nicknameElem.style.borderColor = 'red';
-              allErrors.innerText += 'Слишком длинное имя\n';
-            } else {
-              nicknameElem.style.borderColor = 'gray';
-              nicknameElem.setCustomValidity('');
-            }
-            allErrors.style.color = 'red';
-
-            const emailRegex =
-              /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-            if (!email) {
-              failFlag = true;
-              emailElem.style.borderColor = 'red';
-              allErrors.innerText += 'Пустой email\n';
-            } else if (!email.match(emailRegex)) {
-              failFlag = true;
-              emailElem.style.borderColor = 'red';
-              allErrors.innerText += 'Инвалидный email\n';
-            } else if (email.length > MAX_LENGTH) {
-              failFlag = true;
-              emailElem.style.borderColor = 'red';
-              allErrors.innerText += 'Слишком длинный email\n';
-            } else {
-              emailElem.style.borderColor = 'gray';
-            }
-
-            if (!password || password.length < MIN_PASSWD_LENGTH) {
-              failFlag = true;
-              allErrors.innerText += 'Пароль должен быть не менее 8 символов\n';
-              passwordElem.style.borderColor = 'red';
-            } else if (password.length > MAX_LENGTH) {
-              failFlag = true;
-              allErrors.innerText +=
-                'Слишком длинный пароль, bcrypt не сможет его хешировать\n';
-              passwordElem.style.borderColor = 'red';
-            } else {
-              passwordElem.style.borderColor = 'gray';
-              allErrors.innerText += '';
-            }
-
-            if (password !== confirmPassword) {
-              failFlag = true;
-              allErrors.innerText += 'Пароли должны совпадать\n';
-              confirmPasswordElem.style.borderColor = 'red';
-            } else {
-              confirmPasswordElem.style.borderColor = 'gray';
-            }
-            if (!failFlag) {
-              // Если валидация прошла, отправляем данные на сервер
-              registerUser(nickname, email, password).then(
-                () => {
-                  if (typeof interfaceStateStore !== 'undefined') {
-                    interfaceStateStore.mode = 'app';
-                    interfaceStateStore.state = new AppState();
-                    interfaceStateStore.updateRegAndApp();
-                  }
-                },
-                (reason: string) => {
-                  allErrors.innerText += reason + '\n';
-                  allErrors.innerText +=
-                    'Попробуйте другие email и логин взять';
-                }
-              );
-            }
-          }}
-        >
-          Зарегистрироваться!
-        </button>
-      </div>
-    ),
-    closeCallback: () => {
-      getHomePageISS().isRegistrationDialogOpened = false;
-      interfaceStateStore?.update();
-    },
+export const RegistrationDialog = (props: RegistrationDialogProps) => {
+  const [data, setData] = useState({
+    nickname: '',
+    email: '',
+    password: '',
+    repeatPassword: '',
   });
+  const [isNicknameTaken, setIsNicknameTaken] = useState(false);
+  const [isEmailTaken, setIsEmailTaken] = useState(false);
+
+  const validationData = {
+    nickname: validateNickname(data.nickname),
+    email: validateEmail(data.email),
+    password: validatePassword(data.password),
+    repeatPassword: {
+      allowed: data.repeatPassword === data.password,
+      validationMessage:
+        data.repeatPassword !== data.password
+          ? 'Пароли не совпадают'
+          : undefined,
+    },
+  };
+  const validationOk =
+    validationData.nickname.allowed &&
+    validationData.password.allowed &&
+    validationData.email.allowed &&
+    validationData.repeatPassword.allowed;
+
+  if (isNicknameTaken) {
+    validationData.nickname = {
+      allowed: false,
+      validationMessage: 'Никнейм занят',
+    };
+  }
+  if (isEmailTaken) {
+    validationData.email = {
+      allowed: false,
+      validationMessage: 'Email занят',
+    };
+  }
+
+  const submitFunction = () => {
+    if (!validationOk) {
+      showToast('Ошибки в форме регистрации', 'error');
+      return;
+    }
+    registerUser(data.nickname, data.email, data.password).then((response) => {
+      switch (response) {
+        case 'ok':
+          showToast('Успешная регистрация', 'success');
+          updateMe();
+          goToUrl('/app');
+          break;
+        case 'email_busy':
+          setIsEmailTaken(true);
+          showToast('Email занят', 'warning');
+          break;
+        case 'login_busy':
+          setIsNicknameTaken(true);
+          showToast('Никнейм занят', 'warning');
+          break;
+        case 'login_and_email_busy':
+          setIsNicknameTaken(true);
+          setIsEmailTaken(true);
+          showToast('Email и никнейм заняты', 'warning');
+          break;
+        default:
+          showToast('Неизвестная ошибка', 'error');
+      }
+    });
+  };
+
+  return (
+    <ModalDialog
+      key="modal_dialog"
+      closeCallback={props.closeCallback}
+      title="Регистрация"
+      isOpened={true}
+    >
+      <div className="login-form__wrapper">
+        <div className="login-form">
+          <div style="display: flex; justify-content: end">
+            <label htmlFor="nickname">Никнейм:</label>
+          </div>
+          <Input
+            key="nickname_input"
+            onEnter={submitFunction}
+            onChanged={(newNickname) => {
+              setIsNicknameTaken(false);
+              setData({ ...data, nickname: newNickname });
+            }}
+            validationMessage={validationData.nickname.validationMessage}
+          />
+          <div style="display: flex; justify-content: end">
+            <label htmlFor="email">Email:</label>
+          </div>
+          <Input
+            key="email_input"
+            onChanged={(newEmail) => {
+              setIsEmailTaken(false);
+              setData({ ...data, email: newEmail });
+            }}
+            onEnter={submitFunction}
+            validationMessage={validationData.email.validationMessage}
+          />
+          <div style="display: flex; justify-content: end">
+            <label htmlFor="password">Пароль:</label>
+          </div>
+          <Input
+            key="password_input"
+            isPassword
+            onEnter={submitFunction}
+            onChanged={(newPassword) => {
+              setData({ ...data, password: newPassword });
+            }}
+            validationMessage={validationData.password.validationMessage}
+          />
+          <div style="display: flex; justify-content: end">
+            <label htmlFor="repeat_password">Повторите пароль:</label>
+          </div>
+          <Input
+            key="repeat_password_input"
+            isPassword
+            onEnter={submitFunction}
+            onChanged={(newRepeatPassword) => {
+              setData({ ...data, repeatPassword: newRepeatPassword });
+            }}
+            validationMessage={validationData.repeatPassword.validationMessage}
+          />
+        </div>
+        <div className="login-form__button-container">
+          <Button
+            key="submit_btn"
+            variant={validationOk ? 'positive' : 'default'}
+            callback={submitFunction}
+            text="Зарегистрироваться"
+          />
+        </div>
+      </div>
+    </ModalDialog>
+  );
 };
