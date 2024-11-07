@@ -24,21 +24,18 @@
   padding-bottom: 80px;
 }
 .left-menu__first-level {
-  display: flex;
-  align-items: center;
+  text-align: center;
+  width: 100%;
   gap: 50px;
-  margin-left: 14px;
-  margin-top: 30px;
+  margin-top: 20px;
 }
 .left-menu__body-name span {
   font-size: 22px;
   font-weight: 600;
 }
 .left-menu__body-name {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 20px;
 }
 .left-menu__card-list {
   display: flex;

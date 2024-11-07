@@ -19,6 +19,15 @@ type LeftPanelProps = ComponentProps;
 export const LeftPanel = (props: LeftPanelProps) => {
   const [inputOpened, setInputOpened] = useState(false);
   const boardsStore = useBoardsStore() ?? [];
+  const [newBoardName, setNewBoardName] = useState('');
+
+  const submitNewBoard = () => {
+    createBoard(newBoardName).then(() => {
+      showToast('Успешно создана доска', 'success');
+      updateBoards();
+    });
+  };
+
   return (
     <aside class="left-menu">
       <div class="left-menu__header">
@@ -28,7 +37,6 @@ export const LeftPanel = (props: LeftPanelProps) => {
         <div class="left-menu__first-level">
           <div class="left-menu__body-name">
             <span>Мои доски</span>
-            <Button key="favourite_btn" icon="bi-star" />
           </div>
         </div>
         <div class="left-menu__card-list" style="flex-direction: column;">
@@ -36,26 +44,48 @@ export const LeftPanel = (props: LeftPanelProps) => {
             return <BoardCard key={`board_${board.id}`} board={board} />;
           })}
         </div>
-        <div>
+        <div style="position: absolute; bottom: 0px">
           {inputOpened && (
-            <Input
-              key="newBoardName"
-              focusOnInstance
-              onEscape={() => {
-                setInputOpened(false);
-              }}
-              onEnter={(value: string) => {
-                setInputOpened(false);
-                createBoard(value).then(() => {
-                  showToast('Успешно создана доска', 'success');
-                  updateBoards();
-                });
-              }}
-            />
+            <>
+              <Input
+                key="newBoardName"
+                focusOnInstance
+                placeholder='Название новой доски'
+                onEscape={() => {
+                  setInputOpened(false);
+                  setNewBoardName('');
+                }}
+                onEnter={submitNewBoard}
+              />
+              <Button
+                key="confirm_new_board"
+                variant="positive"
+                fullWidth
+                icon="bi-plus-square"
+                text="Добавить доску"
+                callback={() => {
+                  submitNewBoard();
+                  setInputOpened(false);
+                  setNewBoardName('');
+                }}
+              />
+              <Button
+                key="cancel_new_board"
+                fullWidth
+                variant="negative"
+                icon="bi-x-lg"
+                text="Не добавлять"
+                callback={() => {
+                  setInputOpened(false);
+                  setNewBoardName('');
+                }}
+              />
+            </>
           )}
           {!inputOpened && (
             <Button
               key="add_board_btn"
+              variant="positive"
               icon="bi-plus-square"
               text="Добавить доску"
               callback={() => {

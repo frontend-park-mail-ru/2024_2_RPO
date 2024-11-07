@@ -34,5 +34,9 @@ export const goToUrl = (url: string) => {
 
 export const [useRouterStore, setRouterStore] = defineStore<RouterFlags>(
   'router',
-  getFlagRoutes(window.location.pathname)
+  {
+    isHome: false,
+    isApp: false,
+    boardId: undefined,
+  }
 );

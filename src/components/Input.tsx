@@ -21,11 +21,12 @@ interface Callbacks {
   onChanged: (ev: Event) => void;
 }
 
+//TODO исправить эти баги
+
 let globalUid = 0;
 const instMap: Map<number, Callbacks> = new Map();
 
 export const Input = (props: InputProps) => {
-  console.log('UPDATE VDOM');
   const [activated, setIsActivated] = useState(false);
   const [uid, setUid] = useState(-1);
   useEffectRefs((refs) => {
@@ -100,6 +101,7 @@ export const Input = (props: InputProps) => {
       <input
         ref="input"
         className="input"
+        autofocus={props.focusOnInstance}
         readonly={props.readOnly === true ? true : undefined}
         placeholder={props.placeholder}
         type={props.isPassword ? 'password' : undefined}

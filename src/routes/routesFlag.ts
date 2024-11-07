@@ -1,3 +1,4 @@
+import { loadBoard } from '@/stores/activeBoardStore';
 import { updateBoards } from '@/stores/boardsStore';
 
 export interface RouterFlags {
@@ -17,6 +18,7 @@ export const getFlagRoutes = (currentPath: string): RouterFlags => {
   }
   if (currentPath.startsWith('/app')) {
     updateBoards();
+    loadBoard(boardId);
   }
 
   return {
