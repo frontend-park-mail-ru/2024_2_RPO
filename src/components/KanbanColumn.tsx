@@ -11,6 +11,7 @@ import { showToast } from '@/stores/toastNotificationStore';
 import { createCard, deleteColumn, updateColumn } from '@/api/columnsCards';
 import { useState } from '@/jsxCore/hooks';
 import { Input } from './Input';
+import './kanbanColumn.scss';
 
 interface KanbanColumnProps extends ComponentProps {
   columnIndex: number;
@@ -24,46 +25,43 @@ export const KanbanColumn = (props: KanbanColumnProps) => {
     <div class="kanban-column">
       <div class="kanban-column__header">
         <EditableText
+          readOnly={activeBoard.myRole === 'viewer'}
           text={columnData.title}
-          setText={(newText) => {
-            updateColumn(activeBoard.id, props.columnId, {
-              title: newText,
-            }).then((newCol) => {
-              activeBoard.columns[props.columnIndex].title = newCol.title;
-              setActiveBoardStore(activeBoard);
-            });
+          setText={(newText, oldText) => {
+            if (newText !== oldText) {
+              updateColumn(activeBoard.id, props.columnId, {
+                title: newText,
+              }).then((newCol) => {
+                activeBoard.columns[props.columnIndex].title = newCol.title;
+                setActiveBoardStore(activeBoard);
+              });
+            }
           }}
           key="title_editable_text"
           textClassName="kanban-column__title"
         />
-        <div
-          class="kanban-column__trash-button kanban-column__button"
-          ON_click={() => {
-            if (columnData.cards.length > 0) {
-              showToast(
-                'Чтобы удалить колонку, надо, чтобы она была пустая',
-                'error'
-              );
-              return;
-            }
-            deleteColumn(activeBoard.id, props.columnId).then(() => {
-              activeBoard.columns = activeBoard.columns.filter((col) => {
-                return col.id !== props.columnId;
+        {activeBoard.myRole !== 'viewer' && (
+          <div
+            class="kanban-column__trash-button kanban-column__button"
+            ON_click={() => {
+              if (columnData.cards.length > 0) {
+                showToast(
+                  'Чтобы удалить колонку, надо, чтобы она была пустая',
+                  'error'
+                );
+                return;
+              }
+              deleteColumn(activeBoard.id, props.columnId).then(() => {
+                activeBoard.columns = activeBoard.columns.filter((col) => {
+                  return col.id !== props.columnId;
+                });
+                setActiveBoardStore(activeBoard);
               });
-              setActiveBoardStore(activeBoard);
-            });
-          }}
-        >
-          <i class="bi-trash"></i>
-        </div>
-        <div
-          class="kanban-column__dots-button kanban-column__button"
-          ON_click={() => {
-            showToast('Зачем Вы нажали на эту кнопку??', 'warning');
-          }}
-        >
-          <i class="bi-three-dots"></i>
-        </div>
+            }}
+          >
+            <i class="bi-trash"></i>
+          </div>
+        )}
       </div>
       {columnData.cards.map((cardData) => {
         return (

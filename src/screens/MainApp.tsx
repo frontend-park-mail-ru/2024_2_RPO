@@ -42,15 +42,23 @@ export const MainApp = (props: MainAppProps) => {
       {leftPanelOpened && <LeftPanel key="left_panel" />}
 
       <main>
-        <img
-          src={
-            activeBoard !== undefined
-              ? activeBoard.backgroundImageUrl
-              : '/static/img/inviteBackgroundPicture.png'
-          }
-          class="app__background-image"
-          alt=""
-        />
+        {activeBoard !== undefined && (
+          <img
+            src={activeBoard.backgroundImageUrl}
+            class="app__background-image"
+            alt=""
+          />
+        )}
+        {activeBoard === undefined && (
+          <div class="onboarding__wrapper-bg">
+            <div class="onboarding__advice-container">
+              <img class="onboarding__image" src="/static/img/onboarding.svg" />
+              <span class="onboarding__text">
+                Чтобы приступить к работе, выберите доску в левом меню
+              </span>
+            </div>
+          </div>
+        )}
 
         {activeBoard !== undefined && <KanbanBoard key="kanban-board" />}
       </main>

@@ -39,6 +39,7 @@ export const KanbanCard = (props: KanbanCardProps) => {
       ) : undefined}
       <EditableText
         key="editable_text"
+        wrapText
         text={props.text}
         setText={(newText) => {
           updateCard(activeBoard.id, props.cardId, {

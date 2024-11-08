@@ -70,6 +70,7 @@ export const NavBar = (props: NavBarProps) => {
           {activeBoard !== undefined && (
             <div class="navbar__group">
               <SelectBox
+                widthRem={10}
                 key="mode_select"
                 options={modeOptions}
                 currentIndex={0}
@@ -78,6 +79,10 @@ export const NavBar = (props: NavBarProps) => {
               <EditableText
                 key="board_name_text"
                 text={activeBoard?.title ?? 'Загрузка'}
+                readOnly={
+                  activeBoard.myRole === 'viewer' ||
+                  activeBoard.myRole === 'editor'
+                }
                 textClassName="navbar__board-name"
                 wrapperClassName="navbar__board-name-wrapper"
                 setText={(newText) => {

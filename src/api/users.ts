@@ -132,7 +132,7 @@ export const loginUser = async (
       case HTTP_STATUS_OK:
         return true;
       case HTTP_STATUS_UNAUTHORIZED:
-        showToast('Неверные креды', 'error');
+        showToast('Неверные учётные данные', 'error');
         throw new Error('Неверные учетные данные');
       default:
         showToast('Неизвестная ошибка', 'error');

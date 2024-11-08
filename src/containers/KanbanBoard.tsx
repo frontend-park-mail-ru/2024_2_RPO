@@ -30,6 +30,8 @@ const NewColumnButton = () => {
       {isOpened && (
         <Input
           key="col_name"
+          focusOnInstance
+          placeholder="Название новой колонки"
           onEscape={() => {
             setIsOpened(false);
           }}

@@ -5,7 +5,7 @@
 
 import { useState } from '@/jsxCore/hooks';
 import { ComponentProps } from '@/jsxCore/types';
-import "./selectBox.scss"
+import './selectBox.scss';
 
 export interface SelectBoxOption {
   title: string;
@@ -15,6 +15,8 @@ export interface SelectBoxOption {
 interface SelectBoxProps extends ComponentProps {
   options: SelectBoxOption[];
   currentIndex: number;
+  widthRem: number;
+  readOnly?: boolean;
   onChange?: (newIndex: number) => void;
 }
 export const SelectBox = (props: SelectBoxProps) => {
@@ -22,8 +24,12 @@ export const SelectBox = (props: SelectBoxProps) => {
   const currentOption = props.options[props.currentIndex];
   return (
     <div
-      class="select-box"
+      className={['select-box']}
+      style={`width: ${props.widthRem}rem`}
       ON_click={() => {
+        if (props.readOnly) {
+          return;
+        }
         setIsOpened(!isOpened);
       }}
     >
@@ -42,12 +48,15 @@ export const SelectBox = (props: SelectBoxProps) => {
           <div style="padding-left: 5px; flex-grow: 1">
             {currentOption.title}
           </div>
-          <div class="select-box__chevron-icon">
-            <i class="bi-chevron-down"></i>
-          </div>
+          {props.readOnly || (
+            <div class="select-box__chevron-icon">
+              <i class="bi-chevron-down"></i>
+            </div>
+          )}
         </div>
         {isOpened && (
           <div class="select-box__dropdown">
+            <div style="height: 5px;" />
             {props.options
               .map((val, idx) => {
                 return { ...val, idx };
@@ -58,6 +67,7 @@ export const SelectBox = (props: SelectBoxProps) => {
               .map((option) => {
                 return (
                   <div
+                    class="select-box__option"
                     ON_click={() => {
                       if (props.onChange !== undefined) {
                         props.onChange(option.idx);

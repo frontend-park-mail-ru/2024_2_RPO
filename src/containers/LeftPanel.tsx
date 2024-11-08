@@ -21,8 +21,16 @@ export const LeftPanel = (props: LeftPanelProps) => {
   const boardsStore = useBoardsStore() ?? [];
   const [newBoardName, setNewBoardName] = useState('');
 
-  const submitNewBoard = () => {
-    createBoard(newBoardName).then(() => {
+  const submitNewBoard = (boardName: string) => {
+    if (boardName.length < 3) {
+      showToast('Название доски должно быть не меньше 3 символов', 'error');
+      return;
+    }
+    if (boardName.length > 30) {
+      showToast('Название доски должно быть не больше 30 символов', 'error');
+      return;
+    }
+    createBoard(boardName).then(() => {
       showToast('Успешно создана доска', 'success');
       updateBoards();
     });
@@ -34,28 +42,25 @@ export const LeftPanel = (props: LeftPanelProps) => {
         <div class="left-menu__left-elements"></div>
       </div>
       <div class="left-menu__body">
-        <div class="left-menu__first-level">
-          <div class="left-menu__body-name">
-            <span>Мои доски</span>
-          </div>
-        </div>
-        <div class="left-menu__card-list" style="flex-direction: column;">
-          {boardsStore.map((board) => {
-            return <BoardCard key={`board_${board.id}`} board={board} />;
-          })}
-        </div>
-        <div style="position: absolute; bottom: 0px">
+        <div style="width:100%">
           {inputOpened && (
             <>
               <Input
                 key="newBoardName"
                 focusOnInstance
-                placeholder='Название новой доски'
+                placeholder="Название новой доски"
                 onEscape={() => {
                   setInputOpened(false);
                   setNewBoardName('');
                 }}
-                onEnter={submitNewBoard}
+                onEnter={(text) => {
+                  submitNewBoard(text);
+                  setInputOpened(false);
+                  setNewBoardName('');
+                }}
+                onChanged={(newText) => {
+                  setNewBoardName(newText);
+                }}
               />
               <Button
                 key="confirm_new_board"
@@ -64,7 +69,7 @@ export const LeftPanel = (props: LeftPanelProps) => {
                 icon="bi-plus-square"
                 text="Добавить доску"
                 callback={() => {
-                  submitNewBoard();
+                  submitNewBoard(newBoardName);
                   setInputOpened(false);
                   setNewBoardName('');
                 }}
@@ -93,6 +98,16 @@ export const LeftPanel = (props: LeftPanelProps) => {
               }}
             />
           )}
+        </div>
+        <div class="left-menu__first-level">
+          <div class="left-menu__body-name">
+            <span>Мои доски</span>
+          </div>
+        </div>
+        <div class="left-menu__card-list" style="flex-direction: column;">
+          {boardsStore.map((board) => {
+            return <BoardCard key={`board_${board.id}`} board={board} />;
+          })}
         </div>
       </div>
     </aside>

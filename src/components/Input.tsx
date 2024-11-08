@@ -26,6 +26,8 @@ interface Callbacks {
 let globalUid = 0;
 const instMap: Map<number, Callbacks> = new Map();
 
+let tttt = 0;
+
 export const Input = (props: InputProps) => {
   const [activated, setIsActivated] = useState(false);
   const [uid, setUid] = useState(-1);
@@ -38,6 +40,9 @@ export const Input = (props: InputProps) => {
       setTimeout(() => {
         if (props.onChanged) {
           props.onChanged(inp.value);
+        }
+        if (props.focusOnInstance) {
+          inp.focus();
         }
       }, 200);
       setIsActivated(true);
@@ -96,12 +101,13 @@ export const Input = (props: InputProps) => {
       });
     }
   });
+  tttt++;
   return (
     <div className="input__wrapper">
       <input
+        name={tttt.toString()}
         ref="input"
         className="input"
-        autofocus={props.focusOnInstance}
         readonly={props.readOnly === true ? true : undefined}
         placeholder={props.placeholder}
         type={props.isPassword ? 'password' : undefined}
