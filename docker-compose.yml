@@ -1,0 +1,10 @@
+services:
+  main_front:
+    container_name: main_front
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - "0.0.0.0:8002:80"
+    volumes:
+      - pumpkin-user-uploads:/usr/share/nginx/html/uploads
