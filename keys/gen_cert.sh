@@ -3,7 +3,7 @@
 curl https://get.acme.sh | sh
 
 DOMAIN="109.120.180.70"
-CERT_DIR="/etc/letsencrypt/"
+CERT_DIR="/etc/letsencrypt"
 
 mkdir -p $CERT_DIR
 
