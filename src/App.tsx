@@ -39,7 +39,7 @@ setTimeout(() => {
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function () {
-    navigator.serviceWorker.register('/static/sw.js').then(
+    navigator.serviceWorker.register('/sw.js').then(
       function (registration) {
         console.log(
           'ServiceWorker registration successful with scope: ',
@@ -51,4 +51,6 @@ if ('serviceWorker' in navigator) {
       }
     );
   });
+} else {
+  console.error('Service Worker is not available');
 }
