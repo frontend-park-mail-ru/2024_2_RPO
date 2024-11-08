@@ -8,3 +8,5 @@ services:
       - "0.0.0.0:8002:80"
     volumes:
       - pumpkin-user-uploads:/usr/share/nginx/html/uploads
+volumes:
+  pumpkin-user-uploads:
