@@ -10,8 +10,8 @@ RUN npm run build
 FROM nginx:stable-alpine
 RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx.conf /etc/nginx/conf.d
-COPY certificate.cer /usr/share/keys
-COPY private.key /usr/share/keys
+COPY certificate.crt /usr/share/keys/
+COPY private.key /usr/share/keys/
 COPY --from=builder /app/dist /usr/share/nginx/html
 COPY ./static /usr/share/nginx/html/static
 EXPOSE 80
