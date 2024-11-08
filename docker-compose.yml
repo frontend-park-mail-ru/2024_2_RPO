@@ -5,7 +5,9 @@ services:
       context: .
       dockerfile: ./Dockerfile
     ports:
-      - "0.0.0.0:8002:80"
+      - "0.0.0.0:443:443"
+      - "0.0.0.0:80:80"
+      - "0.0.0.0:8005:8005"
     volumes:
       - pumpkin-user-uploads:/usr/share/nginx/html/uploads
 volumes:
