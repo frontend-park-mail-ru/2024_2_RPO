@@ -14,6 +14,7 @@ import { useMeStore } from '@/stores/meStore';
 import { updateMembers } from '@/stores/members';
 import { updateBoard } from '@/api/boards';
 import { showToast } from '@/stores/toastNotificationStore';
+import './navBar.scss';
 
 interface NavBarProps extends ComponentProps {
   leftPanelOpened: boolean;
@@ -34,7 +35,7 @@ export const NavBar = (props: NavBarProps) => {
   const [userPopupOpened, setUserPopupOpened] = useState(false);
   return (
     <>
-      <nav class="navbar">
+      <nav className={['navbar']}>
         <div class="navbar__logo-group">
           <div
             class="navbar__left-panel-button"
@@ -48,7 +49,10 @@ export const NavBar = (props: NavBarProps) => {
             ></i>
           </div>
           <span
-            class="navbar__logo-link"
+            className={[
+              'navbar__logo-link',
+              props.leftPanelOpened || 'navbar__mobile-hidden',
+            ]}
             ON_click={() => {
               goToUrl('/');
             }}
@@ -66,45 +70,71 @@ export const NavBar = (props: NavBarProps) => {
             </div>
           </span>
         </div>
-        <div class="navbar__rest navbar__group">
+        {activeBoard === undefined && <div style="flex-grow:99999"></div>}
+        <div class="navbar__rest-group">
           {activeBoard !== undefined && (
-            <div class="navbar__group">
-              <SelectBox
-                widthRem={10}
-                key="mode_select"
-                options={modeOptions}
-                currentIndex={0}
-              />
-              <div style="width: 140px"></div>
-              <EditableText
-                key="board_name_text"
-                text={activeBoard?.title ?? 'Загрузка'}
-                readOnly={
-                  activeBoard.myRole === 'viewer' ||
-                  activeBoard.myRole === 'editor'
-                }
-                textClassName="navbar__board-name"
-                wrapperClassName="navbar__board-name-wrapper"
-                setText={(newText) => {
-                  updateBoard(activeBoard.id, newText, '').then(() => {
-                    showToast('Успешно изменено название доски!', 'success');
-                    activeBoard.title = newText;
-                    setActiveBoardStore(activeBoard);
-                  });
-                }}
-              />
-              <Button
-                key="settings"
-                icon="bi-gear"
-                callback={() => {
-                  updateMembers();
-                  openBoardSettingsModalDialog();
-                }}
-              />
-            </div>
+            <>
+              <div
+                className={[
+                  props.leftPanelOpened || 'navbar__mobile-hidden',
+                  'navbar__selectbox',
+                ]}
+              >
+                <SelectBox
+                  widthRem={10}
+                  key="mode_select"
+                  options={modeOptions}
+                  currentIndex={0}
+                  onChange={(idx) => {
+                    if (idx === 1) {
+                      showToast('Эта функция в разработке', 'warning');
+                    }
+                  }}
+                />
+              </div>
+              <div class="navbar__board-controls">
+                <div style="width: 140px" class="navbar__mobile-hidden"></div>
+                <div
+                  className={[
+                    'navbar__board-name',
+                    props.leftPanelOpened ? 'navbar__mobile-hidden' : '',
+                  ]}
+                >
+                  <EditableText
+                    key="board_name_text"
+                    text={activeBoard?.title ?? 'Загрузка'}
+                    readOnly={
+                      activeBoard.myRole === 'viewer' ||
+                      activeBoard.myRole === 'editor'
+                    }
+                    textClassName="navbar__board-name"
+                    wrapperClassName="navbar__board-name-wrapper"
+                    setText={(newText) => {
+                      updateBoard(activeBoard.id, newText, '').then(() => {
+                        showToast(
+                          'Успешно изменено название доски!',
+                          'success'
+                        );
+                        activeBoard.title = newText;
+                        setActiveBoardStore(activeBoard);
+                      });
+                    }}
+                  />
+                  <div style="flex-grow:1" class="navbar__mobile-only"></div>
+                  <Button
+                    key="settings"
+                    icon="bi-gear"
+                    callback={() => {
+                      updateMembers();
+                      openBoardSettingsModalDialog();
+                    }}
+                  />
+                </div>
+                <div style="flex-grow:1" class="navbar__mobile-hidden"></div>
+              </div>
+            </>
           )}
-          <div class="flex-grow"></div>
-          <div class="navbar__group">
+          <div class="navbar__right-group">
             {/* <Button key="notification_btn" icon="bi-bell" /> */}
             {/* Для будущего функционала: уведомлений и поиска
             <input
@@ -119,7 +149,10 @@ export const NavBar = (props: NavBarProps) => {
             ></i>
             */}
             <div
-              class="navbar__profile-picture"
+              className={[
+                'navbar__profile-picture',
+                props.leftPanelOpened || 'navbar__mobile-hidden',
+              ]}
               ON_click={() => {
                 setUserPopupOpened(true);
               }}

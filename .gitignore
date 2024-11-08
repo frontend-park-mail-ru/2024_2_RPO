@@ -4,6 +4,4 @@ serverConfig.json
 dist
 .vscode
 bun.lockb
-private.key
-request.csr
-certificate.crt
+keys

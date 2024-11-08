@@ -24,7 +24,7 @@ export const SelectBox = (props: SelectBoxProps) => {
   const currentOption = props.options[props.currentIndex];
   return (
     <div
-      className={['select-box']}
+      className={['select-box', props.readOnly ? '' : 'select-box__editable']}
       style={`width: ${props.widthRem}rem`}
       ON_click={() => {
         if (props.readOnly) {

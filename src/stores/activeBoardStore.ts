@@ -8,14 +8,17 @@ export const [useActiveBoardStore, setActiveBoardStore] = defineStore<
   ActiveBoard | undefined
 >('activeBoardStore', useMocks ? activeBoardMock : undefined);
 
-export const loadBoard = (boardId: number | undefined) => {
+export const loadBoard = (
+  boardId: number | undefined,
+  refetch: boolean = false
+) => {
   if (boardId === undefined) {
     setActiveBoardStore(undefined);
     return;
   } else {
     const abStore = useActiveBoardStore();
     if (abStore !== undefined) {
-      if (abStore.id === boardId) {
+      if (abStore.id === boardId && !refetch) {
         return;
       }
     }

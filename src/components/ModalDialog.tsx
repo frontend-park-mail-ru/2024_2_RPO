@@ -1,5 +1,5 @@
 import { ComponentProps, JsxNode } from '@/jsxCore/types';
-import "./modalDialog.scss"
+import './modalDialog.scss';
 
 interface ModalDialogProps extends ComponentProps {
   title?: string;
@@ -32,7 +32,7 @@ export const ModalDialog = (props: ModalDialogProps) => {
           </div>
         </div>
         <hr style="margin-bottom: 20px;" />
-        {props.children}
+        <div>{props.children}</div>
       </div>
     </div>
   );

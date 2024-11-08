@@ -13,6 +13,13 @@
   --color-accent: #0070f0;
   --color-transparent: #c15df3;
   --color-background-secondary: #f1f2f4;
+  --navbar-height: 58px;
+}
+
+@media screen and (max-width: 800px) {
+  :root {
+    --navbar-height: 70px;
+  }
 }
 
 .full-screen-dark {
@@ -205,80 +212,6 @@
   font-family: 'Montserrat', sans-serif;
 }
 
-.navbar {
-  width: 100%;
-  height: 58px;
-  padding: 0 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: rgba(200, 200, 200, 0.5);
-  z-index: 10;
-  position: fixed;
-  column-gap: 10px;
-}
-.navbar__logo {
-  width: 243px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  column-gap: 8px;
-}
-.navbar__board-name {
-  font-weight: bold;
-  font-size: 1.25rem;
-}
-.navbar__board-name-wrapper {
-  height: 32px;
-}
-.navbar__left-panel-button {
-  height: 32px;
-  background-color: white;
-  padding-left: 8px;
-  padding-right: 8px;
-  border-radius: 3px;
-  border: gray solid 1px;
-  cursor: pointer;
-}
-.navbar__rest {
-  flex-grow: 1;
-}
-.navbar__group {
-  display: flex;
-  column-gap: 8px;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-}
-.navbar__logo-icon {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  user-select: none;
-  cursor: pointer;
-}
-.navbar__logo-group {
-  display: flex;
-  column-gap: 8px;
-  width: 233px;
-  align-items: center;
-}
-.navbar__logo-link {
-  font-size: 1.5rem;
-  font-weight: bold;
-  font-family: 'Montserrat', 'sans-serif';
-  text-decoration: none;
-  color: #000000;
-}
-
-.navbar__profile-picture {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-  cursor: pointer;
-}
-
 .user-popup__avatar {
   width: 80px;
   height: 80px;
@@ -396,6 +329,20 @@
   justify-content: center;
   align-items: start;
   gap: 50px;
+}
+
+@media screen and (max-width: 800px) {
+  .board-settings__upper-section {
+    flex-direction: column;
+  }
+}
+@media screen and (max-width: 800px) {
+  .board-settings__left {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 }
 
 .board-settings__background-image {
@@ -565,4 +512,5 @@
 .onboarding__text {
   margin-top: 40px;
   font-size: 1.5rem;
+  margin: 30px;
 }
