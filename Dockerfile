@@ -10,8 +10,8 @@ RUN npm run build
 FROM nginx:stable-alpine
 RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx.conf /etc/nginx/conf.d
-RUN nginx -t
 COPY ./keys /usr/share/
+RUN nginx -t
 COPY sw.js /usr/share/nginx/html/
 COPY --from=builder /app/dist /usr/share/nginx/html
 COPY ./static /usr/share/nginx/html/static
