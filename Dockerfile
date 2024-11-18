@@ -10,6 +10,7 @@ RUN npm run build
 FROM nginx:stable-alpine
 RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx.conf /etc/nginx/conf.d
+RUN nginx -t /etc/nginx/conf.d
 COPY ./keys /usr/share/
 COPY sw.js /usr/share/nginx/html/
 COPY --from=builder /app/dist /usr/share/nginx/html

@@ -1,0 +1,125 @@
+.homepage {
+  display: flex;
+  max-width: 100vw;
+  justify-content: center;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+.homepage__top-section {
+  background: radial-gradient(rgba(255, 127, 0, 0.25), rgba(0, 13, 255, 0.25));
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.homepage__quote-section {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 50px;
+  margin-right: 30px;
+}
+
+.homepage__quote {
+  max-width: 300px;
+  margin-bottom: 40px;
+  margin-top: 40px;
+}
+
+.homepage__wave {
+  width: 100vw;
+  object-fit: fill;
+}
+
+.homepage__detail-section {
+  display: flex;
+  flex-direction: row;
+  column-gap: 30px;
+  margin-bottom: 40px;
+}
+
+.homepage__detail-section__even .homepage__detail-image {
+  position: relative;
+  right: -10px;
+}
+.homepage__detail-section__odd .homepage__detail-image {
+  position: relative;
+  left: -10px;
+}
+
+.homepage__detail-comment {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 250px;
+}
+
+.homepage__detail-section__even {
+  flex-direction: row-reverse !important;
+}
+
+.homepage__detail-header {
+  font-weight: bold;
+  text-decoration: underline;
+  font-family: Montserrat, sans-serif;
+  margin-bottom: 20px;
+}
+
+.top-section {
+  padding-top: 50px;
+  padding-bottom: 50px;
+  display: flex;
+  flex-direction: row;
+  margin-left: 20vw;
+  margin-right: 20vw;
+  align-items: center;
+}
+
+.top-section__left {
+  display: flex;
+  flex-direction: column;
+  row-gap: 40px;
+}
+
+.top-section__logo {
+  font-family: Montserrat, sans-serif;
+  font-size: 4rem;
+  font-weight: bold;
+}
+
+.top-section__comment {
+}
+
+.top-section__motto {
+  font-family: Montserrat, sans-serif;
+  font-weight: bold;
+  font-style: italic;
+  font-size: 2rem;
+  background-color: #aaa4d2;
+  color: white;
+  text-wrap: nowrap;
+  padding: 5px;
+  padding-right: 12px;
+  border-radius: 12px;
+}
+
+.top-section__buttons {
+  display: flex;
+  column-gap: 20px;
+}
+.top-section__right {
+  margin-left: 20vw;
+}
+.top-section__right img {
+  height: 300px;
+}
+
+.homepage__footer {
+  background-color: #8e8e8e;
+  color: white;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  text-align: center;
+}

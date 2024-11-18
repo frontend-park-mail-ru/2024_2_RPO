@@ -16,6 +16,7 @@ import { User } from '@/types/user';
 import { goToUrl } from '@/stores/routerStore';
 import { deleteBoard, setBoardBackgroundImage } from '@/api/boards';
 import { useState } from '@/jsxCore/hooks';
+import './boardSettings.scss';
 
 // На будущее
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -71,7 +72,7 @@ export const BoardSettings = () => {
                 if (files && files.length > 0) {
                   setBoardBackgroundImage(activeBoard.id, files[0]).then(
                     (resp) => {
-                      showToast('Успешно изменён фон!', 'error');
+                      showToast('Успешно изменён фон!', 'success');
                       activeBoard.backgroundImageUrl =
                         resp.body.backgroundImageUrl;
                       setActiveBoardStore(activeBoard);

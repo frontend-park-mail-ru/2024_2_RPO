@@ -47,9 +47,9 @@ export const getUserMe = async (): Promise<User | undefined> => {
 type RegStatus =
   | 'ok'
   | 'error'
-  | 'login_busy'
+  | 'nickname_busy'
   | 'email_busy'
-  | 'login_and_email_busy';
+  | 'nickname_and_email_busy';
 
 /**
  * Зарегистрировать пользователя
@@ -79,11 +79,11 @@ export const registerUser = async (
         {
           switch (response.body.text) {
             case 'Nickname is busy':
+              return 'nickname_busy';
+            case 'Email is busy':
               return 'email_busy';
-            case 'Login is busy':
-              return 'login_busy';
             case 'Email and nickname are busy':
-              return 'login_and_email_busy';
+              return 'nickname_and_email_busy';
           }
         }
         showToast('Неизвестная ошибка 409', 'error');

@@ -74,11 +74,11 @@ export const RegistrationDialog = (props: RegistrationDialogProps) => {
           setIsEmailTaken(true);
           showToast('Email занят', 'warning');
           break;
-        case 'login_busy':
+        case 'nickname_busy':
           setIsNicknameTaken(true);
           showToast('Никнейм занят', 'warning');
           break;
-        case 'login_and_email_busy':
+        case 'nickname_and_email_busy':
           setIsNicknameTaken(true);
           setIsEmailTaken(true);
           showToast('Email и никнейм заняты', 'warning');
@@ -106,7 +106,8 @@ export const RegistrationDialog = (props: RegistrationDialogProps) => {
             onEnter={submitFunction}
             onChanged={(newNickname) => {
               setIsNicknameTaken(false);
-              setData({ ...data, nickname: newNickname });
+              data.nickname = newNickname;
+              setData(data);
             }}
             validationMessage={validationData.nickname.validationMessage}
           />
@@ -117,7 +118,8 @@ export const RegistrationDialog = (props: RegistrationDialogProps) => {
             key="email_input"
             onChanged={(newEmail) => {
               setIsEmailTaken(false);
-              setData({ ...data, email: newEmail });
+              data.email = newEmail;
+              setData(data);
             }}
             onEnter={submitFunction}
             validationMessage={validationData.email.validationMessage}
@@ -130,7 +132,8 @@ export const RegistrationDialog = (props: RegistrationDialogProps) => {
             isPassword
             onEnter={submitFunction}
             onChanged={(newPassword) => {
-              setData({ ...data, password: newPassword });
+              data.password = newPassword;
+              setData(data);
             }}
             validationMessage={validationData.password.validationMessage}
           />
@@ -142,7 +145,8 @@ export const RegistrationDialog = (props: RegistrationDialogProps) => {
             isPassword
             onEnter={submitFunction}
             onChanged={(newRepeatPassword) => {
-              setData({ ...data, repeatPassword: newRepeatPassword });
+              data.repeatPassword = newRepeatPassword;
+              setData(data);
             }}
             validationMessage={validationData.repeatPassword.validationMessage}
           />
