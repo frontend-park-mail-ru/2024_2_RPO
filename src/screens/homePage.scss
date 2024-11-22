@@ -38,15 +38,52 @@
   flex-direction: row;
   column-gap: 30px;
   margin-bottom: 40px;
+  padding-right: 10%;
+  padding-left: 10%;
+  gap: 10%;
+}
+@media (max-width: 768px) {
+  .homepage__detail-section {
+    flex-direction: column; /* Размещаем элементы вертикально */
+    padding: 0 20px; /* Уменьшаем отступы */
+    justify-content: center;
+  }
+
+  .homepage__detail-image {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .homepage__detail-comment {
+    width: 100%;
+    text-align: center; /* Центрируем текст */
+  }
 }
 
-.homepage__detail-section__even .homepage__detail-image {
-  position: relative;
-  right: -10px;
+.homepage__detail-section__even {
+  position: relative; /* Создаем контекст для позиционирования */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
+
+// .homepage__detail-section__even .homepage__detail-image {
+//   right: -10; /* Привязываем к правому краю */
+// }
+
 .homepage__detail-section__odd .homepage__detail-image {
   position: relative;
-  left: -10px;
+  // left: 70px;
+  width: 70%;
+}
+
+.homepage img {
+  border-radius: 12px; /* Скругление углов */
+}
+
+.homepage .home-page__logo {
+  border-radius: 0; /* Убираем скругление для логотипа */
+  width: 100%;
 }
 
 .homepage__detail-comment {
@@ -54,10 +91,16 @@
   flex-direction: column;
   justify-content: center;
   max-width: 250px;
+  right: 70px;
 }
 
 .homepage__detail-section__even {
   flex-direction: row-reverse !important;
+}
+
+.homepage__detail-section__even .homepage__detail-comment {
+  flex: 1; /* Текст занимает доступное пространство */
+  text-align: left; /* Текст выровнен по левому краю */
 }
 
 .homepage__detail-header {
@@ -109,9 +152,9 @@
   display: flex;
   column-gap: 20px;
 }
-.top-section__right {
-  margin-left: 20vw;
-}
+// .top-section__right {
+//   margin-left: 20vw;
+// }
 .top-section__right img {
   height: 300px;
 }
@@ -123,3 +166,95 @@
   padding-bottom: 20px;
   text-align: center;
 }
+html {
+  scroll-behavior: smooth; /* Включает плавную прокрутку для якорных ссылок */
+}
+
+.homepage__scroll-indicator {
+  position: absolute;
+  top: 75%; /* Центрирование по вертикали */
+  left: 50%; /* Центрирование по горизонтали */
+  transform: translate(-50%, -50%);
+  text-align: center;
+
+  .scroll-link {
+    text-decoration: none;
+    color: inherit;
+
+    &:hover {
+      color: #ff7f00; /* Меняет цвет при наведении */
+    }
+  }
+
+  .scroll-text {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #fff;
+  }
+
+  .scroll-arrow {
+    font-size: 2rem;
+    color: #fff;
+    animation: blink 1.5s infinite;
+  }
+}
+
+/* Анимация стрелки */
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Мобильные стили */
+@media (max-width: 768px) {
+  .homepage__scroll-indicator {
+    .scroll-text {
+      font-size: 1.2rem;
+    }
+    .scroll-arrow {
+      font-size: 1.5rem;
+    }
+  }
+}
+
+.video-frame {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+  padding: 0 10px; /* Отступы для мобильных устройств */
+}
+
+iframe {
+  width: 100%; /* Ширина на 100% контейнера */
+  max-width: 640px; /* Максимальная ширина для десктопа */
+  height: auto; /* Автоматический расчет высоты */
+  aspect-ratio: 16 / 9; /* Устанавливаем соотношение сторон */
+  border: none;
+  border-radius: 12px; /* Скругленные углы */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Тень */
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+  iframe {
+    max-width: 100%; /* Убираем ограничение по ширине */
+    height: auto; /* Высота сохраняет пропорции */
+  }
+
+  .video-frame {
+    padding: 0; /* Убираем дополнительные отступы */
+  }
+}
+
+// .home-page__logo {
+//   width: 150px; /* Фиксированная ширина */
+//   height: 50px; /* Фиксированная высота */
+//   object-fit: contain; /* Гарантирует, что логотип не будет искажен */
+// }
