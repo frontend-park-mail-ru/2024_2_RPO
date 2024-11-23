@@ -1,93 +1,68 @@
-import { useState } from '@/jsxCore/hooks';
-import './CsatPoll.scss';
-
-interface Question {
-  id: string;
-  text: string;
-  type: 'rating' | 'checkbox' | 'textarea';
-  options?: string[];
-}
-
-const questions: Question[] = [
-  {
-    id: '1',
-    text: 'Насколько удобно пользоваться интерфейсом доски?',
-    type: 'rating',
-  },
-  {
-    id: '2',
-    text: 'Насколько понятен дизайн элементов (карточки, кнопки, меню)?',
-    type: 'rating',
-  },
-  {
-    id: '3',
-    text: 'Насколько логично расположены основные функции доски?',
-    type: 'rating',
-  },
-  {
-    id: '4',
-    text: 'Какие улучшения нужны в сервисе?',
-    type: 'checkbox',
-    options: [
-      'Улучшить дизайн',
-      'Добавить GIF',
-      'Добавить проверку регистрации по почте',
-    ],
-  },
-  {
-    id: '5',
-    text: 'Какие изменения вы хотели бы увидеть в нашем сервисе?',
-    type: 'textarea',
-  },
-];
+import { useCsatStore, setCsatStore, PollQuestion } from '@/stores/csatStore';
 
 export const CSATPoll = () => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [responses, setResponses] = useState<
-    Record<string, number | string[] | string>
-  >({});
+  const csat = useCsatStore();
+  const questions = csat.questions[csat.currentSurvey];
 
-  const handleSubmit = (e: Event) => {
-    e.preventDefault();
-    console.log('Submitted Responses: ', responses);
-    alert('Спасибо за заполнение опроса!');
+  const handleAnswer = (questionId: string, answer: string | number) => {
+    setCsatStore({
+      ...csat,
+      responses: {
+        ...csat.responses,
+        [questionId]: answer,
+      },
+    });
+  };
+
+  const handleNext = () => {
+    if (csat.currentSurvey < 4) {
+      setCsatStore({ ...csat, currentSurvey: csat.currentSurvey + 1 });
+    } else {
+      // Завершение опроса
+      setCsatStore({
+        ...csat,
+        isOpened: false,
+        currentSurvey: 1,
+        responses: {},
+      });
+      alert('Спасибо за участие в нашем опросе!');
+    }
   };
 
   return (
     <div class="form-container">
-      <form onsubmit={handleSubmit} class="form">
-        <h2 class="title">Оцените удобство использования Канбан-досок</h2>
-
-        {questions.map((question) => (
-          <div class="question">
+      <form class="form">
+        <h2 class="title">Опрос №{csat.currentSurvey}</h2>
+        {questions.map((question: PollQuestion) => (
+          <div key={question.id} class="question">
             <p>{question.text}</p>
-            {question.type === 'rating' && (
+            {question.type === 'answer_rating' && (
               <div class="rating">
-                {[1, 2, 3, 4, 5].map(() => (
-                  <i class="bi bi-star-fill star"></i>
+                {[1, 2, 3, 4, 5].map((rating) => (
+                  <button
+                    key={rating}
+                    class="rating-button"
+                    onclick={() => handleAnswer(question.id, rating)}
+                  >
+                    {rating}
+                  </button>
                 ))}
               </div>
             )}
-            {question.type === 'checkbox' && (
-              <div class="checkbox-group">
-                {question.options?.map((option) => (
-                  <label class="checkbox-option">
-                    <input type="checkbox" /> {option}
-                  </label>
-                ))}
-              </div>
-            )}
-            {question.type === 'textarea' && (
+            {question.type === 'answer_text' && (
               <textarea
                 class="textarea-input"
-                placeholder="Ваши предложения..."
+                placeholder="Ваш ответ"
+                oninput={(e: Event) => {
+                  const target = e.target as HTMLTextAreaElement;
+                  handleAnswer(question.id, target.value);
+                }}
               ></textarea>
             )}
           </div>
         ))}
-
-        <button type="submit" class="submit-button">
-          Отправить
+        <button type="button" class="submit-button" onclick={handleNext}>
+          {csat.currentSurvey < 4 ? 'К следующему опросу' : 'Завершить опрос'}
         </button>
       </form>
     </div>
