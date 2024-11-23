@@ -10,6 +10,8 @@ import { useActiveBoardStore } from '@/stores/activeBoardStore';
 import { setBoardsStore, useBoardsStore } from '@/stores/boardsStore';
 import { getBoards } from '@/api/boards';
 import { Board } from '@/types/board';
+import { useCsatStore } from '@/stores/csatStore';
+import { ModalDialog } from '@/components/ModalDialog';
 
 type MainAppProps = ComponentProps;
 
@@ -19,6 +21,7 @@ export const MainApp = (props: MainAppProps) => {
   const modalDialogsStore = useModalDialogsStore();
   const activeBoard = useActiveBoardStore();
   const boards = useBoardsStore();
+  const csat = useCsatStore();
   if (boards === undefined) {
     getBoards().then((newBoards: Board[]) => {
       setBoardsStore(newBoards);
@@ -34,6 +37,18 @@ export const MainApp = (props: MainAppProps) => {
       />
       {modalDialogsStore.isUserProfileOpened && (
         <UserProfile key="user_profile" />
+      )}
+      {csat.isOpened && (
+        <ModalDialog
+          key="csat_modal_dialog"
+          title="Оцените наш сервис"
+          isOpened={true}
+        >
+          <iframe
+            src="/csat_poll"
+            style="width: 100%; height: 600px; border: none;"
+          ></iframe>
+        </ModalDialog>
       )}
       {modalDialogsStore.isBoardSettingsOpened && (
         <BoardSettings key="board_settings" />
