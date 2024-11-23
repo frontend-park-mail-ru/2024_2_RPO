@@ -38,5 +38,7 @@ export const [useRouterStore, setRouterStore] = defineStore<RouterFlags>(
     isHome: false,
     isApp: false,
     boardId: undefined,
+    isCsatResults: false,
+    isPoll: false,
   }
 );

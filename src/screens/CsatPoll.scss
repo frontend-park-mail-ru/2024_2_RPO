@@ -1,57 +1,66 @@
-const formContainerStyle = {
-    maxWidth: '800px',
-    margin: '0 auto',
-    padding: '20px',
-    backgroundColor: '#f4f4f4',
-  };
+.form-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f4f4f4;
+}
 
-  const formStyle = {
-    backgroundColor: '#fff',
-    borderRadius: '10px',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-    padding: '20px',
-  };
+.form {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
 
-  const titleStyle = {
-    textAlign: 'center',
-    fontSize: '1.5em',
-    marginBottom: '20px',
-  };
+.title {
+  text-align: center;
+  font-size: 1.5em;
+  margin-bottom: 20px;
+}
 
-  const questionStyle = {
-    marginBottom: '20px',
-  };
+.question {
+  margin-bottom: 20px;
+}
 
-  const ratingStyle = {
-    display: 'flex',
-    gap: '10px',
-    marginBottom: '10px',
-  };
+.rating {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
 
-  const starStyle = {
-    fontSize: '24px',
-    color: 'black',
-    cursor: 'pointer',
-    border: '1px solid black',
-    borderRadius: '50%',
-    padding: '5px',
-    margin: '0 2px',
-  };
+  .star {
+    font-size: 24px;
+    color: black;
+    cursor: pointer;
+    border: 1px solid black;
+    border-radius: 50%;
+    padding: 5px;
+    margin: 0 2px;
 
-  const activeStarStyle = {
-    backgroundColor: 'yellow',
-    color: 'black',
-  };
+    &:hover {
+      background-color: yellow;
+      color: black;
+    }
 
-  const submitButtonStyle = {
-    display: 'block',
-    width: '100%',
-    padding: '10px',
-    backgroundColor: '#007BFF',
-    color: '#fff',
-    fontSize: '1em',
-    border: 'none',
-    borderRadius: '5px',
-    cursor: 'pointer',
-    textAlign: 'center',
-  };
+    &.active {
+      background-color: yellow;
+      color: black;
+    }
+  }
+}
+
+.submit-button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: #fff;
+  font-size: 1em;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+}

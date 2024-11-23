@@ -11,6 +11,8 @@ import { apiUrl } from './config';
 import { updateMe } from './stores/meStore';
 import { getFlagRoutes } from './routes/routesFlag';
 import { loadBoard, useActiveBoardStore } from './stores/activeBoardStore';
+import { CSATPoll } from './screens/CsatPoll';
+import { CsatResults } from './screens/CsatResults';
 
 setApiUrl(apiUrl);
 
@@ -20,11 +22,10 @@ const App: IComponentFunction = () => {
   return (
     <>
       <div class="display-none"></div>
-      {routerStore.isApp ? (
-        <MainApp key="main_app" />
-      ) : (
-        <HomePage key="home_page" />
-      )}
+      {routerStore.isApp && <MainApp key="main_app" />}
+      {routerStore.isHome && <HomePage key="home_page" />}
+      {routerStore.isPoll && <CSATPoll key="csat_poll" />}
+      {routerStore.isCsatResults && <CsatResults key="csat_results" />}
       <ToastContainer key="toast_container" />
     </>
   );
