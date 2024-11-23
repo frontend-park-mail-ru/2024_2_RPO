@@ -65,22 +65,26 @@ export const HomePage = (props: ComponentProps) => {
               </div>
             </div>
             <div className="top-section__right">
-              <img src="static/img/logo.svg" class="home-page__logo" />
+              <img
+                src="static/img/logo_new2.png"
+                class="home-page__logo"
+                width="70%"
+              />
             </div>
-          </div>
 
-          <div className="homepage__scroll-indicator">
-            <a
-              href="#kanban-info"
-              className="scroll-link"
-              onclick={(e: MouseEvent) => {
-                e.preventDefault(); // Предотвращаем стандартное поведение ссылки
-                scrollToSection('kanban-info'); // Плавная прокрутка
-              }}
-            >
-              <div className="scroll-text">Подробнее о Pumpkin</div>
-              <i className="bi bi-arrow-down scroll-arrow"></i>
-            </a>
+            <div className="homepage__scroll-indicator">
+              <a
+                href="#kanban-info"
+                className="scroll-link"
+                onclick={(e: MouseEvent) => {
+                  e.preventDefault(); // Предотвращаем стандартное поведение ссылки
+                  scrollToSection('kanban-info'); // Плавная прокрутка
+                }}
+              >
+                <div className="scroll-text">Подробнее о Pumpkin</div>
+                <i className="bi bi-arrow-down scroll-arrow"></i>
+              </a>
+            </div>
           </div>
 
           <img src="/static/img/wave.svg" class="homepage__wave" />

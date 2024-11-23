@@ -49,13 +49,24 @@
     justify-content: center;
   }
 
+  .homepage .homepage__detail-section__even {
+    flex-direction: column-reverse !important;
+
+    @media (max-width: 768px) {
+      .homepage__detail-section__even {
+        flex-direction: column-reverse !important;
+      }
+    }
+  }
+
   .homepage__detail-section__even {
-    flex-direction: column-reverse !important; /* Размещаем элементы вертикально */
+    flex-direction: row-reverse !important;
   }
 
   .homepage__detail-image {
     width: 100%;
     margin-bottom: 20px;
+    min-width: 250px;
   }
 
   .homepage__detail-comment {
@@ -78,7 +89,9 @@
 .homepage__detail-section__odd .homepage__detail-image {
   position: relative;
   // left: 70px;
-  width: 70%;
+  width: 50%;
+  min-width: 150px;
+  object-fit: contain;
 }
 
 .homepage img {
@@ -87,19 +100,35 @@
 
 .homepage .home-page__logo {
   border-radius: 0; /* Убираем скругление для логотипа */
-  width: 100%;
+  max-width: 250px;
+  object-fit: contain;
+  min-width: 150px;
 }
 
+.top-section__logo {
+  font-family: Montserrat, sans-serif;
+  font-size: 4rem;
+  font-weight: bold;
+  // max-height: 200px;
+}
+.home-page__logo {
+  max-width: 250px; /* Оставляем максимальную ширину для десктопов */
+  height: auto; /* Сохраняем пропорции */
+  object-fit: contain; /* Предотвращаем искажение изображения */
+}
+
+@media (max-width: 768px) {
+  .home-page__logo {
+    max-width: 150px; /* Уменьшаем ширину на мобильных */
+    margin: 0 auto; /* Центрируем изображение */
+  }
+}
 .homepage__detail-comment {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  max-width: 250px;
+  // max-width: 250px;
   right: 70px;
-}
-
-.homepage__detail-section__even {
-  flex-direction: row-reverse !important;
 }
 
 .homepage__detail-section__even .homepage__detail-comment {
@@ -118,22 +147,23 @@
   padding-top: 50px;
   padding-bottom: 50px;
   display: flex;
-  flex-direction: row;
+  flex-direction: row; /* По умолчанию - в строку */
   margin-left: 20vw;
   margin-right: 20vw;
   align-items: center;
+
+  /* Медиазапрос для мобильных устройств */
+  @media (max-width: 768px) {
+    flex-direction: column; /* Переключение на столбец */
+    margin-left: 5vw; /* Уменьшение отступов для мобильных */
+    margin-right: 5vw;
+  }
 }
 
 .top-section__left {
   display: flex;
   flex-direction: column;
   row-gap: 40px;
-}
-
-.top-section__logo {
-  font-family: Montserrat, sans-serif;
-  font-size: 4rem;
-  font-weight: bold;
 }
 
 // .top-section__comment {
@@ -146,21 +176,29 @@
   font-size: 2rem;
   background-color: #aaa4d2;
   color: white;
-  text-wrap: nowrap;
+  white-space: nowrap; /* Отключает перенос текста */
   padding: 5px;
   padding-right: 12px;
   border-radius: 12px;
+
+  /* Медиазапрос для мобильных устройств */
+  @media (max-width: 768px) {
+    white-space: normal; /* Включает перенос текста */
+    word-wrap: break-word; /* Перенос длинных слов */
+  }
 }
 
 .top-section__buttons {
   display: flex;
   column-gap: 20px;
 }
-// .top-section__right {
-//   margin-left: 20vw;
-// }
+.top-section__right {
+  // margin-left: 20vw;
+  margin-bottom: 20px;
+  padding: 20px;
+}
 .top-section__right img {
-  height: 300px;
+  height: 100%;
 }
 
 .homepage__footer {
@@ -174,11 +212,43 @@ html {
   scroll-behavior: smooth; /* Включает плавную прокрутку для якорных ссылок */
 }
 
+// .homepage__scroll-indicator {
+//   position: absolute;
+//   margin-top: 20px;
+//   top: 77%; /* Центрирование по вертикали */
+//   left: 50%; /* Центрирование по горизонтали */
+//   transform: translate(-50%, -50%);
+//   text-align: center;
+
+//   .scroll-link {
+//     text-decoration: none;
+//     color: inherit;
+
+//     &:hover {
+//       color: #160d01; /* Меняет цвет при наведении */
+//     }
+//   }
+
+//   .scroll-text {
+//     font-size: 1.5rem;
+//     margin-bottom: 10px;
+//     font-weight: bold;
+//     color: #160d01;
+//   }
+
+//   .scroll-arrow {
+//     font-size: 2rem;
+//     color: #fff;
+//     animation: blink 1.5s infinite;
+//   }
+// }
+
 .homepage__scroll-indicator {
   position: absolute;
-  top: 75%; /* Центрирование по вертикали */
-  left: 50%; /* Центрирование по горизонтали */
+  top: 80%; /* Перемещаем ниже, чтобы избежать наложения */
+  left: 50%;
   transform: translate(-50%, -50%);
+  z-index: 2; /* Повышаем приоритет, чтобы быть над изображениями */
   text-align: center;
 
   .scroll-link {
@@ -186,7 +256,7 @@ html {
     color: inherit;
 
     &:hover {
-      color: #ff7f00; /* Меняет цвет при наведении */
+      color: #160d01; /* Меняет цвет при наведении */
     }
   }
 
@@ -194,13 +264,20 @@ html {
     font-size: 1.5rem;
     margin-bottom: 10px;
     font-weight: bold;
-    color: #fff;
+    color: #160d01;
   }
 
   .scroll-arrow {
     font-size: 2rem;
     color: #fff;
     animation: blink 1.5s infinite;
+  }
+}
+
+@media (max-width: 768px) {
+  .homepage__scroll-indicator {
+    top: 90%; /* Перемещаем еще ниже на мобильных устройствах */
+    z-index: 3; /* Увеличиваем приоритет */
   }
 }
 
@@ -256,9 +333,3 @@ iframe {
     padding: 0; /* Убираем дополнительные отступы */
   }
 }
-
-// .home-page__logo {
-//   width: 150px; /* Фиксированная ширина */
-//   height: 50px; /* Фиксированная высота */
-//   object-fit: contain; /* Гарантирует, что логотип не будет искажен */
-// }
