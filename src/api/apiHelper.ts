@@ -1,4 +1,4 @@
-import { boardUrl, userUrl } from '@/config';
+import { boardUrl, userUrl, pollUrl } from '@/config';
 let csrfToken: string = '';
 export const useMocks =
   boardUrl.toString() === 'mock' || userUrl.toString() === 'mock';
@@ -22,6 +22,8 @@ const getApiUrl = (addr: string): string => {
     const ret = userUrl + '/' + addr;
     console.log(ret);
     return ret;
+  } else if (addr.startsWith('poll')) {
+    return pollUrl + '/' + addr;
   } else {
     return boardUrl + '/' + addr;
   }

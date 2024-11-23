@@ -5,4 +5,5 @@ export const userMeMock: User = {
   name: 'tarasovxx',
   email: 'tarasovxx@example.com',
   avatarImageUrl: '/static/img/KarlMarks.jpg',
+  pollQuestions: null,
 };

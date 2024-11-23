@@ -17,12 +17,14 @@ const normalizeUser = (r: MemberWithPermissionsResponse): UserToBoard => {
       name: r.user.name,
       email: r.user.email,
       avatarImageUrl: r.user.avatarImageUrl,
+      pollQuestions: null,
     },
     addedBy: {
       id: r.addedBy.id,
       name: r.addedBy.name,
       email: r.addedBy.email,
       avatarImageUrl: r.addedBy.avatarImageUrl,
+      pollQuestions: null,
     },
     role: r.role,
   };

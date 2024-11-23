@@ -1,3 +1,5 @@
+import { PollQuestion } from '@/stores/csatStore';
+
 export interface BoardContentResponse {
   myRole: 'viewer' | 'editor' | 'editor_chief' | 'admin';
   boardInfo: BoardInfoResponse;
@@ -52,6 +54,7 @@ export interface UserResponse {
   email: string;
   createdAt: string;
   avatarImageUrl: string;
+  pollQuestions: null | PollQuestion[];
 }
 
 export interface UserPermissionsResponse {

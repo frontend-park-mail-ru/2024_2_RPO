@@ -12,6 +12,7 @@ import { User } from '@/types/user';
 import { userMeMock } from './mocks/user';
 import { showToast } from '@/stores/toastNotificationStore';
 import { UserRequest, UserResponse } from './types';
+import { setCsatStore, useCsatStore } from '@/stores/csatStore';
 /**
  * Получить информацию о текущем пользователе
  * @returns промис, который возвращает или User (если залогинен), или undefined (если не залогинен)
@@ -26,11 +27,18 @@ export const getUserMe = async (): Promise<User | undefined> => {
     switch (response.status) {
       case HTTP_STATUS_OK: {
         const data: UserResponse = response.body;
+        if (data.pollQuestions !== null) {
+          const csat = useCsatStore();
+          csat.isOpened = true;
+          csat.questions = data.pollQuestions;
+          setCsatStore(csat);
+        }
         return {
           name: data.name,
           id: data.id,
           email: data.email,
           avatarImageUrl: data.avatarImageUrl,
+          pollQuestions: data.pollQuestions,
         };
       }
       case HTTP_STATUS_UNAUTHORIZED:

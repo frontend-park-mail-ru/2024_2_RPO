@@ -9,7 +9,7 @@ import { ToastContainer } from './containers/ToastContainer';
 import { updateMe } from './stores/meStore';
 import { getFlagRoutes } from './routes/routesFlag';
 import { loadBoard, useActiveBoardStore } from './stores/activeBoardStore';
-import { CSATPoll } from './screens/CsatPoll';
+import { CsatPoll } from './screens/CsatPoll';
 import { CsatResults } from './screens/CsatResults';
 
 const App: IComponentFunction = () => {
@@ -20,7 +20,7 @@ const App: IComponentFunction = () => {
       <div class="display-none"></div>
       {routerStore.isApp && <MainApp key="main_app" />}
       {routerStore.isHome && <HomePage key="home_page" />}
-      {routerStore.isPoll && <CSATPoll key="csat_poll" />}
+      {routerStore.isPoll && <CsatPoll key="csat_poll" />}
       {routerStore.isCsatResults && <CsatResults key="csat_results" />}
       <ToastContainer key="toast_container" />
     </>

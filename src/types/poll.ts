@@ -22,5 +22,5 @@ export interface RatingResult {
 
 export interface PollResults {
   ratingResults: RatingResult[];
-  answerResults: TextResult[];
+  textResults: TextResult[];
 }

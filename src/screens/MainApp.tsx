@@ -11,7 +11,7 @@ import { useActiveBoardStore } from '@/stores/activeBoardStore';
 import { setBoardsStore, useBoardsStore } from '@/stores/boardsStore';
 import { getBoards } from '@/api/boards';
 import { Board } from '@/types/board';
-import { useCsatStore } from '@/stores/csatStore';
+import { setCsatStore, useCsatStore } from '@/stores/csatStore';
 import { ModalDialog } from '@/components/ModalDialog';
 
 type MainAppProps = ComponentProps;
@@ -45,6 +45,9 @@ export const MainApp = (props: MainAppProps) => {
         <ModalDialog
           title="Оцените наш сервис"
           isOpened={true}
+          closeCallback={() => {
+            setCsatStore({ ...csat, isOpened: false });
+          }}
           key="csat-modal"
         >
           <iframe

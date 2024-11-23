@@ -14,7 +14,7 @@ interface CsatStore {
 }
 
 export const [useCsatStore, setCsatStore] = defineStore<CsatStore>('csat', {
-  isOpened: true,
+  isOpened: false,
   questions: pollMock,
   currentQuestionIndex: 0,
 });
