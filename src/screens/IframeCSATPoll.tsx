@@ -1,9 +1,14 @@
-import { createApp } from '@/jsxCore/core'; // Аналог ReactDOM для вашего фреймворка
+// !!!!!!!!!!!!
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { createApp } from '@/jsxCore/core';
 import './CsatPoll.scss';
 import { CSATPoll } from './CsatPoll';
+// !!!!!!!!!!!!
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { ComponentProps, JsxNode, JsxTextNode } from '@/jsxCore/types';
 
-// Компонент для встраивания в iframe
-export const IframeCSATPoll = () => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const IframeCSATPoll = (props: ComponentProps): JsxNode[] => {
   return (
     <div class="iframe-wrapper">
       <div class="iframe-header">
@@ -14,11 +19,7 @@ export const IframeCSATPoll = () => {
           <i class="bi bi-x-lg"></i>
         </button>
       </div>
-      <CSATPoll />
+      <CSATPoll key="csat_poll" />
     </div>
   );
 };
-
-// Подключаем компонент в DOM, как это делается для главной страницы
-const appRoot = document.getElementById('iframe-root') as HTMLDivElement;
-createApp(IframeCSATPoll, appRoot);

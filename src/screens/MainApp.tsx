@@ -2,6 +2,7 @@ import { LeftPanel } from '@/containers/LeftPanel';
 import { NavBar } from '@/containers/NavBar';
 import { ComponentProps } from '@/jsxCore/types';
 import { useState } from '@/jsxCore/hooks';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { UserProfile } from '@/containers/UserProfile';
 import { KanbanBoard } from '@/containers/KanbanBoard';
 import { useModalDialogsStore } from '@/stores/modalDialogsStore';
@@ -28,6 +29,9 @@ export const MainApp = (props: MainAppProps) => {
       setBoardsStore(newBoards);
     });
   }
+  if (csat.isOpened) {
+    localStorage.setItem('csat_questions', JSON.stringify(csat.questions));
+  }
 
   return (
     <>
@@ -36,133 +40,7 @@ export const MainApp = (props: MainAppProps) => {
         setLeftPanelOpened={setLeftPanelOpened}
         key="nav_bar"
       />
-      {modalDialogsStore.isUserProfileOpened && (
-        <UserProfile key="user_profile" />
-      )}
-
       {/* {csat.isOpened && (
-        <ModalDialog
-          key="csat_modal_dialog"
-          title={`Опрос ${csat.currentSurveyIndex}`}
-          isOpened={true}
-        >
-          {csat.currentSurveyIndex <= Object.keys(csat.questions).length ? (
-            <div>
-              <p>
-                {
-                  csat.questions[csat.currentSurveyIndex][
-                    csat.currentQuestionIndex
-                  ]?.text
-                }
-              </p>
-
-              {csat.questions[csat.currentSurveyIndex][
-                csat.currentQuestionIndex
-              ]?.type === 'answer_rating' && (
-                <div class="rating">
-                  {[1, 2, 3, 4, 5].map((rating) => (
-                    <button
-                      // key={rating}
-                      class="rating-button"
-                      onclick={() => {
-                        setCsatStore({
-                          ...csat,
-                          responses: {
-                            ...csat.responses,
-                            [csat.questions[csat.currentSurveyIndex][
-                              csat.currentQuestionIndex
-                            ].id]: rating,
-                          },
-                        });
-                      }}
-                    >
-                      {rating}
-                    </button>
-                  ))}
-                </div>
-              )}
-
-              {csat.questions[csat.currentSurveyIndex][
-                csat.currentQuestionIndex
-              ]?.type === 'answer_text' && (
-                <textarea
-                  class="text-input"
-                  placeholder="Ваш ответ"
-                  oninput={(e: Event) => {
-                    const target = e.target as HTMLTextAreaElement;
-                    setCsatStore({
-                      ...csat,
-                      responses: {
-                        ...csat.responses,
-                        [csat.questions[csat.currentSurveyIndex][
-                          csat.currentQuestionIndex
-                        ].id]: target.value,
-                      },
-                    });
-                  }}
-                />
-              )}
-
-              <button
-                class="next-button"
-                onclick={() => {
-                  if (
-                    csat.currentQuestionIndex <
-                    csat.questions[csat.currentSurveyIndex].length - 1
-                  ) {
-                    setCsatStore({
-                      ...csat,
-                      currentQuestionIndex: csat.currentQuestionIndex + 1,
-                    });
-                  } else if (
-                    csat.currentSurveyIndex < Object.keys(csat.questions).length
-                  ) {
-                    setCsatStore({
-                      ...csat,
-                      currentSurveyIndex: csat.currentSurveyIndex + 1,
-                      currentQuestionIndex: 0,
-                    });
-                  } else {
-                    setCsatStore({
-                      ...csat,
-                      isOpened: false,
-                      currentSurveyIndex: 1,
-                      currentQuestionIndex: 0,
-                      responses: {},
-                    });
-                  }
-                }}
-              >
-                {csat.currentQuestionIndex <
-                csat.questions[csat.currentSurveyIndex].length - 1
-                  ? 'К следующему вопросу'
-                  : csat.currentSurveyIndex < Object.keys(csat.questions).length
-                  ? 'Перейти к следующему опросу'
-                  : 'Завершить опрос'}
-              </button>
-            </div>
-          ) : (
-            <div>
-              <p>Спасибо за участие в опросе!</p>
-              <button
-                class="close-button"
-                onclick={() => {
-                  setCsatStore({
-                    ...csat,
-                    isOpened: false,
-                    currentSurveyIndex: 1,
-                    currentQuestionIndex: 0,
-                    responses: {},
-                  });
-                }}
-              >
-                Закрыть
-              </button>
-            </div>
-          )}
-        </ModalDialog>
-      )} */}
-      {csat.isOpened && (
         <ModalDialog
           key="csat_modal_dialog"
           title="Оцените наш сервис"
@@ -170,7 +48,23 @@ export const MainApp = (props: MainAppProps) => {
         >
           <iframe
             id="iframe-root"
-            src="/csat_poll"
+            src={`/csat_poll?questions=${encodeURIComponent(
+              JSON.stringify(iframeQuestions)
+            )}`}
+            style="width: 100%; height: 600px; border: none;"
+          ></iframe>
+        </ModalDialog>
+      )} */}
+
+      {csat.isOpened && (
+        <ModalDialog
+          title="Оцените наш сервис"
+          isOpened={true}
+          key="csat-modal"
+        >
+          <iframe
+            id="iframe-root"
+            src={`/csat_poll`}
             style="width: 100%; height: 600px; border: none;"
           ></iframe>
         </ModalDialog>

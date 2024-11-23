@@ -1,3 +1,4 @@
+import { pollMock } from '@/api/mocks/poll';
 import { defineStore } from '@/jsxCore/hooks';
 
 interface PollQuestion {
@@ -8,67 +9,14 @@ interface PollQuestion {
 
 interface CsatStore {
   isOpened: boolean;
-  currentSurvey: number;
   currentQuestionIndex: number;
   questions: PollQuestion[];
 }
 
 export const [useCsatStore, setCsatStore] = defineStore<CsatStore>('csat', {
   isOpened: true,
-  currentSurvey: 1,
+  questions: pollMock,
   currentQuestionIndex: 0,
-  questions: [
-    {
-      id: 1,
-      text: 'Насколько удобно пользоваться интерфейсом доски?',
-      type: 'answer_rating',
-    },
-    {
-      id: 2,
-      text: 'Насколько понятен дизайн элементов (карточки, кнопки, меню)?',
-      type: 'answer_rating',
-    },
-    {
-      id: 3,
-      text: 'Насколько логично расположены основные функции доски?',
-      type: 'answer_rating',
-    },
-    {
-      id: 4,
-      text: 'Насколько удобно создавать и редактировать карточки?',
-      type: 'answer_rating',
-    },
-    {
-      id: 5,
-      text: 'Оцените быстродействие сервиса при работе с большим количеством карточек.',
-      type: 'answer_rating',
-    },
-    {
-      id: 6,
-      text: 'Насколько удобно пользоваться функциями поиска и фильтрации?',
-      type: 'answer_rating',
-    },
-    {
-      id: 7,
-      text: 'Насколько удобно делиться досками и карточками с коллегами?',
-      type: 'answer_rating',
-    },
-    {
-      id: 8,
-      text: 'Насколько эффективно работают уведомления о событиях?',
-      type: 'answer_rating',
-    },
-    {
-      id: 9,
-      text: 'Оцените удобство ведения комментариев и обсуждений в карточках.',
-      type: 'answer_rating',
-    },
-    {
-      id: 10,
-      text: 'Насколько вероятно, что вы порекомендуете наш сервис другим командам?',
-      type: 'answer_rating',
-    },
-  ],
 });
 
 // Логика записи ответа и перехода к следующему вопросу
