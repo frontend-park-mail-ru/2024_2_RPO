@@ -20,30 +20,30 @@
 
 .question {
   margin-bottom: 20px;
+
+  p {
+    text-align: center; /* Центрируем текст вопроса */
+  }
 }
 
 .rating {
   display: flex;
-  gap: 10px;
+  justify-content: center; /* Центрируем звезды по горизонтали */
+  gap: 15px; /* Увеличиваем расстояние между звездами */
   margin-bottom: 10px;
 
   .star {
-    font-size: 24px;
-    color: black;
+    font-size: 32px;
+    color: lightgray;
     cursor: pointer;
-    border: 1px solid black;
-    border-radius: 50%;
-    padding: 5px;
-    margin: 0 2px;
+    transition: color 0.2s ease;
 
     &:hover {
-      background-color: yellow;
-      color: black;
+      color: gold;
     }
 
     &.active {
-      background-color: yellow;
-      color: black;
+      color: gold;
     }
   }
 }

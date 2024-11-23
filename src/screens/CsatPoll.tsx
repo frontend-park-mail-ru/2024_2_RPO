@@ -5,7 +5,6 @@ import './CsatPoll.scss';
 interface Question {
   id: string;
   text: string;
-  //type: 'text' | 'rating';
 }
 
 const questions: Question[] = [
@@ -23,13 +22,20 @@ export const CSATPoll = (props: ComponentProps) => {
   const [hoveredStars, setHoveredStars] = useState<Record<string, number>>({});
 
   const handleStarClick = (questionId: string, value: number) => {
+    // Сохраняем выбранный рейтинг в responses
     setResponses({
       ...responses,
       [questionId]: value,
     });
+    // Сбрасываем подсветку, чтобы при уходе курсора отображались выбранные звезды
+    setHoveredStars({
+      ...hoveredStars,
+      [questionId]: 0,
+    });
   };
 
   const handleStarHover = (questionId: string, value: number) => {
+    // Устанавливаем подсветку на все звезды до текущей
     setHoveredStars({
       ...hoveredStars,
       [questionId]: value,
@@ -37,6 +43,7 @@ export const CSATPoll = (props: ComponentProps) => {
   };
 
   const handleStarHoverLeave = (questionId: string) => {
+    // Сбрасываем подсветку на наведении, оставляем только выбранные
     setHoveredStars({
       ...hoveredStars,
       [questionId]: 0,
@@ -61,7 +68,7 @@ export const CSATPoll = (props: ComponentProps) => {
             <div class="rating">
               {[1, 2, 3, 4, 5].map((star) => (
                 <i
-                  class={`bi bi-star star ${
+                  class={`bi bi-star-fill star ${
                     hoveredStars[question.id] >= star ||
                     responses[question.id] >= star
                       ? 'active'
