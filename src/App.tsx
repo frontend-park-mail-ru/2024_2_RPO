@@ -3,18 +3,14 @@ import './fonts.scss';
 import { createApp } from './jsxCore/core';
 import { HomePage } from './screens/HomePage';
 import { IComponentFunction } from './jsxCore/types';
-import { setApiUrl } from './api/apiHelper';
 import { MainApp } from './screens/MainApp';
 import { setRouterStore, useRouterStore } from './stores/routerStore';
 import { ToastContainer } from './containers/ToastContainer';
-import { apiUrl } from './config';
 import { updateMe } from './stores/meStore';
 import { getFlagRoutes } from './routes/routesFlag';
 import { loadBoard, useActiveBoardStore } from './stores/activeBoardStore';
 import { CSATPoll } from './screens/CsatPoll';
 import { CsatResults } from './screens/CsatResults';
-
-setApiUrl(apiUrl);
 
 const App: IComponentFunction = () => {
   const routerStore = useRouterStore();

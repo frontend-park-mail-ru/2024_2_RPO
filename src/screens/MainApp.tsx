@@ -40,21 +40,6 @@ export const MainApp = (props: MainAppProps) => {
         setLeftPanelOpened={setLeftPanelOpened}
         key="nav_bar"
       />
-      {/* {csat.isOpened && (
-        <ModalDialog
-          key="csat_modal_dialog"
-          title="Оцените наш сервис"
-          isOpened={true}
-        >
-          <iframe
-            id="iframe-root"
-            src={`/csat_poll?questions=${encodeURIComponent(
-              JSON.stringify(iframeQuestions)
-            )}`}
-            style="width: 100%; height: 600px; border: none;"
-          ></iframe>
-        </ModalDialog>
-      )} */}
 
       {csat.isOpened && (
         <ModalDialog

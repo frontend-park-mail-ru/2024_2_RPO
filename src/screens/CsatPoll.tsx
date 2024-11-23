@@ -1,45 +1,37 @@
 import { useState } from '@/jsxCore/hooks';
 import './CsatPoll.scss';
 import { ComponentProps } from '@/jsxCore/types';
-// !!!!!!!!!!!!
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { useCsatStore } from '@/stores/csatStore';
+import { Button } from '@/components/Button';
+import { Input } from '@/components/Input';
+import { submitAnswer } from '@/api/poll';
+import { Question } from '@/types/poll';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const CSATPoll = (props: ComponentProps) => {
-  const csat = JSON.parse(localStorage.getItem('csat_questions') as string);
+  const csat: Question[] = JSON.parse(
+    localStorage.getItem('csat_questions') as string
+  );
   // Состояние текущего индекса вопроса
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentRating, setCurrentRating] = useState(0);
+  const [currentText, setCurrentText] = useState('');
 
-  const currentQuestion = csat.questions[currentIndex];
+  const currentQuestion = csat[currentIndex];
 
   // Обработчик ответа на вопрос (для рейтинга)
   const handleResponse = (rating: number, text: string) => {
-    const currentQuestion = csat.questions[currentIndex];
+    const currentQuestion = csat[currentIndex];
     if (currentQuestion.type === 'answer_rating') {
-      console.log(
-        'USER ANSWER: qId=',
-        currentQuestion.id,
-        ', answer: ',
-        rating
-      );
+      if (currentRating !== 0) {
+        submitAnswer({ questionId: currentQuestion.id, rating: currentRating });
+      }
     } else {
+      if (currentText.length > 0) {
+        submitAnswer({ questionId: currentQuestion.id, text: currentText });
+      }
       console.log('USER ANSWER: qId=', currentQuestion.id, ', answer: ', text);
     }
   };
-
-  // Переход к следующему вопросу
-  // const handleNext = () => {
-  //   if (currentIndex < questions.length - 1) {
-  //     setCurrentIndex(currentIndex + 1);
-  //   } else {
-  //     console.log('Опрос завершен. Ответы:', responses);
-  //     // alert('Спасибо за участие в опросе!');
-  //     window.parent.postMessage('close-iframe', '*'); // Закрытие iframe
-  //   }
-  // };
-
-  // Текущий вопрос
 
   return (
     <div class="form-container">
@@ -52,40 +44,39 @@ export const CSATPoll = (props: ComponentProps) => {
           {currentQuestion.type === 'answer_rating' && (
             <div class="rating">
               {[1, 2, 3, 4, 5].map((rating) => (
-                <button
-                  type="button"
-                  class="star"
-                  onClick={() => handleResponse(rating, '')}
-                >
-                  {rating}
-                </button>
+                <div ON_click={() => setCurrentRating(rating)}>
+                  <i
+                    class={rating > currentRating ? 'bi-star' : 'bi-star-fill'}
+                    style={
+                      rating > currentRating ? 'color: black' : 'color: yellow'
+                    }
+                  />
+                </div>
               ))}
             </div>
           )}
 
           {currentQuestion.type === 'answer_text' && (
-            <textarea
-              class="textarea-input"
-              placeholder="Ваш ответ"
-              onInput={(e: Event) => {
-                const target = e.target as HTMLTextAreaElement;
-                handleResponse(0, target.value);
-              }}
+            <Input
+              key="answer_question"
+              onChanged={(newValue) => setCurrentText(newValue)}
             />
           )}
         </div>
 
-        <button
-          type="button"
-          class="submit-button"
-          onClick={() => {
+        <Button
+          key="next_button"
+          callback={() => {
+            console.log('next');
+            handleResponse(currentRating, currentText);
+            setCurrentRating(0);
+            setCurrentText('');
             setCurrentIndex(currentIndex + 1);
           }}
-        >
-          {currentIndex < csat.questions.length - 1
-            ? 'Следующий вопрос'
-            : 'Завершить'}
-        </button>
+          text={
+            currentIndex < csat.length - 1 ? 'Следующий вопрос' : 'Завершить'
+          }
+        ></Button>
       </div>
     </div>
   );
