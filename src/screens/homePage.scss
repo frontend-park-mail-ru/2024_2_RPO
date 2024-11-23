@@ -49,6 +49,10 @@
     justify-content: center;
   }
 
+  .homepage__detail-section__even {
+    flex-direction: column-reverse !important; /* Размещаем элементы вертикально */
+  }
+
   .homepage__detail-image {
     width: 100%;
     margin-bottom: 20px;
