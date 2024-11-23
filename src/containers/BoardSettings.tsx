@@ -268,7 +268,7 @@ export const BoardSettings = () => {
                           removeMember(activeBoard.id, user.user.id).then(
                             () => {
                               showToast(
-                                'Успешно изгнан пользователь',
+                                'Пользователь успешно удален',
                                 'success'
                               );
                               setMembersStore(
