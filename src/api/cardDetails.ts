@@ -1,6 +1,7 @@
-import { CardComment, CheckListField } from '@/types/card';
+import { CardComment, CardDetails, CheckListField } from '@/types/card';
 import {
   apiDelete,
+  apiGet,
   apiPost,
   apiPut,
   HTTP_STATUS_CREATED,
@@ -13,11 +14,17 @@ import {
   CommentRequest,
 } from './requestTypes';
 import {
+  CardDetailsResponse,
   CheckListFieldResponse,
   CommentResponse,
   UserResponse,
 } from './responseTypes';
-import { decodeCheckListField, decodeComment, decodeUser } from './decode';
+import {
+  decodeCardDetails,
+  decodeCheckListField,
+  decodeComment,
+  decodeUser,
+} from './decode';
 import { User } from '@/types/user';
 
 export const assignUser = async (
@@ -139,4 +146,17 @@ export const deleteCheckListField = async (
     }
   }
   return false;
+};
+
+export const getCardDetails = async (
+  cardId: number
+): Promise<CardDetails | undefined> => {
+  const res = await apiGet(`cardDetails/card_${cardId}`);
+  switch (res.status) {
+    case HTTP_STATUS_OK: {
+      const body: CardDetailsResponse = res.body;
+      return decodeCardDetails(body);
+    }
+  }
+  return undefined;
 };

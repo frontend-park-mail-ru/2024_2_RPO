@@ -1,5 +1,6 @@
-import { CardComment, CheckListField } from '@/types/card';
+import { CardComment, CardDetails, CheckListField } from '@/types/card';
 import {
+  CardDetailsResponse,
   CheckListFieldResponse,
   CommentResponse,
   MemberWithPermissionsResponse,
@@ -36,5 +37,15 @@ export const decodeComment = (comment: CommentResponse): CardComment => {
     ...comment,
     createdAt: new Date(comment.createdAt),
     createdBy: decodeUser(comment.createdBy),
+  };
+};
+
+export const decodeCardDetails = (d: CardDetailsResponse): CardDetails => {
+  return {
+    checkList: d.checkList.map(decodeCheckListField),
+    card: d.card,
+    attachments: d.attachments,
+    comments: d.comments.map(decodeComment),
+    assignedUsers: d.assignedUsers.map(decodeUser),
   };
 };

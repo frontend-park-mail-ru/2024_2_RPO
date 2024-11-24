@@ -24,10 +24,7 @@ export const KanbanColumn = (props: KanbanColumnProps) => {
   const columnData = activeBoard.columns[props.columnIndex];
   const submitCreateCard = (newText: string) => {
     if (newText.length < 3) {
-      showToast(
-        'Длина текста в карточке может быть от 3 символов',
-        'error'
-      );
+      showToast('Длина текста в карточке может быть от 3 символов', 'error');
       return;
     }
     createCard(activeBoard.id, {
@@ -62,7 +59,7 @@ export const KanbanColumn = (props: KanbanColumnProps) => {
               );
               return;
             }
-            updateColumn(activeBoard.id, props.columnId, {
+            updateColumn(props.columnId, {
               title: newText,
             }).then((newCol) => {
               activeBoard.columns[props.columnIndex].title = newCol.title;
@@ -83,7 +80,7 @@ export const KanbanColumn = (props: KanbanColumnProps) => {
                 );
                 return;
               }
-              deleteColumn(activeBoard.id, props.columnId).then(() => {
+              deleteColumn(props.columnId).then(() => {
                 activeBoard.columns = activeBoard.columns.filter((col) => {
                   return col.id !== props.columnId;
                 });

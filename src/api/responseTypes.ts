@@ -78,10 +78,25 @@ export interface CheckListFieldResponse {
   isDone: boolean;
 }
 
+export interface AttachmentResponse {
+  id: number;
+  originalName: string;
+  fileName: string;
+  createdAt: string;
+}
+
 export interface CommentResponse {
   id: number;
   text: string;
   isEdited: boolean;
   createdBy: UserResponse;
   createdAt: string;
+}
+
+export interface CardDetailsResponse {
+  card: CardResponse;
+  checkList: CheckListFieldResponse[];
+  attachments: AttachmentResponse[];
+  comments: CommentResponse[];
+  assignedUsers: UserResponse[];
 }

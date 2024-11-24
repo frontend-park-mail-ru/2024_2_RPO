@@ -1,6 +1,7 @@
 import { showToast } from '@/stores/toastNotificationStore';
 import {
   apiDelete,
+  apiPatch,
   apiPost,
   apiPut,
   HTTP_STATUS_BAD_REQUEST,
@@ -17,12 +18,11 @@ import { Card } from '@/types/card';
 import { CardRequest, ColumnRequest } from './requestTypes';
 
 export const deleteColumn = async (
-  boardId: number,
   columnId: number
 ): Promise<void> => {
   try {
     const response = await apiDelete(
-      `/columns/board_${boardId}/column_${columnId}`
+      `/columns/column_${columnId}`
     );
     switch (response.status) {
       case HTTP_STATUS_OK:
@@ -39,13 +39,12 @@ export const deleteColumn = async (
 };
 
 export const updateColumn = async (
-  boardId: number,
   columnId: number,
   columnData: ColumnRequest
 ): Promise<BoardColumn> => {
   try {
     const response = await apiPut(
-      `/columns/board_${boardId}/column_${columnId}`,
+      `/columns/column_${columnId}`,
       columnData
     );
     switch (response.status) {
@@ -103,13 +102,12 @@ export const createCard = async (
 };
 
 export const updateCard = async (
-  boardId: number,
   cardId: number,
   data: CardRequest
 ): Promise<Card> => {
   try {
-    const response = await apiPut(
-      `/cards/board_${boardId}/card_${cardId}`,
+    const response = await apiPatch(
+      `/cards/card_${cardId}`,
       data
     );
     switch (response.status) {
@@ -128,11 +126,10 @@ export const updateCard = async (
 };
 
 export const deleteCard = async (
-  boardId: number,
   cardId: number
 ): Promise<void> => {
   try {
-    const response = await apiDelete(`/cards/board_${boardId}/card_${cardId}`);
+    const response = await apiDelete(`/cards/card_${cardId}`);
     if (response.status === HTTP_STATUS_OK) {
       showToast('Карточка успешно удалена.', 'success');
     } else {

@@ -13,6 +13,8 @@ import { getBoards } from '@/api/boards';
 import { Board } from '@/types/board';
 import { setCsatStore, useCsatStore } from '@/stores/csatStore';
 import { ModalDialog } from '@/components/ModalDialog';
+import { useCardDetailsStore } from '@/stores/cardDetailsStore';
+import { CardDetailsContainer } from '@/containers/CardDetails';
 
 type MainAppProps = ComponentProps;
 
@@ -23,6 +25,7 @@ export const MainApp = (props: MainAppProps) => {
   const activeBoard = useActiveBoardStore();
   const boards = useBoardsStore();
   const csat = useCsatStore();
+  const cardDetails = useCardDetailsStore();
 
   if (boards === undefined) {
     getBoards().then((newBoards: Board[]) => {
@@ -63,6 +66,14 @@ export const MainApp = (props: MainAppProps) => {
       )}
 
       {leftPanelOpened && <LeftPanel key="left_panel" />}
+
+      <ModalDialog
+        isOpened={cardDetails !== undefined}
+        title="Подробности карточки"
+        key="card_details_modal_dialog"
+      >
+        <CardDetailsContainer key="card_details"></CardDetailsContainer>
+      </ModalDialog>
 
       <main>
         {activeBoard !== undefined && (
