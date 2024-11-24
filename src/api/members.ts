@@ -1,4 +1,4 @@
-import { UserToBoard } from '@/types/user';
+import { UserToBoard as Member } from '@/types/user';
 import {
   apiDelete,
   apiGet,
@@ -8,36 +8,17 @@ import {
   HTTP_STATUS_OK,
 } from './apiHelper';
 import { showToast } from '@/stores/toastNotificationStore';
-import { MemberWithPermissionsResponse } from './types';
-
-const normalizeUser = (r: MemberWithPermissionsResponse): UserToBoard => {
-  return {
-    user: {
-      id: r.user.id,
-      name: r.user.name,
-      email: r.user.email,
-      avatarImageUrl: r.user.avatarImageUrl,
-      pollQuestions: null,
-    },
-    addedBy: {
-      id: r.addedBy.id,
-      name: r.addedBy.name,
-      email: r.addedBy.email,
-      avatarImageUrl: r.addedBy.avatarImageUrl,
-      pollQuestions: null,
-    },
-    role: r.role,
-  };
-};
+import { MemberWithPermissionsResponse } from './responseTypes';
+import { decodeMember } from './decode';
 
 export const getBoardPermissions = async (
   boardId: number
-): Promise<UserToBoard[]> => {
+): Promise<Member[]> => {
   const response = await apiGet(`/userPermissions/board_${boardId}`);
   switch (response.status) {
     case HTTP_STATUS_OK: {
       const data = response.body as MemberWithPermissionsResponse[];
-      return data.map(normalizeUser);
+      return data.map(decodeMember);
     }
     default:
       showToast('Ошибка при получении прав всех участников', 'error');
@@ -48,14 +29,14 @@ export const getBoardPermissions = async (
 export const addMember = async (
   boardId: number,
   nickname: string
-): Promise<UserToBoard> => {
+): Promise<Member> => {
   const response = await apiPost(`/userPermissions/board_${boardId}`, {
     nickname,
   });
   switch (response.status) {
     case HTTP_STATUS_OK: {
       const data = response.body as MemberWithPermissionsResponse;
-      return normalizeUser(data);
+      return decodeMember(data);
     }
     case HTTP_STATUS_CONFLICT:
       showToast('Похоже, участник уже есть', 'error');
@@ -92,7 +73,7 @@ export const updateMember = async (
   switch (response.status) {
     case HTTP_STATUS_OK: {
       const data = response.body as MemberWithPermissionsResponse;
-      return normalizeUser(data);
+      return decodeMember(data);
     }
     default:
       showToast('Ошибка при изменении прав участника', 'error');

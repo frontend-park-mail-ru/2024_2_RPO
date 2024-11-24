@@ -18,7 +18,7 @@ import {
   BoardContentResponse,
   BoardInfoResponse,
   BoardResponse,
-} from './types';
+} from './responseTypes';
 import { showToast } from '@/stores/toastNotificationStore';
 
 // Получить все доски пользователя

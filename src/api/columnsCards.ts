@@ -11,9 +11,10 @@ import {
   HTTP_STATUS_OK,
   HTTP_STATUS_UNAUTHORIZED,
 } from './apiHelper';
-import { CardRequest, CardResponse, ColumnRequest } from './types';
+import { CardResponse } from './responseTypes';
 import { BoardColumn } from '@/types/activeBoard';
 import { Card } from '@/types/card';
+import { CardRequest, ColumnRequest } from './requestTypes';
 
 export const deleteColumn = async (
   boardId: number,
@@ -36,6 +37,7 @@ export const deleteColumn = async (
     console.error(error);
   }
 };
+
 export const updateColumn = async (
   boardId: number,
   columnId: number,
@@ -60,6 +62,7 @@ export const updateColumn = async (
   }
   throw new Error('Неизвестная ошибка');
 };
+
 export const createColumn = async (
   boardId: number,
   columnData: ColumnRequest
@@ -77,6 +80,7 @@ export const createColumn = async (
   showToast('Произошла ошибка при добавлении колонки', 'error');
   throw new Error('Error while creating column');
 };
+
 export const createCard = async (
   boardId: number,
   data: CardRequest
@@ -97,6 +101,7 @@ export const createCard = async (
   }
   throw new Error('Неизвестная ошибка');
 };
+
 export const updateCard = async (
   boardId: number,
   cardId: number,
@@ -121,6 +126,7 @@ export const updateCard = async (
   }
   throw new Error('Неизвестная ошибка');
 };
+
 export const deleteCard = async (
   boardId: number,
   cardId: number
@@ -137,6 +143,7 @@ export const deleteCard = async (
     console.error(error);
   }
 };
+
 const handleErrorResponse = (status: number, message: string) => {
   switch (status) {
     case HTTP_STATUS_BAD_REQUEST:

@@ -5,7 +5,7 @@ export interface User {
   id: number;
   email: string;
   avatarImageUrl: string;
-  pollQuestions: PollQuestion[] | null;
+  pollQuestions: PollQuestion[] | undefined;
 }
 
 export interface UserToBoard {
