@@ -13,11 +13,9 @@ import { setCardDetailsStore } from '@/stores/cardDetailsStore';
 import { Card } from '@/types/card';
 
 interface KanbanCardProps extends ComponentProps {
-  text: string;
-  cardId: number;
+  card: Card;
   columnId: number;
   columnIdx: number;
-  coverImageUrl?: string;
 }
 
 interface EditableProps extends ComponentProps {
@@ -70,6 +68,7 @@ const Editable = (props: EditableProps) => {
 
 export const KanbanCard = (props: KanbanCardProps) => {
   const activeBoard = useActiveBoardStore() as ActiveBoard;
+  const card = props.card;
   const [isInput, setIsInput] = useState(false);
   let timer: number;
   const editCallback = () => {
@@ -83,10 +82,10 @@ export const KanbanCard = (props: KanbanCardProps) => {
         <div
           class="kanban-card__delete-button"
           ON_click={() => {
-            deleteCard(props.cardId).then(() => {
+            deleteCard(card.id).then(() => {
               activeBoard.columns.forEach((column) => {
                 column.cards = column.cards.filter((card) => {
-                  return card.id !== props.cardId;
+                  return card.id !== card.id;
                 });
               });
               setActiveBoardStore(activeBoard);
@@ -96,14 +95,14 @@ export const KanbanCard = (props: KanbanCardProps) => {
           <i class="bi-trash" />
         </div>
       )}
-      {props.coverImageUrl !== undefined ? (
-        <img src={props.coverImageUrl} class="kanban-card__cover"></img>
+      {card.coverImageUrl !== undefined ? (
+        <img src={card.coverImageUrl} class="kanban-card__cover"></img>
       ) : undefined}
       {isInput ? (
         <Editable
           key="editable_card"
-          initialText={props.text}
-          cardId={props.cardId}
+          initialText={card.title}
+          cardId={card.id}
           onNewCard={(crd) => {
             activeBoard.columns[props.columnIdx].cards = activeBoard.columns[
               props.columnIdx
@@ -127,16 +126,17 @@ export const KanbanCard = (props: KanbanCardProps) => {
           ON_click={() => {
             clearTimeout(timer);
             timer = setTimeout(() => {
-              getCardDetails(props.cardId).then((val) => {
+              getCardDetails(card.id).then((val) => {
                 setCardDetailsStore(val);
                 console.log(val);
               });
             }, 300);
           }}
         >
-          {props.text}
+          {card.title}
         </div>
       )}
+      {}
     </div>
   );
 };

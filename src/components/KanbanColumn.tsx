@@ -96,11 +96,9 @@ export const KanbanColumn = (props: KanbanColumnProps) => {
         return (
           <KanbanCard
             key={`card_${cardData.id}`}
-            text={cardData.title}
-            cardId={cardData.id}
+            card={cardData}
             columnId={props.columnId}
             columnIdx={props.columnIndex}
-            coverImageUrl={cardData.coverImageUrl}
           />
         );
       })}

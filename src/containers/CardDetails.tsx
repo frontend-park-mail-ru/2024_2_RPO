@@ -184,6 +184,37 @@ export const CardDetailsContainer = (props: ComponentProps) => {
   const [newComment, setNewComment] = useState('');
   const [newCheckListField, setNewCheckListField] = useState('');
   const [newAssigned, setNewAssigned] = useState('');
+
+  const addCLF = () => {
+    addCheckListField(cardDetails.card.id, newCheckListField).then((clf) => {
+      if (clf !== undefined) {
+        setNewCheckListField('');
+        cardDetails.checkList.push(clf);
+        setCardDetailsStore(cardDetails);
+      }
+    });
+  };
+
+  const addComm = () => {
+    createComment(cardDetails.card.id, newComment).then((comment) => {
+      if (comment !== undefined) {
+        setNewComment('');
+        cardDetails.comments.push(comment);
+        setCardDetailsStore(cardDetails);
+      }
+    });
+  };
+
+  const addAssigned = () => {
+    assignUser(cardDetails.card.id, newAssigned).then((u) => {
+      if (u !== undefined) {
+        setNewAssigned('');
+        cardDetails.assignedUsers.push(u);
+        setCardDetailsStore(cardDetails);
+      }
+    });
+  };
+
   return (
     <div class="card-details">
       <div class="card-details__left-section">
@@ -199,27 +230,29 @@ export const CardDetailsContainer = (props: ComponentProps) => {
         <Input
           key="checklist_input"
           placeholder="Новый пункт чеклиста"
-          onEnter={(text) => {
-            addCheckListField(cardDetails.card.id, text).then((clf) => {
-              if (clf !== undefined) {
-                cardDetails.checkList.push(clf);
-                setCardDetailsStore(cardDetails);
-              }
-            });
+          onEnter={addCLF}
+          onChanged={(newText) => {
+            setNewCheckListField(newText);
           }}
+        />
+        <Button
+          key="checklist_add_btn"
+          callback={addCLF}
+          text="Добавить пункт чеклиста"
+          variant="accent"
         />
         <h1>Комментарии</h1>
         <Input
           key="comment_input"
           placeholder="Напишите Ваш комментарий"
-          onEnter={(text) => {
-            createComment(cardDetails.card.id, text).then((comment) => {
-              if (comment !== undefined) {
-                cardDetails.comments.push(comment);
-                setCardDetailsStore(cardDetails);
-              }
-            });
-          }}
+          onEnter={addComm}
+          onChanged={setNewComment}
+        />
+        <Button
+          key="comment_btn"
+          callback={addComm}
+          text="Добавить комментарий"
+          variant="accent"
         />
         {cardDetails.comments.map((comment) => {
           return (
@@ -287,16 +320,17 @@ export const CardDetailsContainer = (props: ComponentProps) => {
         })}
         <Input
           key="assign_user"
-          placeholder="Назначить участника"
-          onEnter={(text) => {
-            assignUser(cardDetails.card.id, text).then((u) => {
-              if (u !== undefined) {
-                console.log(u);
-                cardDetails.assignedUsers.push(u);
-                setCardDetailsStore(cardDetails);
-              }
-            });
+          placeholder="Никнейм участника"
+          onEnter={addAssigned}
+          onChanged={(newText) => {
+            setNewAssigned(newText);
           }}
+        />
+        <Button
+          key="assign_user_btn"
+          text="Назначить участника"
+          variant="accent"
+          callback={addAssigned}
         />
       </div>
     </div>
