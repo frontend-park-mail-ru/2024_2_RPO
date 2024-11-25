@@ -181,6 +181,9 @@ const DeadlineInput = (props: DeadlineProps) => {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const CardDetailsContainer = (props: ComponentProps) => {
   const cardDetails = useCardDetailsStore() as CardDetails;
+  const [newComment, setNewComment] = useState('');
+  const [newCheckListField, setNewCheckListField] = useState('');
+  const [newAssigned, setNewAssigned] = useState('');
   return (
     <div class="card-details">
       <div class="card-details__left-section">

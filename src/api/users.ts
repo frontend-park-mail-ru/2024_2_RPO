@@ -14,6 +14,7 @@ import { showToast } from '@/stores/toastNotificationStore';
 import { UserResponse } from './responseTypes';
 import { setCsatStore, useCsatStore } from '@/stores/csatStore';
 import { UserRequest } from './requestTypes';
+import { decodeUser } from './decode';
 /**
  * Получить информацию о текущем пользователе
  * @returns промис, который возвращает или User (если залогинен), или undefined (если не залогинен)
@@ -28,19 +29,15 @@ export const getUserMe = async (): Promise<User | undefined> => {
     switch (response.status) {
       case HTTP_STATUS_OK: {
         const data: UserResponse = response.body;
-        if (data.questions !== null) {
+        if (data.pollQuestions !== undefined) {
           const csat = useCsatStore();
           csat.isOpened = true;
-          csat.questions = data.questions ?? [];
-          setCsatStore(csat);
+          csat.questions = data.pollQuestions ?? [];
+          if (csat.questions.length) {
+            setCsatStore(csat);
+          }
         }
-        return {
-          name: data.name,
-          id: data.id,
-          email: data.email,
-          avatarImageUrl: data.avatarImageUrl,
-          pollQuestions: data.questions,
-        };
+        return decodeUser(data);
       }
       case HTTP_STATUS_UNAUTHORIZED:
         return undefined;

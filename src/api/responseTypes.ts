@@ -50,7 +50,7 @@ export interface UserResponse {
   email: string;
   createdAt: string;
   avatarImageUrl: string;
-  questions?: PollQuestion[];
+  pollQuestions?: PollQuestion[];
 }
 
 export interface UserPermissionsResponse {

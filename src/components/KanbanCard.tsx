@@ -28,7 +28,7 @@ interface EditableProps extends ComponentProps {
 
 const Editable = (props: EditableProps) => {
   const [init, setInit] = useState(true);
-  const [newText, setNewText] = useState('');
+  const [newText, setNewText] = useState(props.initialText);
 
   useEffectRefs((refs) => {
     if (init) {

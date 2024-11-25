@@ -10,7 +10,7 @@ import {
 import { User, UserToBoard as Member } from '@/types/user';
 
 export const decodeUser = (user: UserResponse): User => {
-  return { ...user, pollQuestions: user.questions };
+  return { ...user, pollQuestions: user.pollQuestions };
 };
 
 export const decodeCard = (card: CardResponse): Card => {

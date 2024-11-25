@@ -25,7 +25,7 @@ export const CsatResults = (props: ComponentProps) => {
   ddd.ratingResults = ddd.ratingResults ? ddd.ratingResults : [];
   ddd.textResults = ddd.textResults ? ddd.textResults : [];
   ddd.textResults.forEach((rrr) => {
-    rrr.answers = rrr.answers ? rrr.answers : [];
+    rrr.text = rrr.text ? rrr.text : [];
   });
   return (
     <div style="display: flex; flex-direction:column">
@@ -45,7 +45,9 @@ export const CsatResults = (props: ComponentProps) => {
         return (
           <div>
             <h3>Q: {res.question}</h3>
-            <div>{JSON.stringify(res.answers)}</div>
+            <div>{res.text.map((text)=>{
+              return <div>-{text}</div>
+            })}</div>
           </div>
         );
       })}

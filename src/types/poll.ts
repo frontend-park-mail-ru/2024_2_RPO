@@ -12,7 +12,7 @@ export interface PollSubmit {
 
 export interface TextResult {
   question: string;
-  answers: string[];
+  text: string[];
 }
 
 export interface RatingResult {
