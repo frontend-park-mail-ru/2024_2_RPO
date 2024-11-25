@@ -1,25 +1,41 @@
 .editable-text__text-wrapper {
-  padding-left: 1px;
-  padding-right: 1px;
+  padding: 1px;
   display: flex;
-  align-items: center;
+  align-items: start;
   justify-content: center;
 }
-.editable-text__text-wrapper:hover {
-  padding-left: 0px;
-  padding-right: 0px;
+@media screen and (max-width: 800px) {
+  .editable-text__text-wrapper {
+    align-items: center;
+  }
+}
+.editable-text__text-wrapper__wrap {
+  width: 100%;
+}
+.editable-text__text-wrapper__editable:hover {
+  padding: 0;
   border: solid 1px black;
   border-radius: 3px;
 }
 .editable-text__text-input {
   all: unset;
+  max-width: 60vw;
   background-color: white;
 }
 .editable-text__text-input-wrapper {
   background-color: white;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: start;
   border-radius: 3px;
   border: solid black 2px;
+}
+.editable-text__text-input-wrapper__wrap {
+  width: 100%;
+}
+.editable-text__textarea {
+  all: unset;
+  width: 100%;
+  min-width: 32px;
+  background-color: white;
 }

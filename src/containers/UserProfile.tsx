@@ -12,6 +12,7 @@ import { setMeStore, updateMe, useMeStore } from '@/stores/meStore';
 import { closeUserProfileModalDialog } from '@/stores/modalDialogsStore';
 import { showToast } from '@/stores/toastNotificationStore';
 import { User } from '@/types/user';
+import './userProfile.scss';
 
 type UserProfileProps = ComponentProps;
 
@@ -96,6 +97,7 @@ export const UserProfile = (props: UserProfileProps) => {
           <Button
             key="change_avatar"
             text="Сменить аватарку"
+            variant="accent"
             icon="bi-images"
             callback={() => {
               const el = document.getElementById(
@@ -106,93 +108,71 @@ export const UserProfile = (props: UserProfileProps) => {
           />
         </div>
         <div class="user-profile__main">
-          <div class="user-profile__change-data-section">
-            <div class="user-profile__change-data-section-field">
-              <div class="user-profile__change-data-section-label">Никнейм</div>
-              <div class="user-profile__change-data-section-form">
-                <Input
-                  key="new_nickname"
-                  initialValue={me.name}
-                  onChanged={(newData) => {
-                    newProfile.nickname = newData;
-                    setNewProfile(newProfile);
-                  }}
-                  onEnter={submitProfile}
-                />
-              </div>
+          <div>
+            <div class="user-profile__change-data-section">
+              <div>Никнейм</div>
+              <Input
+                key="new_nickname"
+                initialValue={me.name}
+                onChanged={(newData) => {
+                  newProfile.nickname = newData;
+                  setNewProfile(newProfile);
+                }}
+                onEnter={submitProfile}
+              />
+              <div>Email</div>
+              <Input
+                key="new_email"
+                initialValue={me.email}
+                onChanged={(newData) => {
+                  newProfile.email = newData;
+                  setNewProfile(newProfile);
+                }}
+                onEnter={submitProfile}
+              />
             </div>
-            <div class="user-profile__change-data-section-field">
-              <div class="user-profile__change-data-section-label">Email</div>
-              <div class="user-profile__change-data-section-form">
-                <Input
-                  key="new_email"
-                  initialValue={me.email}
-                  onChanged={(newData) => {
-                    newProfile.email = newData;
-                    setNewProfile(newProfile);
-                  }}
-                  onEnter={submitProfile}
-                />
-              </div>
+            <div class="user-profile__save-data-section">
+              <Button
+                key="save_profile_btn"
+                text="Сохранить"
+                icon="bi-floppy"
+                variant="accent"
+                callback={submitProfile}
+              />
             </div>
           </div>
-          <div class="user-profile__save-data-section">
-            <Button
-              key="save_profile_btn"
-              text="Сохранить"
-              icon="bi-floppy"
-              variant="accent"
-              callback={submitProfile}
-            />
-          </div>
-          <div class="user-profile__change-data-section">
-            <div class="user-profile__change-data-section-field">
-              <div class="user-profile__change-data-section-label">
-                Старый пароль
-              </div>
-              <div class="user-profile__change-data-section-form">
-                <Input
-                  key="old_password"
-                  isPassword
-                  onChanged={(newData) => {
-                    newPassword.oldPassword = newData;
-                    setNewPassword(newPassword);
-                  }}
-                  onEnter={submitPassword}
-                />
-              </div>
-            </div>
-            <div class="user-profile__change-data-section-field">
-              <div class="user-profile__change-data-section-label">
-                Новый пароль
-              </div>
-              <div class="user-profile__change-data-section-form">
-                <Input
-                  key="new_password"
-                  isPassword
-                  onChanged={(newData) => {
-                    newPassword.newPassword = newData;
-                    setNewPassword(newPassword);
-                  }}
-                  onEnter={submitPassword}
-                />
-              </div>
-            </div>
-            <div class="user-profile__change-data-section-field">
-              <div class="user-profile__change-data-section-label">
-                Повторите пароль
-              </div>
-              <div class="user-profile__change-data-section-form">
-                <Input
-                  key="repeat_password"
-                  isPassword
-                  onChanged={(newData) => {
-                    newPassword.repeatPassword = newData;
-                    setNewPassword(newPassword);
-                  }}
-                  onEnter={submitPassword}
-                />
-              </div>
+          <div>
+            <div class="user-profile__change-data-section">
+              <div>Старый пароль</div>
+              <Input
+                key="old_password"
+                isPassword
+                onChanged={(newData) => {
+                  newPassword.oldPassword = newData;
+                  setNewPassword(newPassword);
+                }}
+                onEnter={submitPassword}
+              />
+              <div>Новый пароль</div>
+              <Input
+                key="new_password"
+                isPassword
+                onChanged={(newData) => {
+                  newPassword.newPassword = newData;
+                  setNewPassword(newPassword);
+                }}
+                onEnter={submitPassword}
+              />
+              <div>Повторите пароль</div>
+              <Input
+                key="repeat_password"
+                isPassword
+                onChanged={(newData) => {
+                  newPassword.repeatPassword = newData;
+                  setNewPassword(newPassword);
+                }}
+                onEnter={submitPassword}
+              />
             </div>
             <div class="user-profile__save-data-section">
               <Button

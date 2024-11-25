@@ -8,11 +8,16 @@ export const activeBoardMock: ActiveBoard = {
       id: 1,
       title: 'Задачи',
       cards: [
-        { id: 228, title: 'Пример задачи, для которой не задана обложка' },
+        {
+          id: 228,
+          title: 'Пример задачи, для которой не задана обложка',
+          deadline: undefined,
+        },
         {
           id: 1337,
           title: 'Пример задачи, для которой задана обложка',
-          coverImageUrl: 'static/img/lada_vesta.png',
+          coverImageUrl: '/static/img/lada_vesta.png',
+          deadline: undefined,
         },
       ],
     },
@@ -20,5 +25,5 @@ export const activeBoardMock: ActiveBoard = {
   myRole: 'admin',
   lastVisit: new Date(Date.UTC(2004, 7, 10)),
   lastUpdate: new Date(Date.UTC(2024, 7, 10)),
-  backgroundImageUrl: '/static/img/backgroundImage.png',
+  backgroundImageUrl: '/static/img/backgroundPicture.png',
 };

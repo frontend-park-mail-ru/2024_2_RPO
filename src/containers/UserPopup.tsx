@@ -56,13 +56,21 @@ export const UserPopup = (props: UserPopupProps) => {
           </div>
         </div>
 
-        <PopupButton key="help_btn" title="Помощь" icon="bi-info-circle" />
-
         <PopupButton
+          key="help_btn"
+          title="Помощь"
+          icon="bi-info-circle"
+          callback={() => {
+            window?.open('https://t.me/safronov_k_o', '_blank')?.focus();
+          }}
+        />
+
+        {/* На будущее */
+        /* <PopupButton
           key="account_upgrade_btn"
           title="Улучшить аккаунт"
           icon="bi-rocket-takeoff"
-        />
+        /> */}
 
         <PopupButton
           key="account_settings_btn"

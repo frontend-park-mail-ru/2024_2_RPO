@@ -41,6 +41,15 @@ function patchProps(props: any, elem: DOMElementRepr) {
     elem.node.removeEventListener(listener.type, listener.listener);
   });
   elem.eventListeners = [];
+  for (let i = 0; i < elem.node.attributes.length; i++) {
+    const attr = elem.node.attributes[i];
+    if (
+      props[attr.name] === undefined &&
+      props[attr.name === 'class' ? 'className' : 'asdfafdasf'] === undefined
+    ) {
+      elem.node.removeAttributeNode(attr);
+    }
+  }
   Object.entries(props).forEach(([key, value]) => {
     if (value === undefined) {
       const prevValue = elem.existingAttrs.get(key);

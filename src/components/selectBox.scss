@@ -1,19 +1,23 @@
 .select-box {
   user-select: none;
-  cursor: pointer;
   height: 32px;
   overflow: visible;
-  position: fixed;
+  position: relative;
+}
+.select-box__editable {
+  cursor: pointer;
 }
 .select-box__button {
   display: flex;
   align-items: center;
   height: 32px;
+  margin-right: 5px;
+  margin-left: 5px;
 }
 .select-box__content {
-  padding-right: 5px;
-  padding-left: 5px;
   border-radius: 3px;
+  overflow: hidden;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
 .select-box__content__closed {
   background-color: var(--color-background-secondary);
@@ -26,9 +30,17 @@
   margin-left: 4px;
 }
 .select-box__dropdown {
-  position: absolute;
+  position: relative;
   background-color: white;
   z-index: 1000;
   left: 0;
-  right: 0;
+}
+.select-box__option {
+  padding-top: 3px;
+  padding-bottom: 3px;
+  padding-right: 5px;
+  padding-left: 5px;
+}
+.select-box__option:hover {
+  background-color: #eee;
 }

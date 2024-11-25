@@ -21,11 +21,14 @@ interface Callbacks {
   onChanged: (ev: Event) => void;
 }
 
+//TODO исправить эти баги
+
 let globalUid = 0;
 const instMap: Map<number, Callbacks> = new Map();
 
+let tttt = 0;
+
 export const Input = (props: InputProps) => {
-  console.log('UPDATE VDOM');
   const [activated, setIsActivated] = useState(false);
   const [uid, setUid] = useState(-1);
   useEffectRefs((refs) => {
@@ -37,6 +40,9 @@ export const Input = (props: InputProps) => {
       setTimeout(() => {
         if (props.onChanged) {
           props.onChanged(inp.value);
+        }
+        if (props.focusOnInstance) {
+          inp.focus();
         }
       }, 200);
       setIsActivated(true);
@@ -95,9 +101,11 @@ export const Input = (props: InputProps) => {
       });
     }
   });
+  tttt++;
   return (
     <div className="input__wrapper">
       <input
+        name={tttt.toString()}
         ref="input"
         className="input"
         readonly={props.readOnly === true ? true : undefined}

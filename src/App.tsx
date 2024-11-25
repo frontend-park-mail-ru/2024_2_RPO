@@ -3,36 +3,60 @@ import './fonts.scss';
 import { createApp } from './jsxCore/core';
 import { HomePage } from './screens/HomePage';
 import { IComponentFunction } from './jsxCore/types';
-import { setApiUrl } from './api/apiHelper';
 import { MainApp } from './screens/MainApp';
-import { useRouterStore } from './stores/routerStore';
+import { setRouterStore, useRouterStore } from './stores/routerStore';
 import { ToastContainer } from './containers/ToastContainer';
-import { apiUrl } from './config';
 import { updateMe } from './stores/meStore';
-import { loadBoard } from './stores/activeBoardStore';
-import { updateBoards } from './stores/boardsStore';
-
-setApiUrl(apiUrl);
+import { getFlagRoutes } from './routes/routesFlag';
+import { CsatPoll } from './screens/CsatPoll';
+import { CsatResults } from './screens/CsatResults';
 
 const App: IComponentFunction = () => {
   const routerStore = useRouterStore();
-  console.log('Router store: ', routerStore);
 
   return (
     <>
       <div class="display-none"></div>
-      {routerStore.isApp ? (
-        <MainApp key="main_app" />
-      ) : (
-        <HomePage key="home_page" />
-      )}
+      {routerStore.isApp && <MainApp key="main_app" />}
+      {routerStore.isHome && <HomePage key="home_page" />}
+      {routerStore.isPoll && <CsatPoll key="csat_poll" />}
+      {routerStore.isCsatResults && <CsatResults key="csat_results" />}
       <ToastContainer key="toast_container" />
     </>
   );
 };
 
-loadBoard(useRouterStore().boardId);
 const appRoot = document.getElementById('app_root') as HTMLDivElement;
 createApp(App, appRoot);
 updateMe();
-updateBoards();
+
+setTimeout(() => {
+  setRouterStore(getFlagRoutes(window.location.pathname));
+}, 0);
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('/sw.js').then(
+      function (registration) {
+        console.log(
+          'ServiceWorker registration successful with scope: ',
+          registration.scope
+        );
+      },
+      function (err) {
+        console.log('ServiceWorker registration failed: ', err);
+      }
+    );
+  });
+} else {
+  console.error('Service Worker is not available');
+}
+
+// const REFETCH_DELAY = 5000;
+
+// setInterval(() => {
+//   const activeBoard = useActiveBoardStore();
+//   if (activeBoard !== undefined) {
+//     loadBoard(activeBoard.id, true);
+//   }
+// }, REFETCH_DELAY);

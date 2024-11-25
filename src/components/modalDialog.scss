@@ -1,0 +1,65 @@
+.modal-dialog {
+  background-color: white;
+  position: fixed;
+  z-index: 100;
+  padding-bottom: 15px;
+  padding-left: 25px;
+  padding-right: 25px;
+}
+@media screen and (min-width: 800px) {
+  .modal-dialog {
+    border-radius: 12px;
+    min-width: 300px;
+    min-height: 200px;
+  }
+}
+@media screen and (max-width: 800px) {
+  .modal-dialog {
+    width: 100vw;
+    height: 100vh;
+    overflow-x: auto;
+    overflow-y: auto;
+  }
+}
+.modal-dialog__header-block {
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+.modal-dialog__title {
+  font-size: 24px;
+  font-weight: 600;
+  font-family: 'Montserrat', sans-serif;
+}
+.modal-dialog__title-wrapper {
+  flex-grow: 1;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-dialog__close-button {
+  position: absolute;
+  display: flex;
+  right: 0;
+  border-radius: 10px;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  cursor: pointer;
+  height: 1.5rem;
+  width: 1.5rem;
+  margin-top: 4px;
+  margin-right: 4px;
+  padding-left: 2px;
+}
+.modal-dialog__close-button i {
+  margin-top: -1px;
+  font-size: 1.25rem !important;
+}
+.modal-dialog__close-button:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+}

@@ -1,0 +1,128 @@
+.navbar__mobile-hidden {
+  text-wrap: nowrap;
+}
+.navbar__mobile-only {
+  text-wrap: nowrap;
+}
+.navbar {
+  width: 100%;
+  height: var(--navbar-height);
+  padding: 0 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(200, 200, 200, 0.5);
+  z-index: 10;
+  position: fixed;
+  column-gap: 10px;
+  padding: 0 10px;
+}
+@media screen and (min-width: 800px) {
+  .navbar__mobile-only {
+    display: none !important;
+  }
+  .navbar {
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+}
+@media screen and (max-width: 800px) {
+  .navbar__mobile-hidden {
+    display: none !important;
+  }
+}
+
+.navbar__logo {
+  width: 243px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 8px;
+}
+.navbar__board-name {
+  font-weight: bold;
+  column-gap: 10px;
+  font-size: 1.25rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.navbar__board-controls {
+  font-weight: bold;
+  font-size: 1.25rem;
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  justify-content: space-between;
+  align-items: center;
+}
+.navbar__board-name-wrapper {
+  height: 32px;
+}
+.navbar__left-panel-button {
+  height: 32px;
+  background-color: white;
+  padding-left: 8px;
+  padding-right: 8px;
+  border-radius: 3px;
+  border: gray solid 1px;
+  cursor: pointer;
+}
+.navbar__logo-icon {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  user-select: none;
+  cursor: pointer;
+}
+.navbar__logo-group {
+  display: flex;
+  column-gap: 8px;
+  align-items: center;
+}
+.navbar__logo-link {
+  font-size: 1.5rem;
+  font-weight: bold;
+  font-family: 'Montserrat', 'sans-serif';
+  text-decoration: none;
+  color: #000000;
+}
+@media screen and (min-width: 800px) {
+  .navbar__logo-group {
+    width: 233px;
+  }
+}
+
+.navbar__profile-picture {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  cursor: pointer;
+}
+@media screen and (max-width: 800px) {
+  .navbar__profile-picture {
+    width: 55px;
+    height: 55px;
+  }
+  .navbar__board-name {
+    flex-grow: 1;
+  }
+}
+.navbar__rest-group {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+}
+.navbar__right-group {
+}
+.navbar__selectbox {
+}
+@media screen and (max-width: 800px) {
+  .navbar__selectbox {
+    position: fixed;
+    top: calc(var(--navbar-height) + 10px);
+    left: 10px;
+  }
+}

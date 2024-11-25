@@ -1,6 +1,7 @@
 import { showToast } from '@/stores/toastNotificationStore';
 import {
   apiDelete,
+  apiPatch,
   apiPost,
   apiPut,
   HTTP_STATUS_BAD_REQUEST,
@@ -11,18 +12,15 @@ import {
   HTTP_STATUS_OK,
   HTTP_STATUS_UNAUTHORIZED,
 } from './apiHelper';
-import { CardRequest, CardResponse, ColumnRequest } from './types';
+import { CardResponse } from './responseTypes';
 import { BoardColumn } from '@/types/activeBoard';
 import { Card } from '@/types/card';
+import { CardPatchRequest, CardRequest, ColumnRequest } from './requestTypes';
+import { decodeCard } from './decode';
 
-export const deleteColumn = async (
-  boardId: number,
-  columnId: number
-): Promise<void> => {
+export const deleteColumn = async (columnId: number): Promise<void> => {
   try {
-    const response = await apiDelete(
-      `/columns/board_${boardId}/column_${columnId}`
-    );
+    const response = await apiDelete(`/columns/column_${columnId}`);
     switch (response.status) {
       case HTTP_STATUS_OK:
       case HTTP_STATUS_CREATED:
@@ -36,16 +34,13 @@ export const deleteColumn = async (
     console.error(error);
   }
 };
+
 export const updateColumn = async (
-  boardId: number,
   columnId: number,
   columnData: ColumnRequest
 ): Promise<BoardColumn> => {
   try {
-    const response = await apiPut(
-      `/columns/board_${boardId}/column_${columnId}`,
-      columnData
-    );
+    const response = await apiPut(`/columns/column_${columnId}`, columnData);
     switch (response.status) {
       case HTTP_STATUS_OK:
       case HTTP_STATUS_CREATED:
@@ -60,6 +55,7 @@ export const updateColumn = async (
   }
   throw new Error('Неизвестная ошибка');
 };
+
 export const createColumn = async (
   boardId: number,
   columnData: ColumnRequest
@@ -77,6 +73,7 @@ export const createColumn = async (
   showToast('Произошла ошибка при добавлении колонки', 'error');
   throw new Error('Error while creating column');
 };
+
 export const createCard = async (
   boardId: number,
   data: CardRequest
@@ -87,7 +84,7 @@ export const createCard = async (
       case HTTP_STATUS_OK:
       case HTTP_STATUS_CREATED:
         showToast('Успешно создана карточка', 'success');
-        return response.body as CardResponse;
+        return decodeCard(response.body as CardResponse);
       default:
         handleErrorResponse(response.status, response.body.text);
     }
@@ -97,21 +94,18 @@ export const createCard = async (
   }
   throw new Error('Неизвестная ошибка');
 };
+
 export const updateCard = async (
-  boardId: number,
   cardId: number,
-  data: CardRequest
+  data: CardPatchRequest
 ): Promise<Card> => {
   try {
-    const response = await apiPut(
-      `/cards/board_${boardId}/card_${cardId}`,
-      data
-    );
+    const response = await apiPatch(`/cards/card_${cardId}`, data);
     switch (response.status) {
       case HTTP_STATUS_OK:
       case HTTP_STATUS_CREATED:
         showToast('Успешно изменена карточка', 'success');
-        return response.body as CardResponse;
+        return decodeCard(response.body as CardResponse);
       default:
         handleErrorResponse(response.status, response.body.text);
     }
@@ -121,12 +115,10 @@ export const updateCard = async (
   }
   throw new Error('Неизвестная ошибка');
 };
-export const deleteCard = async (
-  boardId: number,
-  cardId: number
-): Promise<void> => {
+
+export const deleteCard = async (cardId: number): Promise<void> => {
   try {
-    const response = await apiDelete(`/cards/board_${boardId}/card_${cardId}`);
+    const response = await apiDelete(`/cards/card_${cardId}`);
     if (response.status === HTTP_STATUS_OK) {
       showToast('Карточка успешно удалена.', 'success');
     } else {
@@ -137,6 +129,7 @@ export const deleteCard = async (
     console.error(error);
   }
 };
+
 const handleErrorResponse = (status: number, message: string) => {
   switch (status) {
     case HTTP_STATUS_BAD_REQUEST:

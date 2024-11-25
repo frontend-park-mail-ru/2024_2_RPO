@@ -1,6 +1,7 @@
-let apiRoot: string = '';
+import { boardUrl, userUrl, pollUrl } from '@/config';
 let csrfToken: string = '';
-export let useMocks = false;
+export const useMocks =
+  boardUrl.toString() === 'mock' || userUrl.toString() === 'mock';
 
 interface IResponce {
   status: number;
@@ -15,9 +16,17 @@ interface IResponce {
  */
 const getApiUrl = (addr: string): string => {
   if (addr.startsWith('/')) {
-    return apiRoot + addr;
+    addr = addr.slice(1);
   }
-  return apiRoot + '/' + addr;
+  if (addr.startsWith('users') || addr.startsWith('auth')) {
+    const ret = userUrl + '/' + addr;
+    console.log(ret);
+    return ret;
+  } else if (addr.startsWith('poll')) {
+    return pollUrl + '/' + addr;
+  } else {
+    return boardUrl + '/' + addr;
+  }
 };
 
 const fetchApi = async (
@@ -97,15 +106,6 @@ export const apiPut = async (addr: string, body?: any) => {
 };
 export const apiDelete = async (addr: string) => {
   return fetchApi(addr, 'DELETE');
-};
-
-export const setApiUrl = (newApiRoot: string) => {
-  apiRoot = newApiRoot;
-  if (newApiRoot === 'mock') {
-    useMocks = true;
-  } else {
-    useMocks = false;
-  }
 };
 
 export const HTTP_STATUS_OK = 200;

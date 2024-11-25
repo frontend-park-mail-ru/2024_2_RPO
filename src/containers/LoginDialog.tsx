@@ -6,7 +6,6 @@ import { useState } from '@/jsxCore/hooks';
 import { ComponentProps } from '@/jsxCore/types';
 import { updateMe } from '@/stores/meStore';
 import { goToUrl } from '@/stores/routerStore';
-import { showToast } from '@/stores/toastNotificationStore';
 
 interface LoginDialogProps extends ComponentProps {
   closeCallback?: () => any;
@@ -20,8 +19,6 @@ export const LoginDialog = (props: LoginDialogProps) => {
       if (ok) {
         updateMe();
         goToUrl('/app');
-      } else {
-        showToast('Ошибка при входе', 'error');
       }
     });
   };

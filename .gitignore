@@ -4,3 +4,4 @@ serverConfig.json
 dist
 .vscode
 bun.lockb
+keys

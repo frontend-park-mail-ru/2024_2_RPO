@@ -1,4 +1,5 @@
 import { ComponentProps, JsxNode } from '@/jsxCore/types';
+import './modalDialog.scss';
 
 interface ModalDialogProps extends ComponentProps {
   title?: string;
@@ -16,6 +17,7 @@ export const ModalDialog = (props: ModalDialogProps) => {
   if (!props.isOpened) {
     return <div style="display:none" />;
   }
+  console.log("I AM OPENED")
   return (
     <div class="full-screen-dark">
       <div class="modal-dialog">
@@ -30,8 +32,8 @@ export const ModalDialog = (props: ModalDialogProps) => {
             <i class="bi-x-lg" />
           </div>
         </div>
-        <hr style="margin-bottom: 10px;" />
-        {props.children}
+        <hr style="margin-bottom: 20px;" />
+        <div>{props.children}</div>
       </div>
     </div>
   );

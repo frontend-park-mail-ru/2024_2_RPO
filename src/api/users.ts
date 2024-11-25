@@ -11,7 +11,9 @@ import {
 import { User } from '@/types/user';
 import { userMeMock } from './mocks/user';
 import { showToast } from '@/stores/toastNotificationStore';
-import { UserRequest, UserResponse } from './types';
+import { UserResponse } from './responseTypes';
+import { setCsatStore, useCsatStore } from '@/stores/csatStore';
+import { UserRequest } from './requestTypes';
 /**
  * Получить информацию о текущем пользователе
  * @returns промис, который возвращает или User (если залогинен), или undefined (если не залогинен)
@@ -26,11 +28,18 @@ export const getUserMe = async (): Promise<User | undefined> => {
     switch (response.status) {
       case HTTP_STATUS_OK: {
         const data: UserResponse = response.body;
+        if (data.questions !== null) {
+          const csat = useCsatStore();
+          csat.isOpened = true;
+          csat.questions = data.questions ?? [];
+          setCsatStore(csat);
+        }
         return {
           name: data.name,
           id: data.id,
           email: data.email,
           avatarImageUrl: data.avatarImageUrl,
+          pollQuestions: data.questions,
         };
       }
       case HTTP_STATUS_UNAUTHORIZED:
@@ -47,9 +56,9 @@ export const getUserMe = async (): Promise<User | undefined> => {
 type RegStatus =
   | 'ok'
   | 'error'
-  | 'login_busy'
+  | 'nickname_busy'
   | 'email_busy'
-  | 'login_and_email_busy';
+  | 'nickname_and_email_busy';
 
 /**
  * Зарегистрировать пользователя
@@ -79,11 +88,11 @@ export const registerUser = async (
         {
           switch (response.body.text) {
             case 'Nickname is busy':
+              return 'nickname_busy';
+            case 'Email is busy':
               return 'email_busy';
-            case 'Login is busy':
-              return 'login_busy';
             case 'Email and nickname are busy':
-              return 'login_and_email_busy';
+              return 'nickname_and_email_busy';
           }
         }
         showToast('Неизвестная ошибка 409', 'error');
@@ -132,7 +141,7 @@ export const loginUser = async (
       case HTTP_STATUS_OK:
         return true;
       case HTTP_STATUS_UNAUTHORIZED:
-        showToast('Неверные креды', 'error');
+        showToast('Неверные учётные данные', 'error');
         throw new Error('Неверные учетные данные');
       default:
         showToast('Неизвестная ошибка', 'error');

@@ -1,8 +1,11 @@
+import { loadBoard } from '@/stores/activeBoardStore';
 import { updateBoards } from '@/stores/boardsStore';
 
 export interface RouterFlags {
   isHome: boolean;
   isApp: boolean;
+  isPoll: boolean;
+  isCsatResults: boolean;
   boardId: number | undefined;
 }
 
@@ -17,10 +20,13 @@ export const getFlagRoutes = (currentPath: string): RouterFlags => {
   }
   if (currentPath.startsWith('/app')) {
     updateBoards();
+    loadBoard(boardId);
   }
 
   return {
     isHome: ['/login', '/register', '/'].indexOf(currentPath) !== -1,
+    isCsatResults: currentPath === '/csat_results',
+    isPoll: currentPath === '/csat_poll',
     isApp: currentPath.startsWith('/app'),
     boardId,
   };

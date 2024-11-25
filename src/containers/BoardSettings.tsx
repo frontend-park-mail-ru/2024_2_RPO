@@ -15,7 +15,10 @@ import { useMeStore } from '@/stores/meStore';
 import { User } from '@/types/user';
 import { goToUrl } from '@/stores/routerStore';
 import { deleteBoard, setBoardBackgroundImage } from '@/api/boards';
+import { useState } from '@/jsxCore/hooks';
+import './boardSettings.scss';
 
+// На будущее
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const modeOptions: SelectBoxOption[] = [
   { title: 'Все задачи', icon: 'bi-bell' },
@@ -34,6 +37,17 @@ export const BoardSettings = () => {
   const activeBoard = useActiveBoardStore() as ActiveBoard;
   const me = useMeStore() as User;
   const members = useMembersStore();
+  const [memberNickname, setMemberNickname] = useState('');
+  const submitMember = (nickname: string) => {
+    if (memberNickname.length === 0) {
+      return;
+    }
+    addMember(activeBoard.id, nickname).then((newMember) => {
+      showToast('Успешно добавлен пользователь', 'success');
+      members.push(newMember);
+      setMembersStore(members);
+    });
+  };
   return (
     <ModalDialog
       key="modal_dialog"
@@ -58,30 +72,34 @@ export const BoardSettings = () => {
                 if (files && files.length > 0) {
                   setBoardBackgroundImage(activeBoard.id, files[0]).then(
                     (resp) => {
-                      showToast('Успешно изменён фон!', 'error');
-                      activeBoard.backgroundImageUrl = resp.body.backgroundImageUrl;
+                      showToast('Успешно изменён фон!', 'success');
+                      activeBoard.backgroundImageUrl =
+                        resp.body.backgroundImageUrl;
                       setActiveBoardStore(activeBoard);
                     }
                   );
                 }
               }}
             />
-            {activeBoard.myRole !== 'viewer' && (
-              <Button
-                key="change_background_btn"
-                text="Сменить фон"
-                icon="bi-card-image"
-                variant="default"
-                callback={() => {
-                  const el = document.getElementById(
-                    'uploadbg'
-                  ) as HTMLInputElement;
-                  el.click();
-                }}
-              />
-            )}
+            {activeBoard.myRole !== 'viewer' &&
+              activeBoard.myRole !== 'editor' && (
+                <Button
+                  key="change_background_btn"
+                  fullWidth
+                  text="Сменить фон"
+                  variant="accent"
+                  icon="bi-card-image"
+                  callback={() => {
+                    const el = document.getElementById(
+                      'uploadbg'
+                    ) as HTMLInputElement;
+                    el.click();
+                  }}
+                />
+              )}
             <Button
               key="leave_btn"
+              fullWidth
               text="Выйти из доски"
               icon="bi-box-arrow-right"
               variant="negative"
@@ -96,6 +114,7 @@ export const BoardSettings = () => {
             {activeBoard.myRole === 'admin' && (
               <Button
                 key="delete_btn"
+                fullWidth
                 text="Удалить доску"
                 icon="bi-trash"
                 variant="negative"
@@ -134,17 +153,22 @@ export const BoardSettings = () => {
               <div class="main__add-collaborator-text">Добавить зрителя:</div>
               <div class="main__add-collaborator-input">
                 <Input
-                  key="add_member"
+                  key="add_member_inp"
                   placeholder="Введите никнейм"
-                  onEnter={(nickname) => {
-                    addMember(activeBoard.id, nickname).then((newMember) => {
-                      showToast('Успешно добавлен пользователь', 'success');
-                      members.push(newMember);
-                      setMembersStore(members);
-                    });
+                  onChanged={setMemberNickname}
+                  onEnter={() => {
+                    submitMember(memberNickname);
                   }}
                 />
               </div>
+              <Button
+                key="add_member"
+                icon="bi-plus-square"
+                variant={memberNickname.length ? 'positive' : 'default'}
+                callback={() => {
+                  submitMember(memberNickname);
+                }}
+              />
               {/* На будущее - настройки уведомлений */
               /* <div class="main__notifications-text">Уведомления:</div>
               <div class="main__notificatons">
@@ -186,6 +210,15 @@ export const BoardSettings = () => {
                     <SelectBox
                       key={`edit_member_${user.user.id}`}
                       options={modeOptionsRedactor}
+                      widthRem={12}
+                      readOnly={
+                        !(
+                          activeBoard.myRole === 'admin' ||
+                          (activeBoard.myRole === 'editor_chief' &&
+                            user.role !== 'admin' &&
+                            user.role !== 'editor_chief')
+                        ) || user.user.id === me.id
+                      }
                       currentIndex={[
                         'viewer',
                         'editor',
@@ -213,26 +246,42 @@ export const BoardSettings = () => {
                       }}
                     />
                   </div>
-                  <div class="permissions-table__kick-member-button">
-                    <Button
-                      key={`remove_member_${user.user.id}`}
-                      icon={user.user.id === me.id ? 'bi-person' : 'bi-x-lg'}
-                      variant="default"
-                      callback={() => {
-                        if (user.user.id === me.id) {
-                          return;
-                        }
-                        removeMember(activeBoard.id, user.user.id).then(() => {
-                          showToast('Успешно изгнан пользователь', 'success');
-                          setMembersStore(
-                            members.filter((a) => {
-                              return a.user.id !== user.user.id;
-                            })
+                  {user.user.id === me.id ||
+                  !(
+                    activeBoard.myRole === 'admin' ||
+                    (activeBoard.myRole === 'editor_chief' &&
+                      user.role !== 'admin' &&
+                      user.role !== 'editor_chief')
+                  ) ||
+                  user.user.id === me.id ? (
+                    <div></div>
+                  ) : (
+                    <div class="permissions-table__kick-member-button">
+                      <Button
+                        key={`remove_member_${user.user.id}`}
+                        icon="bi-x-lg"
+                        variant="default"
+                        callback={() => {
+                          if (user.user.id === me.id) {
+                            return;
+                          }
+                          removeMember(activeBoard.id, user.user.id).then(
+                            () => {
+                              showToast(
+                                'Пользователь успешно удален',
+                                'success'
+                              );
+                              setMembersStore(
+                                members.filter((a) => {
+                                  return a.user.id !== user.user.id;
+                                })
+                              );
+                            }
                           );
-                        });
-                      }}
-                    />
-                  </div>
+                        }}
+                      />
+                    </div>
+                  )}
                 </>
               );
             })}
