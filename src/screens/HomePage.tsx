@@ -108,7 +108,7 @@ export const HomePage = (props: ComponentProps) => {
           </div>
         </div>
 
-        <div className="homepage__detail-section homepage__detail-section__odd">
+        <div className="homepage__detail-section homepage__detail-section__even">
           <div className="homepage__detail-comment">
             <div className="homepage__detail-header">
               Размещайте задачи в колонках

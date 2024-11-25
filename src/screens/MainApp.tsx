@@ -2,7 +2,6 @@ import { LeftPanel } from '@/containers/LeftPanel';
 import { NavBar } from '@/containers/NavBar';
 import { ComponentProps } from '@/jsxCore/types';
 import { useState } from '@/jsxCore/hooks';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { UserProfile } from '@/containers/UserProfile';
 import { KanbanBoard } from '@/containers/KanbanBoard';
 import { useModalDialogsStore } from '@/stores/modalDialogsStore';
@@ -46,6 +45,9 @@ export const MainApp = (props: MainAppProps) => {
         setLeftPanelOpened={setLeftPanelOpened}
         key="nav_bar"
       />
+      {modalDialogsStore.isUserProfileOpened && (
+        <UserProfile key="user-profile" />
+      )}
 
       {csat.isOpened && (
         <ModalDialog

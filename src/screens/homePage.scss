@@ -42,15 +42,29 @@
   padding-left: 10%;
   gap: 10%;
 }
-@media (max-width: 768px) {
+
+@media (max-width: 800px) {
   .homepage__detail-section {
-    flex-direction: column; /* Размещаем элементы вертикально */
-    padding: 0 20px; /* Уменьшаем отступы */
+    flex-direction: column;
+    padding: 0 20px;
     justify-content: center;
   }
 
+  .top-section {
+    flex-direction: column-reverse !important;
+    margin-left: 10px !important;
+    margin-right: 10px !important;
+  }
+
+  .top-section__motto {
+    text-wrap: wrap !important;
+  }
+
+  .homepage__detail-section__odd {
+    flex-direction: column-reverse !important;
+  }
   .homepage__detail-section__even {
-    flex-direction: column-reverse !important; /* Размещаем элементы вертикально */
+    flex-direction: column !important;
   }
 
   .homepage__detail-image {
@@ -60,29 +74,20 @@
 
   .homepage__detail-comment {
     width: 100%;
-    text-align: center; /* Центрируем текст */
+    text-align: center;
   }
 }
 
 .homepage__detail-section__even {
-  position: relative; /* Создаем контекст для позиционирования */
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-// .homepage__detail-section__even .homepage__detail-image {
-//   right: -10; /* Привязываем к правому краю */
-// }
-
-.homepage__detail-section__odd .homepage__detail-image {
-  position: relative;
-  // left: 70px;
-  width: 70%;
-}
-
-.homepage img {
-  border-radius: 12px; /* Скругление углов */
+.homepage__detail-section {
+  display: flex;
+  align-items: center;
 }
 
 .homepage .home-page__logo {
@@ -98,11 +103,7 @@
   right: 70px;
 }
 
-.homepage__detail-section__even {
-  flex-direction: row-reverse !important;
-}
-
-.homepage__detail-section__even .homepage__detail-comment {
+.homepage__detail-comment {
   flex: 1; /* Текст занимает доступное пространство */
   text-align: left; /* Текст выровнен по левому краю */
 }
@@ -156,9 +157,7 @@
   display: flex;
   column-gap: 20px;
 }
-// .top-section__right {
-//   margin-left: 20vw;
-// }
+
 .top-section__right img {
   height: 300px;
 }
@@ -175,10 +174,8 @@ html {
 }
 
 .homepage__scroll-indicator {
-  position: absolute;
-  top: 75%; /* Центрирование по вертикали */
-  left: 50%; /* Центрирование по горизонтали */
-  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
   text-align: center;
 
   .scroll-link {
@@ -245,20 +242,13 @@ iframe {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Тень */
 }
 
-/* Адаптивность для мобильных устройств */
 @media (max-width: 768px) {
   iframe {
-    max-width: 100%; /* Убираем ограничение по ширине */
-    height: auto; /* Высота сохраняет пропорции */
+    max-width: 100%;
+    height: auto;
   }
 
   .video-frame {
-    padding: 0; /* Убираем дополнительные отступы */
+    padding: 0;
   }
 }
-
-// .home-page__logo {
-//   width: 150px; /* Фиксированная ширина */
-//   height: 50px; /* Фиксированная высота */
-//   object-fit: contain; /* Гарантирует, что логотип не будет искажен */
-// }

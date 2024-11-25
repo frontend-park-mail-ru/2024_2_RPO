@@ -1,6 +1,6 @@
 import { ComponentProps } from '@/jsxCore/types';
 import './kanbanCard.scss';
-import { deleteCard } from '@/api/columnsCards';
+import { deleteCard, updateCard } from '@/api/columnsCards';
 import {
   setActiveBoardStore,
   useActiveBoardStore,
@@ -10,20 +10,25 @@ import { useEffectRefs, useState } from '@/jsxCore/hooks';
 import { Button } from './Button';
 import { getCardDetails } from '@/api/cardDetails';
 import { setCardDetailsStore } from '@/stores/cardDetailsStore';
+import { Card } from '@/types/card';
 
 interface KanbanCardProps extends ComponentProps {
   text: string;
   cardId: number;
   columnId: number;
+  columnIdx: number;
   coverImageUrl?: string;
 }
 
 interface EditableProps extends ComponentProps {
   initialText: string;
+  cardId: number;
+  onNewCard: (newCard: Card) => void;
 }
 
 const Editable = (props: EditableProps) => {
   const [init, setInit] = useState(true);
+  const [newText, setNewText] = useState('');
 
   useEffectRefs((refs) => {
     if (init) {
@@ -36,14 +41,28 @@ const Editable = (props: EditableProps) => {
     }
   });
 
+  const submit = () => {
+    updateCard(props.cardId, { title: newText }).then((newCard) => {
+      if (newCard !== undefined) {
+        props.onNewCard(newCard);
+      }
+    });
+  };
+
   return (
     <div>
-      <textarea ref="textarea" />
+      <textarea
+        ref="textarea"
+        ON_input={(ev: InputEvent) => {
+          setNewText((ev.target as HTMLInputElement).value);
+        }}
+      />
       <Button
         key="save_text"
         variant="accent"
         text="Сохранить"
         icon="bi-floppy"
+        callback={submit}
       />
     </div>
   );
@@ -53,6 +72,11 @@ export const KanbanCard = (props: KanbanCardProps) => {
   const activeBoard = useActiveBoardStore() as ActiveBoard;
   const [isInput, setIsInput] = useState(false);
   let timer: number;
+  const editCallback = () => {
+    clearTimeout(timer);
+    setIsInput(true);
+  };
+
   return (
     <div class="kanban-card">
       {activeBoard.myRole !== 'viewer' && (
@@ -76,13 +100,29 @@ export const KanbanCard = (props: KanbanCardProps) => {
         <img src={props.coverImageUrl} class="kanban-card__cover"></img>
       ) : undefined}
       {isInput ? (
-        <Editable key="editable_card" initialText={props.text} />
+        <Editable
+          key="editable_card"
+          initialText={props.text}
+          cardId={props.cardId}
+          onNewCard={(crd) => {
+            activeBoard.columns[props.columnIdx].cards = activeBoard.columns[
+              props.columnIdx
+            ].cards.map((oldCard) => {
+              if (oldCard.id !== crd.id) {
+                return oldCard;
+              }
+              return crd;
+            });
+            setActiveBoardStore(activeBoard);
+            setIsInput(false);
+          }}
+        />
       ) : (
         <div
-          ON_dblclick={() => {
-            clearTimeout(timer);
-            console.log('CLEAR');
-            setIsInput(true);
+          ON_dblclick={editCallback}
+          ON_contextmenu={(ev: Event) => {
+            editCallback();
+            ev.stopPropagation();
           }}
           ON_click={() => {
             clearTimeout(timer);
