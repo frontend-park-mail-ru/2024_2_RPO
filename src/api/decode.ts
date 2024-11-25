@@ -1,6 +1,7 @@
-import { CardComment, CardDetails, CheckListField } from '@/types/card';
+import { Card, CardComment, CardDetails, CheckListField } from '@/types/card';
 import {
   CardDetailsResponse,
+  CardResponse,
   CheckListFieldResponse,
   CommentResponse,
   MemberWithPermissionsResponse,
@@ -10,6 +11,13 @@ import { User, UserToBoard as Member } from '@/types/user';
 
 export const decodeUser = (user: UserResponse): User => {
   return { ...user, pollQuestions: user.questions };
+};
+
+export const decodeCard = (card: CardResponse): Card => {
+  return {
+    ...card,
+    deadline: card.deadline ? new Date(card.deadline) : undefined,
+  };
 };
 
 export const decodeMember = (r: MemberWithPermissionsResponse): Member => {
@@ -43,7 +51,7 @@ export const decodeComment = (comment: CommentResponse): CardComment => {
 export const decodeCardDetails = (d: CardDetailsResponse): CardDetails => {
   return {
     checkList: d.checkList.map(decodeCheckListField),
-    card: d.card,
+    card: decodeCard(d.card),
     attachments: d.attachments,
     comments: d.comments.map(decodeComment),
     assignedUsers: d.assignedUsers.map(decodeUser),

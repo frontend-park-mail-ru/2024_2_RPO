@@ -4,6 +4,7 @@ export interface Card {
   id: number;
   title: string;
   coverImageUrl?: string;
+  deadline: Date | undefined;
 }
 
 export interface CardDetails {

@@ -20,6 +20,7 @@ import {
   BoardResponse,
 } from './responseTypes';
 import { showToast } from '@/stores/toastNotificationStore';
+import { decodeCard } from './decode';
 
 // Получить все доски пользователя
 export const getBoards = async (): Promise<Board[]> => {
@@ -76,7 +77,7 @@ export const getBoardContent = async (
       );
       boardContentResponse.allCards.forEach((card) => {
         const colIdx = columnIndex.get(card.columnId) ?? 0;
-        columns[colIdx].cards.push(card);
+        columns[colIdx].cards.push(decodeCard(card));
       });
 
       return {

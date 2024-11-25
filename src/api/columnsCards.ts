@@ -15,15 +15,12 @@ import {
 import { CardResponse } from './responseTypes';
 import { BoardColumn } from '@/types/activeBoard';
 import { Card } from '@/types/card';
-import { CardRequest, ColumnRequest } from './requestTypes';
+import { CardPatchRequest, CardRequest, ColumnRequest } from './requestTypes';
+import { decodeCard } from './decode';
 
-export const deleteColumn = async (
-  columnId: number
-): Promise<void> => {
+export const deleteColumn = async (columnId: number): Promise<void> => {
   try {
-    const response = await apiDelete(
-      `/columns/column_${columnId}`
-    );
+    const response = await apiDelete(`/columns/column_${columnId}`);
     switch (response.status) {
       case HTTP_STATUS_OK:
       case HTTP_STATUS_CREATED:
@@ -43,10 +40,7 @@ export const updateColumn = async (
   columnData: ColumnRequest
 ): Promise<BoardColumn> => {
   try {
-    const response = await apiPut(
-      `/columns/column_${columnId}`,
-      columnData
-    );
+    const response = await apiPut(`/columns/column_${columnId}`, columnData);
     switch (response.status) {
       case HTTP_STATUS_OK:
       case HTTP_STATUS_CREATED:
@@ -90,7 +84,7 @@ export const createCard = async (
       case HTTP_STATUS_OK:
       case HTTP_STATUS_CREATED:
         showToast('Успешно создана карточка', 'success');
-        return response.body as CardResponse;
+        return decodeCard(response.body as CardResponse);
       default:
         handleErrorResponse(response.status, response.body.text);
     }
@@ -103,18 +97,15 @@ export const createCard = async (
 
 export const updateCard = async (
   cardId: number,
-  data: CardRequest
+  data: CardPatchRequest
 ): Promise<Card> => {
   try {
-    const response = await apiPatch(
-      `/cards/card_${cardId}`,
-      data
-    );
+    const response = await apiPatch(`/cards/card_${cardId}`, data);
     switch (response.status) {
       case HTTP_STATUS_OK:
       case HTTP_STATUS_CREATED:
         showToast('Успешно изменена карточка', 'success');
-        return response.body as CardResponse;
+        return decodeCard(response.body as CardResponse);
       default:
         handleErrorResponse(response.status, response.body.text);
     }
@@ -125,9 +116,7 @@ export const updateCard = async (
   throw new Error('Неизвестная ошибка');
 };
 
-export const deleteCard = async (
-  cardId: number
-): Promise<void> => {
+export const deleteCard = async (cardId: number): Promise<void> => {
   try {
     const response = await apiDelete(`/cards/card_${cardId}`);
     if (response.status === HTTP_STATUS_OK) {

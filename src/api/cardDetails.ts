@@ -2,6 +2,7 @@ import { CardComment, CardDetails, CheckListField } from '@/types/card';
 import {
   apiDelete,
   apiGet,
+  apiPatch,
   apiPost,
   apiPut,
   HTTP_STATUS_CREATED,
@@ -114,6 +115,7 @@ export const addCheckListField = async (
     case HTTP_STATUS_OK:
     case HTTP_STATUS_CREATED: {
       const body: CheckListFieldResponse = response.body;
+      console.log(body);
       return decodeCheckListField(body);
     }
   }
@@ -124,7 +126,7 @@ export const editCheckListField = async (
   fieldId: number,
   content: CheckListFieldPutRequest
 ): Promise<CheckListField | undefined> => {
-  const response = await apiPut(`/checkList/field_${fieldId}`, content);
+  const response = await apiPatch(`/checkList/field_${fieldId}`, content);
   switch (response.status) {
     case HTTP_STATUS_OK:
     case HTTP_STATUS_CREATED: {

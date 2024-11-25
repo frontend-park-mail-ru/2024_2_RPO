@@ -52,6 +52,7 @@ const Editable = (props: EditableProps) => {
 export const KanbanCard = (props: KanbanCardProps) => {
   const activeBoard = useActiveBoardStore() as ActiveBoard;
   const [isInput, setIsInput] = useState(false);
+  let timer: number;
   return (
     <div class="kanban-card">
       {activeBoard.myRole !== 'viewer' && (
@@ -79,13 +80,18 @@ export const KanbanCard = (props: KanbanCardProps) => {
       ) : (
         <div
           ON_dblclick={() => {
+            clearTimeout(timer);
+            console.log('CLEAR');
             setIsInput(true);
           }}
           ON_click={() => {
-            getCardDetails(props.cardId).then((val) => {
-              setCardDetailsStore(val);
-              console.log(val);
-            });
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+              getCardDetails(props.cardId).then((val) => {
+                setCardDetailsStore(val);
+                console.log(val);
+              });
+            }, 300);
           }}
         >
           {props.text}

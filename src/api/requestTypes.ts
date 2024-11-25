@@ -12,6 +12,12 @@ export interface CardRequest {
   columnId: number;
 }
 
+export interface CardPatchRequest {
+  title?: string;
+  isDone?: boolean;
+  deadline?: string | null;
+}
+
 export interface CardUserAssignRequest {
   nickname: string;
 }
@@ -23,8 +29,8 @@ export interface CommentRequest {
 export interface CheckListFieldPutRequest {
   title: string;
   isDone: boolean;
-  previousFieldId: number;
-  nextFieldId: number;
+  previousFieldId?: number;
+  nextFieldId?: number;
 }
 
 export interface CheckListFieldPostRequest {

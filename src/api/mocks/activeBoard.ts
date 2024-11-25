@@ -8,11 +8,16 @@ export const activeBoardMock: ActiveBoard = {
       id: 1,
       title: 'Задачи',
       cards: [
-        { id: 228, title: 'Пример задачи, для которой не задана обложка' },
+        {
+          id: 228,
+          title: 'Пример задачи, для которой не задана обложка',
+          deadline: undefined,
+        },
         {
           id: 1337,
           title: 'Пример задачи, для которой задана обложка',
           coverImageUrl: '/static/img/lada_vesta.png',
+          deadline: undefined,
         },
       ],
     },

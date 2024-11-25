@@ -8,7 +8,6 @@ import { setRouterStore, useRouterStore } from './stores/routerStore';
 import { ToastContainer } from './containers/ToastContainer';
 import { updateMe } from './stores/meStore';
 import { getFlagRoutes } from './routes/routesFlag';
-import { loadBoard, useActiveBoardStore } from './stores/activeBoardStore';
 import { CsatPoll } from './screens/CsatPoll';
 import { CsatResults } from './screens/CsatResults';
 
@@ -52,11 +51,12 @@ if ('serviceWorker' in navigator) {
 } else {
   console.error('Service Worker is not available');
 }
-const REFETCH_DELAY = 5000;
 
-setInterval(() => {
-  const activeBoard = useActiveBoardStore();
-  if (activeBoard !== undefined) {
-    loadBoard(activeBoard.id, true);
-  }
-}, REFETCH_DELAY);
+// const REFETCH_DELAY = 5000;
+
+// setInterval(() => {
+//   const activeBoard = useActiveBoardStore();
+//   if (activeBoard !== undefined) {
+//     loadBoard(activeBoard.id, true);
+//   }
+// }, REFETCH_DELAY);

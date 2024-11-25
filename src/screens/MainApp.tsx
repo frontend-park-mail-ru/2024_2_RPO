@@ -13,7 +13,10 @@ import { getBoards } from '@/api/boards';
 import { Board } from '@/types/board';
 import { setCsatStore, useCsatStore } from '@/stores/csatStore';
 import { ModalDialog } from '@/components/ModalDialog';
-import { useCardDetailsStore } from '@/stores/cardDetailsStore';
+import {
+  setCardDetailsStore,
+  useCardDetailsStore,
+} from '@/stores/cardDetailsStore';
 import { CardDetailsContainer } from '@/containers/CardDetails';
 
 type MainAppProps = ComponentProps;
@@ -71,6 +74,9 @@ export const MainApp = (props: MainAppProps) => {
         isOpened={cardDetails !== undefined}
         title="Подробности карточки"
         key="card_details_modal_dialog"
+        closeCallback={() => {
+          setCardDetailsStore(undefined);
+        }}
       >
         <CardDetailsContainer key="card_details"></CardDetailsContainer>
       </ModalDialog>
