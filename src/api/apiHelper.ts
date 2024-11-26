@@ -83,7 +83,7 @@ const fetchApi = async (
   ) {
     // Повторить запрос, если сбился CSRF-токен
     await fetchApi('/users/me', 'GET', undefined, true);
-    return await fetchApi(addr, method, requestBody);
+    return await fetchApi(addr, method, requestBody, true);
   }
   return {
     status: response.status,
