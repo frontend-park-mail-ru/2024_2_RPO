@@ -1,4 +1,4 @@
-export interface Question {
+export interface CsatQuestion {
   id: number;
   text: string;
   type: 'answer_text' | 'answer_rating';

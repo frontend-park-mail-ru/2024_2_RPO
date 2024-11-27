@@ -27,6 +27,7 @@ export const MainApp = (props: MainAppProps) => {
   const activeBoard = useActiveBoardStore();
   const boards = useBoardsStore();
   const csat = useCsatStore();
+  console.log(csat);
   const cardDetails = useCardDetailsStore();
 
   if (boards === undefined) {
@@ -61,7 +62,24 @@ export const MainApp = (props: MainAppProps) => {
           <iframe
             id="iframe-root"
             src={`/csat_poll`}
-            style="width: 100%; height: 600px; border: none;"
+            style="width: 100%; border: none;"
+            ON_load={(ev: Event) => {
+              const tgt = ev.target as HTMLIFrameElement;
+              tgt.style.height =
+                (tgt.contentWindow as Window).document.body.clientHeight +
+                10 +
+                'px';
+              const interval = setInterval(() => {
+                try {
+                  tgt.style.height =
+                    (tgt.contentWindow as Window).document.body.clientHeight +
+                    20 +
+                    'px';
+                } catch {
+                  clearInterval(interval);
+                }
+              }, 500);
+            }}
           ></iframe>
         </ModalDialog>
       )}
@@ -72,16 +90,18 @@ export const MainApp = (props: MainAppProps) => {
 
       {leftPanelOpened && <LeftPanel key="left_panel" />}
 
-      <ModalDialog
-        isOpened={cardDetails !== undefined}
-        title="Подробности карточки"
-        key="card_details_modal_dialog"
-        closeCallback={() => {
-          setCardDetailsStore(undefined);
-        }}
-      >
-        <CardDetailsContainer key="card_details"></CardDetailsContainer>
-      </ModalDialog>
+      {cardDetails !== undefined && (
+        <ModalDialog
+          isOpened={true}
+          title="Подробности карточки"
+          key="card_details_modal_dialog"
+          closeCallback={() => {
+            setCardDetailsStore(undefined);
+          }}
+        >
+          <CardDetailsContainer key="card_details"></CardDetailsContainer>
+        </ModalDialog>
+      )}
 
       <main>
         {activeBoard !== undefined && (

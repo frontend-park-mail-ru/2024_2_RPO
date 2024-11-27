@@ -11,6 +11,7 @@ import {
 } from './types';
 import { _removeFromUpdateQueue, markDirty } from './updateQueue';
 import { _unsubscribeFromStores } from './hooks';
+import { flatten } from '@/utils/misc';
 
 // Тип нужен для хранения информации о существующих DOM-узлах, связанных именно с этим инстансом
 // и не имеющих отношения к под-инстансам
@@ -30,12 +31,27 @@ interface DOMTextNodeRepr {
 }
 type DOMNodeRepr = DOMTextNodeRepr | DOMElementRepr;
 
+function normalizeClassName(cn: any): string | undefined {
+  if (cn === undefined) {
+    return undefined;
+  }
+  if (Array.isArray(cn)) {
+    return flatten(cn).join(' ');
+  }
+  return cn.toString();
+}
+
 /**
  * Пропатчить элементу пропсы. Удалить неактуальные атрибуты. Заменить ранее назначенные обработчики событий
  * @param props Пропсы
  * @param elem Элемент, который будем менять
  */
 function patchProps(props: any, elem: DOMElementRepr) {
+  if (props.className !== undefined) {
+    props.class = normalizeClassName(props.className);
+    props.className = undefined;
+  }
+
   // Снять обработчики событий
   elem.eventListeners.forEach((listener) => {
     elem.node.removeEventListener(listener.type, listener.listener);
@@ -43,10 +59,7 @@ function patchProps(props: any, elem: DOMElementRepr) {
   elem.eventListeners = [];
   for (let i = 0; i < elem.node.attributes.length; i++) {
     const attr = elem.node.attributes[i];
-    if (
-      props[attr.name] === undefined &&
-      props[attr.name === 'class' ? 'className' : 'asdfafdasf'] === undefined
-    ) {
+    if (props[attr.name] === undefined) {
       elem.node.removeAttributeNode(attr);
     }
   }
@@ -58,18 +71,7 @@ function patchProps(props: any, elem: DOMElementRepr) {
       }
       return;
     }
-    if (key === 'className') {
-      let newValue: string = '';
-      if (Array.isArray(value)) {
-        newValue = value.join(' ');
-      } else if (typeof value === 'string') {
-        newValue = value;
-      }
-      if (elem.existingAttrs.get('className') !== newValue.toString()) {
-        elem.existingAttrs.set('className', newValue.toString());
-        elem.node.className = newValue;
-      }
-    } else if (key.startsWith('ON_')) {
+    if (key.startsWith('ON_')) {
       if (typeof value !== 'function' && typeof value !== 'undefined') {
         throw new Error('Event handler should be function');
       }

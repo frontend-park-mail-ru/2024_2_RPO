@@ -69,15 +69,16 @@ export function defineStore<S>(
   const useStore = () => {
     if (activeInstance !== undefined) {
       // Подписать инстанс на store
-      if (
-        !storeSubscribersIndex.has(activeInstance) ||
-        !storeSubscribersIndex.get(activeInstance)?.has(storeName)
-      ) {
+      if (!storeSubscribersIndex.has(activeInstance)) {
         storeSubscribersIndex.set(activeInstance, new Set());
+      }
+      if (!storeSubscribersIndex.get(activeInstance)?.has(storeName)) {
         storeSubscribersIndex.get(activeInstance)?.add(storeName);
         storeSubscribers.get(storeName)?.add(activeInstance);
       }
     }
+    console.log(storeName, activeInstance);
+    console.log(storeSubscribers);
     return storeMap.get(storeName);
   };
   const setStore = (newStoreContent: S) => {
