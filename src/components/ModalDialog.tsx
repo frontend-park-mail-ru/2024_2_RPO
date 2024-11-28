@@ -17,9 +17,9 @@ export const ModalDialog = (props: ModalDialogProps) => {
   if (!props.isOpened) {
     return <div style="display:none" />;
   }
-  console.log("I AM OPENED")
+  console.log('I AM OPENED');
   return (
-    <div class="full-screen-dark">
+    <div class="full-screen-dark" ON_click={props.closeCallback}>
       <div class="modal-dialog">
         <div class="modal-dialog__header-block">
           <div className="modal-dialog__title-wrapper">

@@ -1,5 +1,5 @@
 import { ComponentProps } from '@/jsxCore/types';
-
+import './button.scss'
 interface ButtonProps extends ComponentProps {
   text?: string;
   icon?: string;

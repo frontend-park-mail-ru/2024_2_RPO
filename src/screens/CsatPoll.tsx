@@ -95,7 +95,7 @@ export const CsatPoll = (props: ComponentProps) => {
             text="Закрыть"
             variant="accent"
             callback={() => {
-              postMessage('close_csat');
+              window.parent.postMessage('close_csat');
             }}
           />
         </div>

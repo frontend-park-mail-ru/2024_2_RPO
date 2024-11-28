@@ -1,9 +1,10 @@
 .kanban-card {
+  position: absolute;
   border-radius: 8px;
-  position: sticky;
   background-color: white;
   padding: 4px 6px;
   display: flex;
+  width: 256px;
   flex-direction: column;
   align-items: start;
   justify-content: start;
@@ -38,4 +39,7 @@
 }
 .kanban-card:hover .kanban-card__delete-button {
   opacity: 100;
+}
+.kanban-card__title {
+  user-select: none;
 }

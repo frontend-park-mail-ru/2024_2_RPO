@@ -10,7 +10,7 @@ import { updateMe } from './stores/meStore';
 import { getFlagRoutes } from './routes/routesFlag';
 import { CsatPoll } from './screens/CsatPoll';
 import { CsatResults } from './screens/CsatResults';
-import { setCsatStore } from './stores/csatStore';
+import { setCsatStore, useCsatStore } from './stores/csatStore';
 
 const App: IComponentFunction = () => {
   const routerStore = useRouterStore();
@@ -38,7 +38,9 @@ setTimeout(() => {
 window.addEventListener('message', (ev: MessageEvent<string>) => {
   if (ev.data === 'close_csat') {
     console.log('should output');
-    setCsatStore({ isOpened: false, questions: [] });
+    setTimeout(() => {
+      setCsatStore({ ...useCsatStore(), isOpened: false });
+    }, 0);
   }
 });
 

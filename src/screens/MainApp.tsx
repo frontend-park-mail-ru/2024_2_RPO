@@ -88,7 +88,14 @@ export const MainApp = (props: MainAppProps) => {
         <BoardSettings key="board_settings" />
       )}
 
-      {leftPanelOpened && <LeftPanel key="left_panel" />}
+      {leftPanelOpened && (
+        <LeftPanel
+          key="left_panel"
+          onClose={() => {
+            setLeftPanelOpened(false);
+          }}
+        />
+      )}
 
       {cardDetails !== undefined && (
         <ModalDialog

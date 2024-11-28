@@ -77,8 +77,6 @@ export function defineStore<S>(
         storeSubscribers.get(storeName)?.add(activeInstance);
       }
     }
-    console.log(storeName, activeInstance);
-    console.log(storeSubscribers);
     return storeMap.get(storeName);
   };
   const setStore = (newStoreContent: S) => {

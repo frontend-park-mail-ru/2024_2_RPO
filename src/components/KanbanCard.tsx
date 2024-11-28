@@ -11,11 +11,15 @@ import { Button } from './Button';
 import { getCardDetails } from '@/api/cardDetails';
 import { setCardDetailsStore } from '@/stores/cardDetailsStore';
 import { Card } from '@/types/card';
+import { setDndStore, useDndStore } from '@/stores/dndStore';
 
 interface KanbanCardProps extends ComponentProps {
   card: Card;
   columnId: number;
   columnIdx: number;
+  isDragging: boolean;
+  x: number;
+  y: number;
 }
 
 interface EditableProps extends ComponentProps {
@@ -66,10 +70,16 @@ const Editable = (props: EditableProps) => {
   );
 };
 
+const DND_THRESHOLD = 10;
+
 export const KanbanCard = (props: KanbanCardProps) => {
   const activeBoard = useActiveBoardStore() as ActiveBoard;
   const card = props.card;
   const [isInput, setIsInput] = useState(false);
+  const [dragStart, setDragStart] = useState<
+    [x: number, y: number] | undefined
+  >(undefined);
+  const [dragOffset, setDragOffset] = useState<[x: number, y: number]>([0, 0]);
   let timer: number;
   const editCallback = () => {
     clearTimeout(timer);
@@ -77,7 +87,34 @@ export const KanbanCard = (props: KanbanCardProps) => {
   };
 
   return (
-    <div class="kanban-card">
+    <div
+      class="kanban-card"
+      style={`left: ${props.x}px; top: ${props.y}px`}
+      ON_mousedown={(ev: PointerEvent) => {
+        setDragStart([ev.x, ev.y]);
+        setDragOffset([ev.offsetX, ev.offsetY]);
+      }}
+      ON_mousemove={(ev: PointerEvent) => {
+        if (dragStart !== undefined) {
+          if (
+            Math.sqrt(
+              Math.pow(dragStart[0] - ev.x, 2) +
+                Math.pow(dragStart[1] - ev.y, 2)
+            ) > DND_THRESHOLD
+          ) {
+            const dndStore = useDndStore();
+            if (dndStore === undefined) {
+              setDndStore({ type: 'card', offset: dragOffset });
+              console.log('offset', dragOffset);
+              setDragStart(undefined);
+            }
+          }
+        }
+      }}
+      ON_mouseleave={() => {
+        setDragStart(undefined);
+      }}
+    >
       {activeBoard.myRole !== 'viewer' && (
         <div
           class="kanban-card__delete-button"
@@ -118,6 +155,7 @@ export const KanbanCard = (props: KanbanCardProps) => {
         />
       ) : (
         <div
+          className="kanban-card__title"
           ON_dblclick={editCallback}
           ON_contextmenu={(ev: Event) => {
             editCallback();

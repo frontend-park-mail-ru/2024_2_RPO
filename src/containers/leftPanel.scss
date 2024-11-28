@@ -3,7 +3,7 @@
   background-color: #e2e2e2;
   height: 100vh;
   padding: 0px 10px;
-  z-index: 5;
+  z-index: 40;
   overflow-y: auto;
 }
 @media screen and (max-width: 800px) {
@@ -14,7 +14,7 @@
 @media screen and (min-width: 800px) {
   .left-menu {
     padding: 0px 20px;
-    width: 243px;
+    width: 246px;
   }
 }
 

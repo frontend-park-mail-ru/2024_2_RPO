@@ -1,5 +1,4 @@
 import { ComponentProps } from '@/jsxCore/types';
-import { KanbanCard } from '@/components/KanbanCard';
 import {
   setActiveBoardStore,
   useActiveBoardStore,
@@ -22,6 +21,7 @@ export const KanbanColumn = (props: KanbanColumnProps) => {
   const [newCardText, setNewCardText] = useState('');
   const activeBoard = useActiveBoardStore() as ActiveBoard;
   const columnData = activeBoard.columns[props.columnIndex];
+
   const submitCreateCard = (newText: string) => {
     if (newText.length < 3) {
       showToast('Длина текста в карточке может быть от 3 символов', 'error');
@@ -92,16 +92,6 @@ export const KanbanColumn = (props: KanbanColumnProps) => {
           </div>
         )}
       </div>
-      {columnData.cards.map((cardData) => {
-        return (
-          <KanbanCard
-            key={`card_${cardData.id}`}
-            card={cardData}
-            columnId={props.columnId}
-            columnIdx={props.columnIndex}
-          />
-        );
-      })}
 
       {activeBoard?.myRole !== 'viewer' && !isInputOpened && (
         <Button

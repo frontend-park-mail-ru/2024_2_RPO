@@ -22,6 +22,7 @@ export const activeBoardMock: ActiveBoard = {
       ],
     },
   ],
+  cards: [], // TODO
   myRole: 'admin',
   lastVisit: new Date(Date.UTC(2004, 7, 10)),
   lastUpdate: new Date(Date.UTC(2024, 7, 10)),
