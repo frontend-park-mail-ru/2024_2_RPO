@@ -18,16 +18,13 @@ import {
 } from '@/stores/cardDetailsStore';
 import { CardDetailsContainer } from '@/containers/CardDetails';
 
-type MainAppProps = ComponentProps;
-
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const MainApp = (props: MainAppProps) => {
+export const MainApp = (props: ComponentProps) => {
   const [leftPanelOpened, setLeftPanelOpened] = useState(false);
   const modalDialogsStore = useModalDialogsStore();
   const activeBoard = useActiveBoardStore();
   const boards = useBoardsStore();
   const csat = useCsatStore();
-  console.log(csat);
   const cardDetails = useCardDetailsStore();
 
   if (boards === undefined) {

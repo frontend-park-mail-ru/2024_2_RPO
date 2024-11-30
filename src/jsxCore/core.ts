@@ -19,11 +19,15 @@ interface DOMElementRepr {
   nodeType: 'Element';
   node: Element;
   children: DOMNodeRepr[];
-  eventListeners: {
-    type: string;
-    listener: EventListener;
-  }[];
   existingAttrs: Map<string, string>;
+
+  // Здесь хранятся проксирующие обработчики событий.
+  // Они привязываются к элементу, их задача - просто передавать событие на пользовательский обработчик.
+  // Это сделано, чтобы лишний раз не дёргать DOM API
+  proxyEventListeners: Map<string, EventListener>;
+
+  // Здесь хранятся пользовательские обработчики событий. Их вызывают проксирующие обработчики
+  eventHandlers: Map<string, EventListener>;
 }
 interface DOMTextNodeRepr {
   nodeType: 'TextNode';
@@ -47,28 +51,25 @@ function normalizeClassName(cn: any): string | undefined {
  * @param elem Элемент, который будем менять
  */
 function patchProps(props: any, elem: DOMElementRepr) {
+  // Лёгким движением руки превратить className в class
   if (props.className !== undefined) {
     props.class = normalizeClassName(props.className);
     props.className = undefined;
   }
 
-  // Снять обработчики событий
-  elem.eventListeners.forEach((listener) => {
-    elem.node.removeEventListener(listener.type, listener.listener);
-  });
-  elem.eventListeners = [];
+  // Обработчики событий, которые есть в этих пропсах
+  const actualEvents = new Set<string>();
+
+  // Удалить те атрибуты, которых нет в пропсах
   for (let i = 0; i < elem.node.attributes.length; i++) {
     const attr = elem.node.attributes[i];
     if (props[attr.name] === undefined) {
       elem.node.removeAttributeNode(attr);
+      elem.existingAttrs.delete(attr.name);
     }
   }
   Object.entries(props).forEach(([key, value]) => {
     if (value === undefined) {
-      const prevValue = elem.existingAttrs.get(key);
-      if (prevValue !== undefined) {
-        elem.node.removeAttribute(key);
-      }
       return;
     }
     if (key.startsWith('ON_')) {
@@ -76,26 +77,41 @@ function patchProps(props: any, elem: DOMElementRepr) {
         throw new Error('Event handler should be function');
       }
       const eventType = key.slice(3);
-      if (value !== undefined) {
-        elem.node.addEventListener(eventType, value as EventListener);
+      actualEvents.add(eventType);
+      elem.eventHandlers.set(eventType, value as EventListener);
+      if (elem.proxyEventListeners.get(eventType) === undefined) {
+        const proxy = (ev: Event) => {
+          (elem.eventHandlers.get(eventType) as EventListener)(ev);
+        };
+        elem.node.addEventListener(eventType, proxy);
+        elem.proxyEventListeners.set(eventType, proxy);
       }
-      elem.eventListeners.push({
-        type: eventType,
-        listener: value as EventListener,
-      });
     } else if (key !== 'children') {
-      const stringVal = value as string;
+      const stringVal = (value as string).toString();
       if (
         !elem.existingAttrs.has(key) ||
-        elem.existingAttrs.get(key) !== stringVal.toString()
+        elem.existingAttrs.get(key) !== stringVal
       ) {
-        const prevValue = elem.existingAttrs.get(key);
-        elem.existingAttrs.set(key, stringVal.toString());
-        if (stringVal.toString() !== prevValue) {
-          elem.node.setAttribute(key, stringVal.toString());
-        }
+        elem.node.setAttribute(key, stringVal);
+        elem.existingAttrs.set(key, stringVal);
       }
     }
+  });
+
+  // Удалить прокси и пользовательский хендлер для тех событий, которых нет в пропсах
+  const legacyEvents = new Set<string>();
+  elem.eventHandlers.forEach((v, key) => {
+    legacyEvents.add(key);
+  });
+  actualEvents.forEach((ev) => {
+    legacyEvents.delete(ev);
+  });
+  legacyEvents.forEach((evToRemove) => {
+    elem.node.removeEventListener(
+      evToRemove,
+      elem.proxyEventListeners.get(evToRemove) as EventListener
+    );
+    elem.proxyEventListeners.delete(evToRemove);
   });
 }
 
@@ -332,7 +348,8 @@ export class ComponentInstance<
               nodeType: 'Element',
               node: document.createElement(vNode.tagName),
               children: [],
-              eventListeners: [],
+              eventHandlers: new Map(),
+              proxyEventListeners: new Map(),
               existingAttrs: new Map(),
             };
           } else {

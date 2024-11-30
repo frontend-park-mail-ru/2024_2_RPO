@@ -84,7 +84,6 @@ export const getBoardContent = async (
         id: boardContentResponse.boardInfo.id,
         title: boardContentResponse.boardInfo.name,
         columns, // обновленный массив columns
-        cards: boardContentResponse.allCards.map(decodeCard),
         myRole: boardContentResponse.myRole,
         lastUpdate: new Date(boardContentResponse.boardInfo.updatedAt),
         lastVisit: new Date(boardContentResponse.boardInfo.updatedAt),

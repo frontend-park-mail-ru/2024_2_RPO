@@ -8,9 +8,11 @@ import { EditableText } from './EditableText';
 import { ActiveBoard } from '@/types/activeBoard';
 import { showToast } from '@/stores/toastNotificationStore';
 import { createCard, deleteColumn, updateColumn } from '@/api/columnsCards';
-import { useState } from '@/jsxCore/hooks';
+import { useEffectRefs, useState } from '@/jsxCore/hooks';
 import { Input } from './Input';
 import './kanbanColumn.scss';
+import { KanbanCard } from './KanbanCard';
+import { colHeaderHeights } from '@/stores/dndStore';
 
 interface KanbanColumnProps extends ComponentProps {
   columnIndex: number;
@@ -35,9 +37,15 @@ export const KanbanColumn = (props: KanbanColumnProps) => {
       setIsInputOpened(false);
     });
   };
+  useEffectRefs((refs) => {
+    setTimeout(() => {
+      const header = refs.get('header') as HTMLDivElement;
+      colHeaderHeights.set(props.columnIndex, header.clientHeight);
+    }, 200);
+  });
   return (
     <div class="kanban-column">
-      <div class="kanban-column__header">
+      <div class="kanban-column__header" ref="header">
         <EditableText
           readOnly={activeBoard.myRole === 'viewer'}
           text={columnData.title}
@@ -92,6 +100,17 @@ export const KanbanColumn = (props: KanbanColumnProps) => {
           </div>
         )}
       </div>
+      {activeBoard.columns[props.columnIndex].cards.map((card) => {
+        return (
+          <div style="position: relative">
+            <KanbanCard
+              key={`card_${card.id}`}
+              card={card}
+              columnIdx={props.columnIndex}
+            />
+          </div>
+        );
+      })}
 
       {activeBoard?.myRole !== 'viewer' && !isInputOpened && (
         <Button

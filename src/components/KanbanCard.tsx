@@ -10,16 +10,12 @@ import { useEffectRefs, useState } from '@/jsxCore/hooks';
 import { Button } from './Button';
 import { getCardDetails } from '@/api/cardDetails';
 import { setCardDetailsStore } from '@/stores/cardDetailsStore';
-import { Card } from '@/types/card';
-import { setDndStore, useDndStore } from '@/stores/dndStore';
+import { Card, RealCard } from '@/types/card';
+import { cardHeights, setDndStore, useDndStore } from '@/stores/dndStore';
 
 interface KanbanCardProps extends ComponentProps {
   card: Card;
-  columnId: number;
   columnIdx: number;
-  isDragging: boolean;
-  x: number;
-  y: number;
 }
 
 interface EditableProps extends ComponentProps {
@@ -86,95 +82,111 @@ export const KanbanCard = (props: KanbanCardProps) => {
     setIsInput(true);
   };
 
-  return (
-    <div
-      class="kanban-card"
-      style={`left: ${props.x}px; top: ${props.y}px`}
-      ON_mousedown={(ev: PointerEvent) => {
-        setDragStart([ev.x, ev.y]);
-        setDragOffset([ev.offsetX, ev.offsetY]);
-      }}
-      ON_mousemove={(ev: PointerEvent) => {
-        if (dragStart !== undefined) {
-          if (
-            Math.sqrt(
-              Math.pow(dragStart[0] - ev.x, 2) +
-                Math.pow(dragStart[1] - ev.y, 2)
-            ) > DND_THRESHOLD
-          ) {
-            const dndStore = useDndStore();
-            if (dndStore === undefined) {
-              setDndStore({ type: 'card', offset: dragOffset });
-              console.log('offset', dragOffset);
-              setDragStart(undefined);
+  if (card.type === 'stub') {
+    return <div ref="card" style={`width: 256px; height: ${card.height}px`}></div>;
+  } else {
+    useEffectRefs((refs) => {
+      // Таймаут нужен, чтобы обложка карточки, если она есть, успела загрузиться
+      setTimeout(() => {
+        const cardElement = refs.get('card') as HTMLDivElement;
+        cardHeights.set(card.id, cardElement.clientHeight);
+      }, 200);
+    });
+    return (
+      <div
+        ref="card"
+        class="kanban-card"
+        ON_mousedown={(ev: PointerEvent) => {
+          setDragStart([ev.x, ev.y]);
+          setDragOffset([ev.offsetX, ev.offsetY]);
+        }}
+        ON_mousemove={(ev: PointerEvent) => {
+          if (dragStart !== undefined) {
+            if (
+              Math.sqrt(
+                Math.pow(dragStart[0] - ev.x, 2) +
+                  Math.pow(dragStart[1] - ev.y, 2)
+              ) > DND_THRESHOLD
+            ) {
+              const dndStore = useDndStore();
+              if (dndStore === undefined) {
+                setDndStore({
+                  type: 'card',
+                  offset: dragOffset,
+                  cardData: card,
+                  prevColIdx:props.columnIdx
+                });
+                console.log('offset', dragOffset);
+                setDragStart(undefined);
+              }
             }
           }
-        }
-      }}
-      ON_mouseleave={() => {
-        setDragStart(undefined);
-      }}
-    >
-      {activeBoard.myRole !== 'viewer' && (
-        <div
-          class="kanban-card__delete-button"
-          ON_click={() => {
-            deleteCard(card.id).then(() => {
-              activeBoard.columns.forEach((column) => {
-                column.cards = column.cards.filter((card) => {
-                  return card.id !== card.id;
+        }}
+        ON_mouseleave={() => {
+          setDragStart(undefined);
+        }}
+      >
+        {activeBoard.myRole !== 'viewer' && (
+          <div
+            class="kanban-card__delete-button"
+            ON_click={() => {
+              deleteCard(card.id).then(() => {
+                activeBoard.columns.forEach((column) => {
+                  column.cards = column.cards.filter((cardToFilter) => {
+                    return (cardToFilter as RealCard).id !== card.id;
+                  });
                 });
+                setActiveBoardStore(activeBoard);
+              });
+            }}
+          >
+            <i class="bi-trash" />
+          </div>
+        )}
+        {card.coverImageUrl !== undefined ? (
+          <img src={card.coverImageUrl} class="kanban-card__cover"></img>
+        ) : undefined}
+        {isInput ? (
+          <Editable
+            key="editable_card"
+            initialText={card.title}
+            cardId={card.id}
+            onNewCard={(crd) => {
+              activeBoard.columns[props.columnIdx].cards = activeBoard.columns[
+                props.columnIdx
+              ].cards.map((oldCard) => {
+                if (oldCard.id !== crd.id) {
+                  return oldCard;
+                }
+                return crd;
               });
               setActiveBoardStore(activeBoard);
-            });
-          }}
-        >
-          <i class="bi-trash" />
-        </div>
-      )}
-      {card.coverImageUrl !== undefined ? (
-        <img src={card.coverImageUrl} class="kanban-card__cover"></img>
-      ) : undefined}
-      {isInput ? (
-        <Editable
-          key="editable_card"
-          initialText={card.title}
-          cardId={card.id}
-          onNewCard={(crd) => {
-            activeBoard.columns[props.columnIdx].cards = activeBoard.columns[
-              props.columnIdx
-            ].cards.map((oldCard) => {
-              if (oldCard.id !== crd.id) {
-                return oldCard;
-              }
-              return crd;
-            });
-            setActiveBoardStore(activeBoard);
-            setIsInput(false);
-          }}
-        />
-      ) : (
-        <div
-          className="kanban-card__title"
-          ON_dblclick={editCallback}
-          ON_contextmenu={(ev: Event) => {
-            editCallback();
-            ev.stopPropagation();
-          }}
-          ON_click={() => {
-            clearTimeout(timer);
-            timer = setTimeout(() => {
-              getCardDetails(card.id).then((val) => {
-                setCardDetailsStore(val);
-                console.log(val);
-              });
-            }, 300);
-          }}
-        >
-          {card.title}
-        </div>
-      )}
-      {}
-    </div>
-  );
+              setIsInput(false);
+            }}
+          />
+        ) : (
+          <div
+            className="kanban-card__title"
+            ON_dblclick={editCallback}
+            ON_contextmenu={(ev: Event) => {
+              editCallback();
+              ev.stopPropagation();
+            }}
+            ON_click={() => {
+              clearTimeout(timer);
+              timer = setTimeout(() => {
+                getCardDetails(card.id).then((val) => {
+                  setCardDetailsStore(val);
+                  console.log(val);
+                });
+              }, 300);
+            }}
+          >
+            {card.title}
+          </div>
+        )}
+        {}
+      </div>
+    );
+  }
 };

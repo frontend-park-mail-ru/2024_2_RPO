@@ -10,7 +10,6 @@ export interface BoardColumn {
 
 export interface ActiveBoard extends Board {
   columns: BoardColumn[];
-  cards: Card[];
   myRole: 'viewer' | 'editor' | 'editor_chief' | 'admin';
   users?: UserToBoard[];
 }

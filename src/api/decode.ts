@@ -1,4 +1,9 @@
-import { Card, CardComment, CardDetails, CheckListField } from '@/types/card';
+import {
+  CardComment,
+  CardDetails,
+  CheckListField,
+  RealCard,
+} from '@/types/card';
 import {
   CardDetailsResponse,
   CardResponse,
@@ -13,9 +18,10 @@ export const decodeUser = (user: UserResponse): User => {
   return { ...user, pollQuestions: user.pollQuestions };
 };
 
-export const decodeCard = (card: CardResponse): Card => {
+export const decodeCard = (card: CardResponse): RealCard => {
   return {
     ...card,
+    type: 'real',
     deadline: card.deadline ? new Date(card.deadline) : undefined,
   };
 };
