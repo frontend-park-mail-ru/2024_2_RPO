@@ -88,7 +88,7 @@ export const MainApp = (props: ComponentProps) => {
       {leftPanelOpened && (
         <LeftPanel
           key="left_panel"
-          onClose={() => {
+          closeCallback={() => {
             setLeftPanelOpened(false);
           }}
         />

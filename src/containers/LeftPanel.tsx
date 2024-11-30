@@ -2,14 +2,14 @@ import { createBoard } from '@/api/boards';
 import { BoardCard } from '@/components/BoardCard';
 import { Button } from '@/components/Button';
 import { Input } from '@/components/Input';
-import { useState } from '@/jsxCore/hooks';
+import { useEscape, useState } from '@/jsxCore/hooks';
 import { ComponentProps } from '@/jsxCore/types';
 import { updateBoards, useBoardsStore } from '@/stores/boardsStore';
 import './leftPanel.scss';
 import { showToast } from '@/stores/toastNotificationStore';
 
 interface LeftPanelProps extends ComponentProps {
-  onClose: () => void;
+  closeCallback: () => void;
 }
 
 /**
@@ -27,6 +27,7 @@ export const LeftPanel = (props: LeftPanelProps) => {
   } else if (newBoardName.length > 30) {
     validationMessage = 'Должно быть не больше 30 символов';
   }
+  useEscape(props.closeCallback);
 
   const submitNewBoard = (boardName: string) => {
     if (boardName.length < 3) {
@@ -47,7 +48,7 @@ export const LeftPanel = (props: LeftPanelProps) => {
 
   return (
     <>
-      <div className="left-panel-dark" ON_click={props.onClose}></div>
+      <div className="left-panel-dark" ON_click={props.closeCallback}></div>
       <aside class="left-menu">
         <div class="left-menu__header">
           <div class="left-menu__left-elements"></div>
@@ -74,7 +75,7 @@ export const LeftPanel = (props: LeftPanelProps) => {
                 />
                 <Button
                   key="confirm_new_board"
-                  variant="positive"
+                  variant="accent"
                   fullWidth
                   icon="bi-plus-square"
                   text="Добавить доску"
@@ -85,9 +86,8 @@ export const LeftPanel = (props: LeftPanelProps) => {
                 <Button
                   key="cancel_new_board"
                   fullWidth
-                  variant="negative"
                   icon="bi-x-lg"
-                  text="Не добавлять"
+                  text="Отмена"
                   callback={() => {
                     setInputOpened(false);
                     setNewBoardName('');
@@ -98,7 +98,7 @@ export const LeftPanel = (props: LeftPanelProps) => {
             {!inputOpened && (
               <Button
                 key="add_board_btn"
-                variant="positive"
+                variant="accent"
                 icon="bi-plus-square"
                 text="Добавить доску"
                 callback={() => {
@@ -119,7 +119,7 @@ export const LeftPanel = (props: LeftPanelProps) => {
                   <BoardCard
                     key={`board_${board.id}`}
                     board={board}
-                    onSelect={props.onClose}
+                    onSelect={props.closeCallback}
                   />
                 );
               })
