@@ -6,6 +6,7 @@ export const activeBoardMock: ActiveBoard = {
   columns: [
     {
       id: 1,
+      isStub: false,
       title: 'Задачи',
       cards: [
         {

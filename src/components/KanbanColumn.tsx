@@ -12,17 +12,24 @@ import { useEffectRefs, useState } from '@/jsxCore/hooks';
 import { Input } from './Input';
 import './kanbanColumn.scss';
 import { KanbanCard } from './KanbanCard';
-import { colHeaderHeights } from '@/stores/dndStore';
+import { colHeaderHeights, setDndStore, useDndStore } from '@/stores/dndStore';
 
 interface KanbanColumnProps extends ComponentProps {
   columnIndex: number;
   columnId: number;
 }
+
+const DND_THRESHOLD = 10;
+
 export const KanbanColumn = (props: KanbanColumnProps) => {
   const [isInputOpened, setIsInputOpened] = useState(false);
   const [newCardText, setNewCardText] = useState('');
   const activeBoard = useActiveBoardStore() as ActiveBoard;
   const columnData = activeBoard.columns[props.columnIndex];
+  const [dragStart, setDragStart] = useState<
+    [x: number, y: number] | undefined
+  >(undefined);
+  const [dragOffset, setDragOffset] = useState<[x: number, y: number]>([0, 0]);
 
   const submitCreateCard = (newText: string) => {
     if (newText.length < 3) {
@@ -44,7 +51,38 @@ export const KanbanColumn = (props: KanbanColumnProps) => {
     }, 200);
   });
   return (
-    <div class="kanban-column">
+    <div
+      class="kanban-column"
+      ON_mousedown={(ev: PointerEvent) => {
+        setDragStart([ev.x, ev.y]);
+        setDragOffset([ev.offsetX, ev.offsetY]);
+      }}
+      ON_mousemove={(ev: PointerEvent) => {
+        if (dragStart !== undefined) {
+          if (
+            Math.sqrt(
+              Math.pow(dragStart[0] - ev.x, 2) +
+                Math.pow(dragStart[1] - ev.y, 2)
+            ) > DND_THRESHOLD
+          ) {
+            const dndStore = useDndStore();
+            if (dndStore === undefined) {
+              setDndStore({
+                type: 'column',
+                activeColumnIdx: props.columnIndex,
+                offset: dragOffset,
+                activeColumn: activeBoard.columns[props.columnIndex],
+              });
+              console.log('offset', dragOffset);
+              setDragStart(undefined);
+            }
+          }
+        }
+      }}
+      ON_mouseleave={() => {
+        setDragStart(undefined);
+      }}
+    >
       <div class="kanban-column__header" ref="header">
         <EditableText
           readOnly={activeBoard.myRole === 'viewer'}
@@ -122,10 +160,10 @@ export const KanbanColumn = (props: KanbanColumnProps) => {
             setIsInputOpened(true);
           }}
           fullWidth
+          extraRounded
         />
       )}
 
-      <div style="height: 1px" />
       {activeBoard?.myRole !== 'viewer' && isInputOpened && (
         <div>
           <Input

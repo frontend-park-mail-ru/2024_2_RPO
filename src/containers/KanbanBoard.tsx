@@ -42,7 +42,7 @@ const NewColumnButton = () => {
   };
 
   return (
-    <div class="kanban-column">
+    <div class="kanban-column" style="padding-top: 4px;">
       {!isOpened && (
         <Button
           key="new_column"
@@ -53,6 +53,7 @@ const NewColumnButton = () => {
           callback={() => {
             setIsOpened(true);
           }}
+          extraRounded
         />
       )}
       {isOpened && (
@@ -73,7 +74,7 @@ const NewColumnButton = () => {
           />
           <Button
             key="confirm_new_card"
-            variant="positive"
+            variant="accent"
             fullWidth
             icon="bi-plus-square"
             text="Добавить колонку"
@@ -84,9 +85,9 @@ const NewColumnButton = () => {
           <Button
             key="cancel_new_card"
             fullWidth
-            variant="negative"
+            variant="default"
             icon="bi-x-lg"
-            text="Не добавлять"
+            text="Отмена"
             callback={() => {
               setIsOpened(false);
               setNewColumnName('');
@@ -101,19 +102,22 @@ const NewColumnButton = () => {
 type KanbanBoardProps = ComponentProps;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const KanbanBoard = (props: KanbanBoardProps) => {
-  const activeBoardStore = useActiveBoardStore() as ActiveBoard;
+  const activeBoard = useActiveBoardStore() as ActiveBoard;
   const [dndPos, setDndPos] = useState([50, 50]);
   const dndStore = useDndStore();
   const stopDnd = () => {
-    if (dndStore !== undefined) {
-      activeBoardStore.columns[dndStore.prevColIdx].cards =
-        activeBoardStore.columns[dndStore.prevColIdx].cards.map((crd) => {
-          if (crd.type === 'stub') return dndStore.cardData;
-          return crd;
-        });
-      setActiveBoardStore(activeBoardStore);
-      setDndStore(undefined);
+    if (dndStore?.type === 'card') {
+      activeBoard.columns[dndStore.prevColIdx].cards = activeBoard.columns[
+        dndStore.prevColIdx
+      ].cards.map((crd) => {
+        if (crd.type === 'stub') return dndStore.cardData;
+        return crd;
+      });
+    } else if (dndStore?.type === 'column') {
+      //TODO
     }
+    setActiveBoardStore(activeBoard);
+    setDndStore(undefined);
   };
 
   return (
@@ -123,60 +127,78 @@ export const KanbanBoard = (props: KanbanBoardProps) => {
           style="z-index:1000; position: fixed; height: 100vh; width: 100vw"
           ON_mousemove={(ev: PointerEvent) => {
             setDndPos([ev.x - dndStore.offset[0], ev.y - dndStore.offset[1]]);
-            const movingCardId = dndStore.cardData.id;
-            // Вычислить, в какой колонке находится новое положение карточки
-            const destColIdx = calculateColumnIdx(ev.x);
+            if (dndStore.type === 'card') {
+              const movingCardId = dndStore.cardData.id;
+              // Вычислить, в какой колонке находится новое положение карточки
+              const destColIdx = calculateColumnIdx(ev.x);
 
-            // Если курсор находится вне колонок, ничего не делать
-            if (destColIdx === -1) {
-              return;
-            }
+              // Если курсор находится вне колонок, ничего не делать
+              if (destColIdx === -1) {
+                return;
+              }
 
-            // Вычислить, какой индекс в колонке будет иметь карточка
-            const colPositions = calculateCardPositions(
-              destColIdx,
-              activeBoardStore.columns[destColIdx].cards.map((a) => {
-                return a.id;
-              })
-            );
-            const cardNewIdx = colPositions.findIndex((pos) => {
-              return isInRectangle(pos, ev.x, ev.y);
-            });
-
-            // Если это та же карточка, ничего не делать
-            if (
-              activeBoardStore.columns[destColIdx].cards[cardNewIdx]?.id ===
-                movingCardId ||
-              cardNewIdx === -1
-            ) {
-              return;
-            }
-
-            // Удалить карточку с предыдущего положения
-            activeBoardStore.columns[dndStore.prevColIdx].cards =
-              activeBoardStore.columns[dndStore.prevColIdx].cards.filter(
-                (card) => {
-                  return card.id !== dndStore.cardData.id;
-                }
+              // Вычислить, какой индекс в колонке будет иметь карточка
+              const colPositions = calculateCardBoundingBoxes(
+                destColIdx,
+                activeBoard.columns[destColIdx].cards.map((a) => {
+                  return a.id;
+                })
               );
+              const cardNewIdx = colPositions.findIndex((pos) => {
+                return isInRectangle(pos, ev.x, ev.y);
+              });
 
-            // Установить карточку в новое положение
-            activeBoardStore.columns[destColIdx].cards.splice(cardNewIdx, 0, {
-              type: 'stub',
-              height: cardHeights.get(movingCardId) ?? 0,
-              id: movingCardId,
-            });
-            dndStore.prevColIdx = destColIdx;
+              // Если это та же карточка, ничего не делать
+              if (
+                activeBoard.columns[destColIdx].cards[cardNewIdx]?.id ===
+                  movingCardId ||
+                cardNewIdx === -1
+              ) {
+                return;
+              }
 
-            // Обновить Store
-            setActiveBoardStore(activeBoardStore);
-            setDndStore(dndStore);
+              // Удалить карточку с предыдущего положения
+              activeBoard.columns[dndStore.prevColIdx].cards =
+                activeBoard.columns[dndStore.prevColIdx].cards.filter(
+                  (card) => {
+                    return card.id !== dndStore.cardData.id;
+                  }
+                );
+
+              // Установить карточку в новое положение
+              activeBoard.columns[destColIdx].cards.splice(cardNewIdx, 0, {
+                type: 'stub',
+                height: cardHeights.get(movingCardId) ?? 0,
+                id: movingCardId,
+              });
+              dndStore.prevColIdx = destColIdx;
+
+              // Обновить Store
+              setActiveBoardStore(activeBoard);
+              setDndStore(dndStore);
+            } else if (dndStore.type === 'column') {
+              // Вычислить новый индекс колонки
+              const newIdx = calculateColumnDestinationIdx(ev.x);
+              // Если он не совпадает, подвинуть колонку
+              if (newIdx !== dndStore.activeColumnIdx) {
+                dndStore.activeColumnIdx = newIdx;
+                activeBoard.columns = activeBoard.columns.filter((col) => {
+                  return col.id !== dndStore.activeColumn.id;
+                });
+                activeBoard.columns.splice(newIdx, 0, {
+                  ...dndStore.activeColumn,
+                  isStub: true,
+                });
+                setDndStore(dndStore);
+                setActiveBoardStore(activeBoard);
+              }
+            }
           }}
           ON_mouseup={stopDnd}
           ON_mouseleave={stopDnd}
         />
       )}
-      {activeBoardStore.columns.map((columnData, idx) => {
+      {activeBoard.columns.map((columnData, idx) => {
         return (
           <KanbanColumn
             key={`column_${columnData.id}`}
@@ -185,17 +207,35 @@ export const KanbanBoard = (props: KanbanBoardProps) => {
           />
         );
       })}
-      {dndStore !== undefined && (
+      {dndStore?.type === 'card' && (
         <div
           style={`position: absolute; opacity: 0.4;
             transform-origin: ${dndStore.offset[0]}px ${dndStore.offset[1]}px;
             transform: rotate(-5deg);
             left: ${dndPos[0]}px; top: ${dndPos[1]}px`}
         >
-          <KanbanCard key="draggable" card={dndStore?.cardData} columnIdx={0} />
+          <KanbanCard
+            key="draggable_card"
+            card={dndStore?.cardData}
+            columnIdx={0}
+          />
         </div>
       )}
-      {activeBoardStore.myRole !== 'viewer' && (
+      {dndStore?.type === 'column' && (
+        <div
+          style={`position: absolute; opacity: 0.4;
+            transform-origin: ${dndStore.offset[0]}px ${dndStore.offset[1]}px;
+            transform: rotate(-5deg);
+            left: ${dndPos[0]}px; top: ${dndPos[1]}px`}
+        >
+          <KanbanColumn
+            key="draggable_column"
+            columnId={dndStore.activeColumn.id}
+            columnIndex={dndStore.activeColumnIdx}
+          />
+        </div>
+      )}
+      {activeBoard.myRole !== 'viewer' && (
         <NewColumnButton key="create_new_column" />
       )}
     </div>
@@ -210,17 +250,18 @@ interface CardPosition {
   cardId: number;
 }
 
-const calculateCardPositions = (
+const calculateCardBoundingBoxes = (
   columnIdx: number,
   cardIds: number[]
 ): CardPosition[] => {
-  const ret: CardPosition[] = [];
+  //Рассчитать реальные позиции карточек
+  const cardPositions: CardPosition[] = [];
   let accHeight = 74;
   accHeight += colHeaderHeights.get(columnIdx) ?? 0;
   accHeight += 8;
   const xCoord = 14 + columnIdx * 286 + 8;
   cardIds.forEach((cardId) => {
-    ret.push({
+    cardPositions.push({
       x: xCoord,
       y: accHeight,
       w: 256,
@@ -230,7 +271,46 @@ const calculateCardPositions = (
     accHeight += 8;
     accHeight += cardHeights.get(cardId) ?? 0;
   });
-  return ret;
+
+  // Пересчитать Bounding Box, сделав коррекцию на разницу высот карточек
+  const boundingBoxes: CardPosition[] = [];
+  cardIds.forEach((cardId, idx) => {
+    const currPos = cardPositions[idx];
+    let topY: number = 0;
+    let bottomY: number = 0;
+    // Пересчёт верхней границы карточки
+    if (idx > 0) {
+      const prevPos = cardPositions[idx - 1];
+      topY = (currPos.y + currPos.h + prevPos.y) / 2;
+    } else {
+      topY = currPos.y;
+    }
+    // Пересчёт нижней границы карточки
+    if (idx !== cardIds.length - 1) {
+      const nextPos = cardPositions[idx + 1];
+      bottomY = (currPos.y + nextPos.y + nextPos.h) / 2;
+    } else {
+      bottomY = currPos.y + currPos.h;
+    }
+    boundingBoxes.push({
+      x: currPos.x,
+      w: currPos.w,
+      y: topY,
+      h: bottomY - topY,
+      cardId,
+    });
+  });
+  return boundingBoxes;
+};
+
+const calculateColumnDestinationIdx = (x: number) => {
+  if (x < 14 + 272 / 2) {
+    return 0;
+  }
+  return Math.min(
+    (useActiveBoardStore()?.columns.length ?? 0) - 1,
+    Math.floor((x - 14 - 272 / 2) / (272 + 14) + 1)
+  );
 };
 
 // Вычислить индекс колонки, в которой находится карточка

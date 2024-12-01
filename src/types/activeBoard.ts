@@ -4,6 +4,7 @@ import { UserToBoard } from './user';
 
 export interface BoardColumn {
   id: number;
+  isStub: boolean; // Надо ли для этой колонки рендерить содержимое (нужно для Drag-n-Drop)
   title: string;
   cards: Card[];
 }

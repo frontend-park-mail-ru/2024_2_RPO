@@ -25,12 +25,13 @@
   }
 }
 .kanban-column__header {
-  padding-top: 5px;
+  padding-top: 8px;
   display: flex;
   align-items: center;
   position: relative;
 }
 .kanban-column__title {
+  user-select: none;
   font-size: 1rem;
   font-weight: 500;
   padding-left: 10px;
@@ -40,15 +41,16 @@
   color: red;
 }
 .kanban-column__button {
+  transition: 0.3s ease;
   color: rgba(0, 0, 0, 0);
   cursor: pointer;
   position: absolute;
-  top: 6px;
-  width: 24px;
-  height: 24px;
-  border-radius: 3px;
-  padding-left: 4px;
-  padding-top: 2px;
+  top: 8px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  padding-left: 8px;
+  padding-top: 7px;
 }
 @media screen and (max-width: 800px) {
   .kanban-column__button {

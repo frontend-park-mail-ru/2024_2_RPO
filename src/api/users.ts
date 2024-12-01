@@ -139,7 +139,7 @@ export const loginUser = async (
         return true;
       case HTTP_STATUS_UNAUTHORIZED:
         showToast('Неверные учётные данные', 'error');
-        throw new Error('Неверные учетные данные');
+        return false;
       default:
         showToast('Неизвестная ошибка', 'error');
         throw new Error('Беды на бэке');

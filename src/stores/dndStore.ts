@@ -1,8 +1,14 @@
 import { defineStore } from '@/jsxCore/hooks';
+import { BoardColumn } from '@/types/activeBoard';
 import { RealCard } from '@/types/card';
 
 type DndType = undefined | CardDndType | ColumnDndType;
-type ColumnDndType = never;
+type ColumnDndType = {
+  type: 'column';
+  activeColumn: BoardColumn;
+  activeColumnIdx: number;
+  offset: [x: number, y: number];
+};
 interface CardDndType {
   type: 'card';
   offset: [x: number, y: number];
