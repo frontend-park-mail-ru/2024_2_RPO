@@ -185,7 +185,7 @@ export const KanbanColumn = (props: KanbanColumnProps) => {
           />
           <Button
             key="confirm_new_card"
-            variant="positive"
+            variant="accent"
             fullWidth
             icon="bi-plus-square"
             text="Добавить карточку"
@@ -196,7 +196,7 @@ export const KanbanColumn = (props: KanbanColumnProps) => {
           <Button
             key="cancel_new_card"
             fullWidth
-            variant="negative"
+            variant="default"
             icon="bi-x-lg"
             text="Не добавлять"
             callback={() => {

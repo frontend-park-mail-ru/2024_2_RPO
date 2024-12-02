@@ -97,7 +97,7 @@ export const BoardSettings = () => {
                   }}
                 />
               )}
-            <Button
+            {/* <Button
               key="leave_btn"
               fullWidth
               text="Выйти из доски"
@@ -110,7 +110,7 @@ export const BoardSettings = () => {
                   goToUrl('/app');
                 });
               }}
-            />
+            /> */}
             {activeBoard.myRole === 'admin' && (
               <Button
                 key="delete_btn"
