@@ -82,6 +82,9 @@ export const KanbanColumn = (props: KanbanColumnProps) => {
       ON_mouseleave={() => {
         setDragStart(undefined);
       }}
+      ON_mouseup={() => {
+        setDragStart(undefined);
+      }}
     >
       <div class="kanban-column__header" ref="header">
         <EditableText

@@ -260,6 +260,13 @@ const calculateCardBoundingBoxes = (
   accHeight += colHeaderHeights.get(columnIdx) ?? 0;
   accHeight += 8;
   const xCoord = 14 + columnIdx * 286 + 8;
+
+  // Костыль, чтобы можно было перетащить карточку в пустую колонку
+  if (cardIds.length === 0) {
+    return [{ x: xCoord, w: 256, cardId: -228, y: accHeight, h: 100 }];
+  }
+
+  // Расчёт высот и y-координат
   cardIds.forEach((cardId) => {
     cardPositions.push({
       x: xCoord,

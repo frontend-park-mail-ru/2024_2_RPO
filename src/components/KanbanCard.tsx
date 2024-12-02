@@ -68,6 +68,8 @@ const Editable = (props: EditableProps) => {
 
 const DND_THRESHOLD = 10;
 
+let timer: number;
+
 export const KanbanCard = (props: KanbanCardProps) => {
   const activeBoard = useActiveBoardStore() as ActiveBoard;
   const card = props.card;
@@ -76,14 +78,18 @@ export const KanbanCard = (props: KanbanCardProps) => {
     [x: number, y: number] | undefined
   >(undefined);
   const [dragOffset, setDragOffset] = useState<[x: number, y: number]>([0, 0]);
-  let timer: number;
   const editCallback = () => {
     clearTimeout(timer);
     setIsInput(true);
   };
+  const cancelDnd = () => {
+    setDragStart(undefined);
+  };
 
   if (card.type === 'stub') {
-    return <div ref="card" style={`width: 256px; height: ${card.height}px`}></div>;
+    return (
+      <div ref="card" style={`width: 256px; height: ${card.height}px`}></div>
+    );
   } else {
     useEffectRefs((refs) => {
       // Таймаут нужен, чтобы обложка карточки, если она есть, успела загрузиться
@@ -97,10 +103,15 @@ export const KanbanCard = (props: KanbanCardProps) => {
         ref="card"
         class="kanban-card"
         ON_mousedown={(ev: PointerEvent) => {
-          setDragStart([ev.x, ev.y]);
-          setDragOffset([ev.offsetX, ev.offsetY]);
+          if (!isInput) {
+            setDragStart([ev.x, ev.y]);
+            setDragOffset([ev.offsetX, ev.offsetY]);
+          }
         }}
         ON_mousemove={(ev: PointerEvent) => {
+          if (isInput) {
+            return;
+          }
           if (dragStart !== undefined) {
             if (
               Math.sqrt(
@@ -114,7 +125,7 @@ export const KanbanCard = (props: KanbanCardProps) => {
                   type: 'card',
                   offset: dragOffset,
                   cardData: card,
-                  prevColIdx:props.columnIdx
+                  prevColIdx: props.columnIdx,
                 });
                 console.log('offset', dragOffset);
                 setDragStart(undefined);
@@ -122,9 +133,8 @@ export const KanbanCard = (props: KanbanCardProps) => {
             }
           }
         }}
-        ON_mouseleave={() => {
-          setDragStart(undefined);
-        }}
+        ON_mouseleave={cancelDnd}
+        ON_mouseup={cancelDnd}
       >
         {activeBoard.myRole !== 'viewer' && (
           <div
@@ -152,6 +162,7 @@ export const KanbanCard = (props: KanbanCardProps) => {
             initialText={card.title}
             cardId={card.id}
             onNewCard={(crd) => {
+              setDragStart(undefined);
               activeBoard.columns[props.columnIdx].cards = activeBoard.columns[
                 props.columnIdx
               ].cards.map((oldCard) => {
@@ -177,7 +188,6 @@ export const KanbanCard = (props: KanbanCardProps) => {
               timer = setTimeout(() => {
                 getCardDetails(card.id).then((val) => {
                   setCardDetailsStore(val);
-                  console.log(val);
                 });
               }, 300);
             }}
