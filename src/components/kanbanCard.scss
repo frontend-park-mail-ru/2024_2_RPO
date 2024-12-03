@@ -42,3 +42,12 @@
 .kanban-card__title {
   user-select: none;
 }
+
+.kanban-card__textarea {
+  display: block;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
+  resize: none;
+}

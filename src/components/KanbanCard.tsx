@@ -11,7 +11,13 @@ import { Button } from './Button';
 import { getCardDetails } from '@/api/cardDetails';
 import { setCardDetailsStore } from '@/stores/cardDetailsStore';
 import { Card, RealCard } from '@/types/card';
-import { cardHeights, setDndStore, useDndStore } from '@/stores/dndStore';
+import {
+  cardHeights,
+  setEditLock,
+  setDndStore,
+  useDndStore,
+  editLock,
+} from '@/stores/dndStore';
 
 interface KanbanCardProps extends ComponentProps {
   card: Card;
@@ -27,33 +33,46 @@ interface EditableProps extends ComponentProps {
 const Editable = (props: EditableProps) => {
   const [init, setInit] = useState(true);
   const [newText, setNewText] = useState(props.initialText);
+  let textAreaElement: HTMLTextAreaElement | undefined = undefined;
+
+  const recalculateHeight = () => {
+    if (textAreaElement !== undefined) {
+      textAreaElement.style.height = 25 + textAreaElement.scrollHeight + 'px';
+    }
+  };
 
   useEffectRefs((refs) => {
+    textAreaElement = refs.get('textarea') as HTMLTextAreaElement;
+    recalculateHeight();
     if (init) {
-      const ta = refs.get('textarea') as HTMLTextAreaElement;
-      ta.focus();
-      ta.value = props.initialText;
+      setEditLock(true);
       setTimeout(() => {
-        setInit(false);
+        textAreaElement?.focus();
       }, 100);
+      textAreaElement.value = props.initialText;
+      setInit(false);
     }
   });
 
   const submit = () => {
     updateCard(props.cardId, { title: newText }).then((newCard) => {
       if (newCard !== undefined) {
+        setEditLock(false);
         props.onNewCard(newCard);
       }
     });
   };
 
   return (
-    <div>
+    <div style="width: 100%">
       <textarea
+        className="kanban-card__textarea"
         ref="textarea"
         ON_input={(ev: InputEvent) => {
           setNewText((ev.target as HTMLInputElement).value);
+          recalculateHeight();
         }}
+        ON_blur={submit}
       />
       <Button
         key="save_text"
@@ -101,9 +120,9 @@ export const KanbanCard = (props: KanbanCardProps) => {
     return (
       <div
         ref="card"
-        class="kanban-card"
+        className="kanban-card"
         ON_mousedown={(ev: PointerEvent) => {
-          if (!isInput) {
+          if (!isInput && !editLock) {
             setDragStart([ev.x, ev.y]);
             setDragOffset([ev.offsetX, ev.offsetY]);
           }
@@ -138,7 +157,7 @@ export const KanbanCard = (props: KanbanCardProps) => {
       >
         {activeBoard.myRole !== 'viewer' && (
           <div
-            class="kanban-card__delete-button"
+            className="kanban-card__delete-button"
             ON_click={() => {
               deleteCard(card.id).then(() => {
                 activeBoard.columns.forEach((column) => {
@@ -192,10 +211,12 @@ export const KanbanCard = (props: KanbanCardProps) => {
               }, 300);
             }}
           >
-            {card.title}
+            <div>{card.title}</div>
+            <div>
+              {card.deadline !== undefined && <i className="bi-clock" />}
+            </div>
           </div>
         )}
-        {}
       </div>
     );
   }

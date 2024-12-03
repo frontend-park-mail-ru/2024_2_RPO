@@ -29,3 +29,11 @@ export const cardHeights = new Map<number, number>();
 // Это нужно для того, чтобы колонки с длинным названием работали корректно.
 // Ключ - порядковый индекс колонки
 export const colHeaderHeights = new Map<number, number>();
+
+// Этот лок нужен только для того, чтобы предотвратить действия, когда где-то редактируется текст.
+// В других целях она не должна использоваться
+export let editLock = false;
+
+export const setEditLock = (newValue: boolean) => {
+  editLock = newValue;
+};

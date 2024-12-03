@@ -51,42 +51,43 @@ export const KanbanColumn = (props: KanbanColumnProps) => {
     }, 200);
   });
   return (
-    <div
-      class="kanban-column"
-      ON_mousedown={(ev: PointerEvent) => {
-        setDragStart([ev.x, ev.y]);
-        setDragOffset([ev.offsetX, ev.offsetY]);
-      }}
-      ON_mousemove={(ev: PointerEvent) => {
-        if (dragStart !== undefined) {
-          if (
-            Math.sqrt(
-              Math.pow(dragStart[0] - ev.x, 2) +
-                Math.pow(dragStart[1] - ev.y, 2)
-            ) > DND_THRESHOLD
-          ) {
-            const dndStore = useDndStore();
-            if (dndStore === undefined) {
-              setDndStore({
-                type: 'column',
-                activeColumnIdx: props.columnIndex,
-                offset: dragOffset,
-                activeColumn: activeBoard.columns[props.columnIndex],
-              });
-              console.log('offset', dragOffset);
-              setDragStart(undefined);
+    <div class="kanban-column">
+      <div
+        class="kanban-column__header"
+        ref="header"
+        ON_mousedown={(ev: PointerEvent) => {
+          setDragStart([ev.x, ev.y]);
+          setDragOffset([ev.offsetX, ev.offsetY]);
+        }}
+        ON_mousemove={(ev: PointerEvent) => {
+          if (dragStart !== undefined) {
+            if (
+              Math.sqrt(
+                Math.pow(dragStart[0] - ev.x, 2) +
+                  Math.pow(dragStart[1] - ev.y, 2)
+              ) > DND_THRESHOLD
+            ) {
+              const dndStore = useDndStore();
+              if (dndStore === undefined) {
+                setDndStore({
+                  type: 'column',
+                  activeColumnIdx: props.columnIndex,
+                  offset: dragOffset,
+                  activeColumn: activeBoard.columns[props.columnIndex],
+                });
+                console.log('offset', dragOffset);
+                setDragStart(undefined);
+              }
             }
           }
-        }
-      }}
-      ON_mouseleave={() => {
-        setDragStart(undefined);
-      }}
-      ON_mouseup={() => {
-        setDragStart(undefined);
-      }}
-    >
-      <div class="kanban-column__header" ref="header">
+        }}
+        ON_mouseleave={() => {
+          setDragStart(undefined);
+        }}
+        ON_mouseup={() => {
+          setDragStart(undefined);
+        }}
+      >
         <EditableText
           readOnly={activeBoard.myRole === 'viewer'}
           text={columnData.title}

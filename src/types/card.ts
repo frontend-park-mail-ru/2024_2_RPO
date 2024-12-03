@@ -14,6 +14,9 @@ export interface RealCard {
   title: string;
   coverImageUrl?: string;
   deadline: Date | undefined;
+  hasCheckList: boolean;
+  hasAttachments: boolean;
+  hasAssignedUsers: boolean;
 }
 
 export interface CardDetails {
