@@ -89,7 +89,7 @@ export const validatePassword = (password: string): IValidationResult => {
   if (!hasSpecialSymbol.test(password)) {
     validationMessage.push('должен содержать специальный символ');
   }
-  if (validationMessage) {
+  if (validationMessage.length > 0) {
     return { allowed: false, validationMessage: validationMessage.join(', ') };
   }
   return { allowed: true, validationMessage: undefined };
