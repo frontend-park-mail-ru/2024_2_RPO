@@ -121,6 +121,14 @@ export const KanbanCard = (props: KanbanCardProps) => {
       <div
         ref="card"
         className="kanban-card"
+        ON_click={() => {
+          clearTimeout(timer);
+          timer = setTimeout(() => {
+            getCardDetails(card.id).then((val) => {
+              setCardDetailsStore(val);
+            });
+          }, 300);
+        }}
         ON_mousedown={(ev: PointerEvent) => {
           if (!isInput && !editLock) {
             setDragStart([ev.x, ev.y]);
@@ -169,9 +177,10 @@ export const KanbanCard = (props: KanbanCardProps) => {
               });
             }}
           >
-            <i class="bi-trash" />
+            <i class="bi-three-dots" />
           </div>
         )}
+
         {card.coverImageUrl !== undefined ? (
           <img src={card.coverImageUrl} class="kanban-card__cover"></img>
         ) : undefined}
@@ -201,14 +210,6 @@ export const KanbanCard = (props: KanbanCardProps) => {
             ON_contextmenu={(ev: Event) => {
               editCallback();
               ev.stopPropagation();
-            }}
-            ON_click={() => {
-              clearTimeout(timer);
-              timer = setTimeout(() => {
-                getCardDetails(card.id).then((val) => {
-                  setCardDetailsStore(val);
-                });
-              }, 300);
             }}
           >
             <div>{card.title}</div>

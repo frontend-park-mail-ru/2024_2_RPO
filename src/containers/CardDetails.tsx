@@ -218,120 +218,129 @@ export const CardDetailsContainer = (props: ComponentProps) => {
   return (
     <div class="card-details">
       <div class="card-details__left-section">
-        <h2>Чеклист</h2>
-        {cardDetails.checkList.map((field) => {
-          return (
-            <CheckListFieldComponent
-              key={`component_${field.id}`}
-              field={field}
-            />
-          );
-        })}
-        <Input
-          key="checklist_input"
-          placeholder="Новый пункт чеклиста"
-          onEnter={addCLF}
-          onChanged={(newText) => {
-            setNewCheckListField(newText);
-          }}
-        />
-        <Button
-          key="checklist_add_btn"
-          callback={addCLF}
-          text="Добавить пункт чеклиста"
-          variant="accent"
-        />
-        <h1>Комментарии</h1>
-        <Input
-          key="comment_input"
-          placeholder="Напишите Ваш комментарий"
-          onEnter={addComm}
-          onChanged={setNewComment}
-        />
-        <Button
-          key="comment_btn"
-          callback={addComm}
-          text="Добавить комментарий"
-          variant="accent"
-        />
-        {cardDetails.comments.map((comment) => {
-          return (
-            <div className="comment">
-              <div className="comment__author">{comment.createdBy.name}</div>
+        <div class="card-details_block">
+          <h2>Чеклист</h2>
+          {cardDetails.checkList.map((field) => {
+            return (
+              <CheckListFieldComponent
+                key={`component_${field.id}`}
+                field={field}
+              />
+            );
+          })}
+          <Input
+            key="checklist_input"
+            placeholder="Новый пункт чеклиста"
+            onEnter={addCLF}
+            onChanged={(newText) => {
+              setNewCheckListField(newText);
+            }}
+          />
+          <Button
+            key="checklist_add_btn"
+            callback={addCLF}
+            text="Добавить пункт чеклиста"
+            variant="accent"
+          />
+        </div>
+        <div class="card-details_block">
+          <h1>Комментарии</h1>
+          <Input
+            key="comment_input"
+            placeholder="Напишите Ваш комментарий"
+            onEnter={addComm}
+            onChanged={setNewComment}
+          />
+          <Button
+            key="comment_btn"
+            callback={addComm}
+            text="Добавить комментарий"
+            variant="accent"
+          />
+          {cardDetails.comments.map((comment) => {
+            return (
+              <div className="comment">
+                <div className="comment__author">{comment.createdBy.name}</div>
 
-              <div>{comment.text}</div>
-              <div
-                style="cursor: pointer; color:red"
-                ON_click={() => {
-                  deleteComment(comment.id).then((t) => {
-                    if (t) {
-                      cardDetails.comments = cardDetails.comments.filter(
-                        (c) => {
-                          return c.id !== comment.id;
-                        }
-                      );
-                      setCardDetailsStore(cardDetails);
-                    }
-                  });
-                }}
-              >
-                <i class="bi-x-lg" />
+                <div>{comment.text}</div>
+                <div
+                  style="cursor: pointer; color:red"
+                  ON_click={() => {
+                    deleteComment(comment.id).then((t) => {
+                      if (t) {
+                        cardDetails.comments = cardDetails.comments.filter(
+                          (c) => {
+                            return c.id !== comment.id;
+                          }
+                        );
+                        setCardDetailsStore(cardDetails);
+                      }
+                    });
+                  }}
+                >
+                  <i class="bi-x-lg" />
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
 
       <div class="card-details__right-section">
-        <h1>Дедлайн</h1>
-        <div>
-          Пожалуйста, вводите дату и время! Если Вы не введёте время, оно не
-          сработает
+        <div class="card-details_block">
+          <h1>Дедлайн</h1>
+          <div>
+            Пожалуйста, вводите дату и время! Если Вы не введёте время, оно не
+            сработает
+          </div>
+          <div style="cursor: pointer; color:red">
+            <DeadlineInput
+              key="deadline_input"
+              deadline={cardDetails.card.deadline}
+              cardId={cardDetails.card.id}
+            />
+          </div>
         </div>
-
-        <DeadlineInput
-          key="deadline_input"
-          deadline={cardDetails.card.deadline}
-          cardId={cardDetails.card.id}
-        />
-        <h1>Назначенные пользователи</h1>
-        {cardDetails.assignedUsers.map((u) => {
-          return (
-            <div style="display: flex; flex-direction: row">
-              <div>{u.name}</div>
-              <div
-                style="cursor: pointer; color:red"
-                ON_click={() => {
-                  deassignUser(cardDetails.card.id, u.id).then((t) => {
-                    if (t) {
-                      cardDetails.assignedUsers =
-                        cardDetails.assignedUsers.filter((au) => {
-                          return au.id !== u.id;
-                        });
-                      setCardDetailsStore(cardDetails);
-                    }
-                  });
-                }}
-              >
-                <i class="bi-x-lg" />
+        <div class="card-details_block">
+          <h1>Назначенные пользователи</h1>
+          {cardDetails.assignedUsers.map((u) => {
+            return (
+              <div style="display: flex; flex-direction: row">
+                <div>{u.name}</div>
+                <div
+                  style="cursor: pointer; color:red"
+                  ON_click={() => {
+                    deassignUser(cardDetails.card.id, u.id).then((t) => {
+                      if (t) {
+                        cardDetails.assignedUsers =
+                          cardDetails.assignedUsers.filter((au) => {
+                            return au.id !== u.id;
+                          });
+                        setCardDetailsStore(cardDetails);
+                      }
+                    });
+                  }}
+                >
+                  <i class="bi-x-lg" />
+                </div>
               </div>
-            </div>
-          );
-        })}
-        <Input
-          key="assign_user"
-          placeholder="Никнейм участника"
-          onEnter={addAssigned}
-          onChanged={(newText) => {
-            setNewAssigned(newText);
-          }}
-        />
-        <Button
-          key="assign_user_btn"
-          text="Назначить участника"
-          variant="accent"
-          callback={addAssigned}
-        />
+            );
+          })}
+          <Input
+            key="assign_user"
+            placeholder="Никнейм участника"
+            onEnter={addAssigned}
+            onChanged={(newText) => {
+              setNewAssigned(newText);
+            }}
+          />
+          <Button
+            key="assign_user_btn"
+            text="Назначить участника"
+            variant="accent"
+            callback={addAssigned}
+          />
+        </div>
       </div>
     </div>
   );
