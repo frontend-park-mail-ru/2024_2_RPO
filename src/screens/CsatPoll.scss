@@ -1,15 +1,8 @@
-.form-container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #f4f4f4;
-}
-
-.form {
+.csat-poll__form {
   background-color: #fff;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
+  padding-bottom: 0;
 }
 
 .title {
@@ -18,12 +11,10 @@
   margin-bottom: 20px;
 }
 
-.question {
-  margin-bottom: 20px;
-
-  p {
-    text-align: center;
-  }
+.csat-poll__question {
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
 }
 
 .rating {
@@ -103,25 +94,18 @@
   }
 }
 
-.iframe-wrapper {
-  position: fixed;
-  top: 10%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 90%;
-  max-width: 800px;
-  background: #fff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
-  z-index: 1000;
+.csat-poll__star {
+  font-size: 2rem;
+  cursor: pointer;
+  transition: 0.5s ease-out;
 }
 
-.iframe-header {
-  display: flex;
-  justify-content: flex-end;
-  padding: 10px;
-  background: #f4f4f4;
-  border-bottom: 1px solid #ccc;
+.csat-poll__star__active {
+  color: #ffcb05;
+}
+
+.csat-poll__star__inactive {
+  color: gray;
 }
 
 .close-button {
