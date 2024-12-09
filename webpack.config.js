@@ -30,6 +30,7 @@ module.exports = {
   },
   devtool: 'inline-source-map',
   devServer: {
+    server: 'https',
     static: [path.resolve(__dirname)],
     liveReload: true,
     historyApiFallback: true,

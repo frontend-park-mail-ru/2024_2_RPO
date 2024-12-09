@@ -1,7 +1,6 @@
-import { boardUrl, userUrl, pollUrl } from '@/config';
+import { apiUrl } from '@/config';
 let csrfToken: string = '';
-export const useMocks =
-  boardUrl.toString() === 'mock' || userUrl.toString() === 'mock';
+export const useMocks = apiUrl.toString() === 'mock';
 
 interface IResponce {
   status: number;
@@ -12,21 +11,14 @@ interface IResponce {
 /**
  * Функция получает полный URL ресурса в API
  * @param addr адрес ресурса в API. Например, /users/me
- * @returns Например, 'https://example.com/api/v2/users/me'
+ * @returns Например, 'https://example.com/api/users/me'
  */
 const getApiUrl = (addr: string): string => {
   if (addr.startsWith('/')) {
     addr = addr.slice(1);
   }
-  if (addr.startsWith('users') || addr.startsWith('auth')) {
-    const ret = userUrl + '/' + addr;
-    console.log(ret);
-    return ret;
-  } else if (addr.startsWith('poll')) {
-    return pollUrl + '/' + addr;
-  } else {
-    return boardUrl + '/' + addr;
-  }
+
+  return apiUrl + '/' + addr;
 };
 
 const fetchApi = async (

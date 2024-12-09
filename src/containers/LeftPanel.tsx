@@ -48,7 +48,7 @@ export const LeftPanel = (props: LeftPanelProps) => {
 
   return (
     <>
-      <div className="left-panel-dark" ON_click={props.closeCallback}></div>
+      <div className="left-panel-dark navbar__mobile-hidden" ON_click={props.closeCallback}></div>
       <aside class="left-menu">
         <div class="left-menu__header">
           <div class="left-menu__left-elements"></div>

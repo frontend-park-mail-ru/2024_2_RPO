@@ -15,5 +15,5 @@ RUN nginx -t
 COPY sw.js /usr/share/nginx/html/
 COPY --from=builder /app/dist /usr/share/nginx/html
 COPY ./static /usr/share/nginx/html/static
-EXPOSE 80
+EXPOSE 8880
 CMD ["nginx", "-g", "daemon off;"]
