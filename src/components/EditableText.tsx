@@ -120,11 +120,15 @@ export const EditableText = (props: EditableTextProps) => {
         props.wrapperClassName ?? '',
         !props.readOnly && 'editable-text__text-wrapper__editable',
       ]}
-      ON_click={() => {
+      ON_click={(ev: PointerEvent) => {
+        ev.stopPropagation();
         if (!props.readOnly) {
           setOldText(props.text);
           setIsInput(true);
         }
+      }}
+      ON_mousedown={(ev: PointerEvent) => {
+        ev.stopPropagation();
       }}
     >
       <div

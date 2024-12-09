@@ -8,14 +8,14 @@
 
 Менторы:
 
-- [Сергей Щербаков](https://github.com/f4lkr4m)
-- Ирина Кабаева
+* [Сергей Щербаков](https://github.com/f4lkr4m) - Frontend
+* Ирина Кабаева - UX
 
 Студенты:
 
-- [Георгий Жуков](https://github.com/dedxyk594)
-- [Константин Сафронов](https://github.com/kosafronov)
-- [Валентин Стремин](https://github.com/supchaser)
+* [Георгий Жуков](https://github.com/dedxyk594)
+* [Константин Сафронов](https://github.com/kosafronov)
+* [Валентин Стремин](https://github.com/supchaser)
 
 ### Ресурсы
 
@@ -23,12 +23,14 @@
 
 <a href="https://github.com/go-park-mail-ru/2024_2_RPO/blob/swagger_dev/openapi.yaml">Swagger (описание API)</a>
 
+<a href="https://kanban-pumpkin.ru">Деплой</a>
+
 ### Запуск Development Server
 
 Перед запуском надо создать файл `src/config.ts` и в нём разместить конфигурацию:
 
 ```ts
-export const apiUrl="https://mysite.com" // Без замыкающего слеша! Если значение будет 'mock', будут использованы моки
+export const apiUrl="https://example.com/api" // Без замыкающего слеша! Если значение будет 'mock', будут использованы моки
 ```
 
 `npm i` - установить все зависимости

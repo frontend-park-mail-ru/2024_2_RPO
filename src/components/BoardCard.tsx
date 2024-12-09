@@ -7,6 +7,7 @@ import { useActiveBoardStore } from '@/stores/activeBoardStore';
 
 interface BoardCardProps extends ComponentProps {
   board: Board;
+  onSelect: () => void;
 }
 
 /**
@@ -24,6 +25,7 @@ export const BoardCard = (props: BoardCardProps) => {
         activeBoard?.id === props.board.id ? 'board-card__active' : '',
       ]}
       ON_click={() => {
+        props.onSelect();
         goToUrl(`/app/board_${props.board.id}/kanban`);
       }}
     >

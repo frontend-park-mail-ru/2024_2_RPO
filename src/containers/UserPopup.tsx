@@ -4,6 +4,8 @@ import { updateMe, useMeStore } from '@/stores/meStore';
 import { openUserProfileModalDialog } from '@/stores/modalDialogsStore';
 import { goToUrl } from '@/stores/routerStore';
 import { User } from '@/types/user';
+import './userPopup.scss';
+import { useEscape } from '@/jsxCore/hooks';
 
 interface PopupButtonProps extends ComponentProps {
   icon: string;
@@ -30,7 +32,7 @@ const PopupButton = (props: PopupButtonProps) => {
 };
 
 interface UserPopupProps extends ComponentProps {
-  closeCallback: (event: Event) => void;
+  closeCallback: () => void;
 }
 /**
  * Компонент попапа, который всплывает при нажатии на аватарку текущего пользователя на навбаре.
@@ -38,6 +40,7 @@ interface UserPopupProps extends ComponentProps {
 
 export const UserPopup = (props: UserPopupProps) => {
   const me = useMeStore() as User;
+  useEscape(props.closeCallback);
   return (
     <>
       <div class="user-popup">
@@ -76,8 +79,8 @@ export const UserPopup = (props: UserPopupProps) => {
           key="account_settings_btn"
           title="Настройки аккаунта"
           icon="bi-gear"
-          callback={(event) => {
-            props.closeCallback(event);
+          callback={() => {
+            props.closeCallback();
             openUserProfileModalDialog();
           }}
         />
@@ -93,14 +96,7 @@ export const UserPopup = (props: UserPopupProps) => {
           }}
         />
       </div>
-      <div
-        class="full-screen-dark"
-        ON_click={(event: PointerEvent) => {
-          if (props.closeCallback !== undefined) {
-            props.closeCallback(event);
-          }
-        }}
-      ></div>
+      <div class="full-screen-dark" ON_click={props.closeCallback}></div>
     </>
   );
 };

@@ -5,8 +5,11 @@ import { markDirty } from './updateQueue';
 let stateNum: number = 0;
 let activeInstance: ComponentInstance<any> | undefined;
 
+const escapeListeners = new Map<ComponentInstance, (() => void)[]>();
+
 export function _setUpdatedInstance(instance: ComponentInstance<any>) {
   stateNum = 0;
+  escapeListeners.set(instance, []);
   activeInstance = instance;
 }
 export function _unsetUpdatedInstance() {
@@ -69,11 +72,10 @@ export function defineStore<S>(
   const useStore = () => {
     if (activeInstance !== undefined) {
       // Подписать инстанс на store
-      if (
-        !storeSubscribersIndex.has(activeInstance) ||
-        !storeSubscribersIndex.get(activeInstance)?.has(storeName)
-      ) {
+      if (!storeSubscribersIndex.has(activeInstance)) {
         storeSubscribersIndex.set(activeInstance, new Set());
+      }
+      if (!storeSubscribersIndex.get(activeInstance)?.has(storeName)) {
         storeSubscribersIndex.get(activeInstance)?.add(storeName);
         storeSubscribers.get(storeName)?.add(activeInstance);
       }
@@ -89,6 +91,32 @@ export function defineStore<S>(
   return [useStore, setStore];
 }
 
+function keyDownHandler(ev: KeyboardEvent) {
+  console.log(ev);
+  if (ev.key === 'Escape') {
+    escapeListeners.forEach((value) => {
+      value.forEach((handler) => {
+        handler();
+      });
+    });
+  }
+}
+
+export function useEscape(handler: (() => void) | undefined) {
+  if (activeInstance === undefined) {
+    throw new Error(
+      'Active instance is undefined; maybe, wrong use of useEscape'
+    );
+  }
+  const lsnMap = escapeListeners.get(activeInstance);
+  if (lsnMap === undefined) {
+    throw new Error('Unknown error');
+  }
+  if (handler !== undefined) {
+    lsnMap.push(handler);
+  }
+}
+
 export function _unsubscribeFromStores(instance: ComponentInstance<any>) {
   if (storeSubscribersIndex.has(instance)) {
     storeSubscribersIndex.get(instance)?.forEach((storeName) => {
@@ -99,4 +127,7 @@ export function _unsubscribeFromStores(instance: ComponentInstance<any>) {
     });
     storeSubscribersIndex.delete(instance);
   }
+  escapeListeners.delete(instance);
 }
+
+window.addEventListener('keydown', keyDownHandler);

@@ -1,12 +1,13 @@
 .kanban-card {
   border-radius: 8px;
-  position: sticky;
   background-color: white;
   padding: 4px 6px;
   display: flex;
+  width: 256px;
   flex-direction: column;
   align-items: start;
   justify-content: start;
+  cursor: pointer;
   box-shadow: 0px 1px 1px #091e4240, 0px 0px 1px #091e424f,
     0px 1px 1px #091e4240, 0px 0px 1px #091e424f; // Позаимствовали у Trello
 }
@@ -38,4 +39,17 @@
 }
 .kanban-card:hover .kanban-card__delete-button {
   opacity: 100;
+}
+.kanban-card__title {
+  user-select: none;
+  cursor: text;
+}
+
+.kanban-card__textarea {
+  display: block;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
+  resize: none;
 }
