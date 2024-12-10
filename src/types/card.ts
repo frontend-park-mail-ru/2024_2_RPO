@@ -1,14 +1,26 @@
 import { User } from './user';
 
-export interface Card {
+export type Card = StubCard | RealCard;
+
+export interface StubCard {
+  type: 'stub';
+  id: number;
+  height: number;
+}
+
+export interface RealCard {
+  type: 'real';
   id: number;
   title: string;
   coverImageUrl?: string;
   deadline: Date | undefined;
+  hasCheckList: boolean;
+  hasAttachments: boolean;
+  hasAssignedUsers: boolean;
 }
 
 export interface CardDetails {
-  card: Card;
+  card: RealCard;
   checkList: CheckListField[];
   attachments: Attachment[];
   comments: CardComment[];

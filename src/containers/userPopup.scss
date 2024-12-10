@@ -1,0 +1,58 @@
+.user-popup {
+  background-color: white;
+  position: absolute;
+  top: 50px;
+  right: 10px;
+  z-index: 102;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.user-popup__avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: #b4c0ee;
+  position: relative;
+  align-items: flex-start;
+}
+
+.user-popup__profile-info {
+  margin-top: 20px;
+  margin-left: 15px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: flex-start;
+  column-gap: 8px;
+}
+
+.user-popup__nickname {
+  font-size: 1.3em;
+  font-weight: bold;
+}
+
+.user-popup__button {
+  width: 100%;
+  padding-left: 15px;
+  padding-right: 20px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  display: flex;
+  justify-content: flex-start;
+  cursor: pointer;
+}
+
+.user-popup__button:hover {
+  background-color: rgba(0, 0, 0, 0.236);
+}
+
+.user-popup__button-icon {
+  margin-top: 1px;
+  margin-right: 8px;
+}
+
+.user-popup__button-text {
+  margin-right: 8px;
+}

@@ -4,13 +4,9 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
-    ports:
-      - "0.0.0.0:443:443"
-      - "0.0.0.0:80:80"
-      - "0.0.0.0:8005:8005"
-      - "0.0.0.0:8005:8006"
-      - "0.0.0.0:8005:8007"
-    volumes:
-      - pumpkin-user-uploads:/usr/share/nginx/html/uploads
-volumes:
-  pumpkin-user-uploads:
+    networks:
+      - Pumpkin-network
+
+networks:
+  Pumpkin-network:
+    external: true

@@ -71,6 +71,7 @@ export const getBoardContent = async (
           columnIndex.set(column.id, idx);
           return {
             ...column,
+            isStub: false,
             cards: [], // инициализация пустым массивом для типа BoardColumn
           };
         }
