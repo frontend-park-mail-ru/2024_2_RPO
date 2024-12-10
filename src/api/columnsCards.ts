@@ -59,13 +59,18 @@ export const updateColumn = async (
 export const createColumn = async (
   boardId: number,
   columnData: ColumnRequest
-): Promise<BoardColumn> => {
+): Promise<BoardColumn | undefined> => {
   try {
     const response = await apiPost(`/columns/board_${boardId}`, columnData);
-    if (response.status === HTTP_STATUS_CREATED) {
-      return response.body as BoardColumn;
-    } else {
-      handleErrorResponse(response.status, response.body.text);
+    switch (response.status) {
+      case HTTP_STATUS_CREATED:
+      case HTTP_STATUS_OK:
+        showToast('Успешно создана колонка', 'success');
+        return response.body as BoardColumn;
+
+      default:
+        handleErrorResponse(response.status, response.body.text);
+        return undefined;
     }
   } catch (error) {
     console.error(error);
@@ -77,7 +82,7 @@ export const createColumn = async (
 export const createCard = async (
   boardId: number,
   data: CardRequest
-): Promise<Card> => {
+): Promise<Card | undefined> => {
   try {
     const response = await apiPost(`/cards/board_${boardId}`, data);
     switch (response.status) {
@@ -87,6 +92,7 @@ export const createCard = async (
         return decodeCard(response.body as CardResponse);
       default:
         handleErrorResponse(response.status, response.body.text);
+        return undefined;
     }
   } catch (error) {
     showToast('Произошла ошибка при создании карточки.', 'error');
@@ -98,7 +104,7 @@ export const createCard = async (
 export const updateCard = async (
   cardId: number,
   data: CardPatchRequest
-): Promise<Card> => {
+): Promise<Card | undefined> => {
   try {
     const response = await apiPatch(`/cards/card_${cardId}`, data);
     switch (response.status) {
@@ -108,6 +114,7 @@ export const updateCard = async (
         return decodeCard(response.body as CardResponse);
       default:
         handleErrorResponse(response.status, response.body.text);
+        return undefined;
     }
   } catch (error) {
     showToast('Произошла ошибка при изменении карточки.', 'error');

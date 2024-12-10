@@ -33,10 +33,12 @@ const NewColumnButton = () => {
       return;
     }
     createColumn(activeBoardStore.id, { title: value }).then((newColumn) => {
-      newColumn.cards = [];
-      activeBoardStore.columns.push(newColumn);
-      setActiveBoardStore(activeBoardStore);
-      setNewColumnName('');
+      if (newColumn !== undefined) {
+        newColumn.cards = [];
+        activeBoardStore.columns.push(newColumn);
+        setActiveBoardStore(activeBoardStore);
+        setNewColumnName('');
+      }
     });
     setIsOpened(false);
   };

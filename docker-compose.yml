@@ -6,12 +6,7 @@ services:
       dockerfile: ./Dockerfile
     networks:
       - Pumpkin-network
-    volumes:
-      - pumpkin-user-uploads:/usr/share/nginx/html/uploads
-volumes:
-  pumpkin-user-uploads:
 
 networks:
   Pumpkin-network:
-    external:
-      name: Pumpkin-network
+    external: true

@@ -40,8 +40,10 @@ export const KanbanColumn = (props: KanbanColumnProps) => {
       title: newText,
       columnId: props.columnId,
     }).then((newCard) => {
-      activeBoard.columns[props.columnIndex].cards.push(newCard);
-      setIsInputOpened(false);
+      if (newCard !== undefined) {
+        activeBoard.columns[props.columnIndex].cards.push(newCard);
+        setIsInputOpened(false);
+      }
     });
   };
   useEffectRefs((refs) => {
