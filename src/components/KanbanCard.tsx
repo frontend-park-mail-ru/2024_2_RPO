@@ -10,7 +10,7 @@ import { useEffectRefs, useState } from '@/jsxCore/hooks';
 import { Button } from './Button';
 import { getCardDetails } from '@/api/cardDetails';
 import { setCardDetailsStore } from '@/stores/cardDetailsStore';
-import { Card, RealCard } from '@/types/card';
+import { Card } from '@/types/card';
 import {
   cardHeights,
   setEditLock,
@@ -18,6 +18,7 @@ import {
   useDndStore,
   editLock,
 } from '@/stores/dndStore';
+import { showToast } from '@/stores/toastNotificationStore';
 
 interface KanbanCardProps extends ComponentProps {
   card: Card;
@@ -87,20 +88,16 @@ const Editable = (props: EditableProps) => {
 
 const DND_THRESHOLD = 10;
 
-let timer: number;
-
 export const KanbanCard = (props: KanbanCardProps) => {
   const activeBoard = useActiveBoardStore() as ActiveBoard;
   const card = props.card;
   const [isInput, setIsInput] = useState(false);
+  const [menuOpened, setMenuOpened] = useState(false);
+  const [menuPos, setMenuPos] = useState([0, 0]);
   const [dragStart, setDragStart] = useState<
     [x: number, y: number] | undefined
   >(undefined);
   const [dragOffset, setDragOffset] = useState<[x: number, y: number]>([0, 0]);
-  const editCallback = () => {
-    clearTimeout(timer);
-    setIsInput(true);
-  };
   const cancelDnd = () => {
     setDragStart(undefined);
   };
@@ -122,12 +119,11 @@ export const KanbanCard = (props: KanbanCardProps) => {
         ref="card"
         className="kanban-card"
         ON_click={() => {
-          clearTimeout(timer);
-          timer = setTimeout(() => {
+          if (!isInput) {
             getCardDetails(card.id).then((val) => {
               setCardDetailsStore(val);
             });
-          }, 300);
+          }
         }}
         ON_mousedown={(ev: PointerEvent) => {
           if (!isInput && !editLock) {
@@ -163,18 +159,91 @@ export const KanbanCard = (props: KanbanCardProps) => {
         ON_mouseleave={cancelDnd}
         ON_mouseup={cancelDnd}
       >
-        {activeBoard.myRole !== 'viewer' && (
+        {menuOpened && (
           <div
-            className="kanban-card__delete-button"
-            ON_click={() => {
-              deleteCard(card.id).then(() => {
-                activeBoard.columns.forEach((column) => {
-                  column.cards = column.cards.filter((cardToFilter) => {
-                    return (cardToFilter as RealCard).id !== card.id;
+            className="full-screen-dark"
+            ON_click={(ev: Event) => {
+              setMenuOpened(false);
+              ev.stopPropagation();
+            }}
+          >
+            <div
+              className="kanban-card__menu"
+              style={`top: ${menuPos[1]}px; left:${menuPos[0] - 100}px`}
+            >
+              {activeBoard.myRole !== 'viewer' && (
+                <>
+                  <div
+                    class="kanban-card__menu-item"
+                    ON_click={() => {
+                      setMenuOpened(false);
+                      setIsInput(true);
+                    }}
+                  >
+                    <i class="bi-pencil" />
+                    Редактировать
+                  </div>
+                  <div
+                    class="kanban-card__menu-item"
+                    style="color: var(--color-negative)"
+                    ON_click={() => {
+                      setMenuOpened(false);
+                      deleteCard(props.card.id).then(() => {
+                        showToast('Карточка успешно удалена!', 'success');
+                        activeBoard.columns[props.columnIdx].cards =
+                          activeBoard.columns[props.columnIdx].cards.filter(
+                            (a) => {
+                              return a.id !== props.card.id;
+                            }
+                          );
+                        setActiveBoardStore(activeBoard);
+                      });
+                    }}
+                  >
+                    <i class="bi-trash" />
+                    Удалить
+                  </div>
+                </>
+              )}
+              <div
+                class="kanban-card__menu-item"
+                ON_click={() => {
+                  getCardDetails(card.id).then((val) => {
+                    setCardDetailsStore(val);
                   });
-                });
-                setActiveBoardStore(activeBoard);
-              });
+                }}
+              >
+                <i class="bi-three-dots" />
+                Подробности
+              </div>
+              {activeBoard.myRole !== 'viewer' && (
+                <>
+                  <div class="kanban-card__menu-item">
+                    <i class="bi-caret-down-fill" />
+                    Переместить ниже
+                  </div>
+                  <div class="kanban-card__menu-item">
+                    <i class="bi-caret-up-fill" />
+                    Переместить выше
+                  </div>
+                  <div class="kanban-card__menu-item">
+                    <i class="bi-caret-left-fill" />В левую колонку
+                  </div>
+                  <div class="kanban-card__menu-item">
+                    <i class="bi-caret-right-fill" />В правую колонку
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        )}
+        {!isInput && (
+          <div
+            className="kanban-card__dots-button"
+            ON_click={(ev: PointerEvent) => {
+              setMenuOpened(true);
+              ev.stopPropagation();
+              setMenuPos([ev.x, ev.y]);
             }}
           >
             <i class="bi-three-dots" />
@@ -204,14 +273,7 @@ export const KanbanCard = (props: KanbanCardProps) => {
             }}
           />
         ) : (
-          <div
-            className="kanban-card__title"
-            ON_dblclick={editCallback}
-            ON_contextmenu={(ev: Event) => {
-              editCallback();
-              ev.stopPropagation();
-            }}
-          >
+          <div className="kanban-card__title">
             <div>{card.title}</div>
             <div>
               {card.deadline !== undefined && <i className="bi-clock" />}

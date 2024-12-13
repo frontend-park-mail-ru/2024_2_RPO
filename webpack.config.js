@@ -34,6 +34,9 @@ module.exports = {
     static: [path.resolve(__dirname)],
     liveReload: true,
     historyApiFallback: true,
+    client: {
+      overlay: false,
+    },
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
