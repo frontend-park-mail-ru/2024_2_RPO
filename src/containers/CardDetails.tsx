@@ -167,6 +167,10 @@ export const CardDetailsContainer = (props: ComponentProps) => {
   const [assignedInput, setAssignedInput] = useState(false);
 
   const addCLF = () => {
+    if (newCheckListField.length < 3) {
+      showToast('Строка чеклиста должна быть от 3 символов', 'error');
+      return;
+    }
     addCheckListField(cardDetails.card.id, newCheckListField).then((clf) => {
       if (clf !== undefined) {
         setNewCheckListField('');
@@ -178,6 +182,10 @@ export const CardDetailsContainer = (props: ComponentProps) => {
   };
 
   const addComm = () => {
+    if (newComment.length < 3) {
+      showToast('Комментарий должен быть от 3 символов', 'error');
+      return;
+    }
     createComment(cardDetails.card.id, newComment).then((comment) => {
       if (comment !== undefined) {
         setNewComment('');
@@ -189,6 +197,12 @@ export const CardDetailsContainer = (props: ComponentProps) => {
   };
 
   const addAssigned = () => {
+    if (newAssigned.length < 3) {
+      if (newComment.length < 3) {
+        showToast('Имя польователя может быть от 3 символов', 'error');
+        return;
+      }
+    }
     assignUser(cardDetails.card.id, newAssigned).then((u) => {
       if (u !== undefined) {
         setNewAssigned('');

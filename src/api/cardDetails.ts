@@ -50,8 +50,10 @@ export const assignUser = async (
       const body: UserResponse = response.body;
       return decodeUser(body);
     }
+    default:
+      showToast('Ошибка при назначении пользователя на карточку', 'error');
+      return undefined;
   }
-  return undefined;
 };
 
 export const deassignUser = async (
