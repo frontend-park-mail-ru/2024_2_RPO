@@ -5,6 +5,7 @@ interface InputProps extends ComponentProps {
   onEnter?: (value: string) => void;
   onEscape?: (value: string) => void;
   onChanged?: (newValue: string) => void;
+  onBlur?: () => void;
   initialValue?: string;
   placeholder?: string;
   readOnly?: boolean;
@@ -62,6 +63,11 @@ export const Input = (props: InputProps) => {
           setValue(newValue);
           if (props.onChanged !== undefined) {
             props.onChanged(newValue);
+          }
+        }}
+        ON_blur={() => {
+          if (props.onBlur !== undefined) {
+            props.onBlur();
           }
         }}
       />

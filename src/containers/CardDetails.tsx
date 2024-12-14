@@ -7,6 +7,7 @@ import { CardDetails, CheckListField } from '@/types/card';
 import { ComponentProps } from '@/jsxCore/types';
 import { Input } from '@/components/Input';
 import {
+  addAttachment,
   addCheckListField,
   assignUser,
   createComment,
@@ -18,64 +19,39 @@ import {
 import { useEffectRefs, useState } from '@/jsxCore/hooks';
 import { Button } from '@/components/Button';
 import { updateCard } from '@/api/columnsCards';
+import { formatDateToGoTimeString } from '@/utils/misc';
+import { showToast } from '@/stores/toastNotificationStore';
 
-// interface UploadedFile {
-//   id: string;
-//   name: string;
-//   icon: string;
-// }
-// const getFileIcon = (fileName: string): string => {
-//   const ext = fileName.split('.').pop()?.toLowerCase();
-//   switch (ext) {
-//     case 'pdf':
-//       return 'bi-file-earmark-pdf';
-//     case 'mp3':
-//     case 'wav':
-//       return 'bi-file-earmark-music';
-//     case 'jpg':
-//     case 'jpeg':
-//     case 'png':
-//     case 'gif':
-//       return 'bi-file-earmark-image';
-//     case 'pptx':
-//       return 'bi-file-earmark-slides';
-//     case 'js':
-//     case 'css':
-//     case 'cpp':
-//     case 'go':
-//       return 'bi-file-earmark-code';
-//     case 'doc':
-//     case 'docx':
-//     case 'odt':
-//       return 'bi-file-earmark-word';
-//     case 'txt':
-//       return 'bi-file-earmark-text';
-//     default:
-//       return 'bi-file-earmark';
-//   }
-// };
-
-function padZero(num: number) {
-  return num.toString().padStart(2, '0');
-}
-
-function formatDateToGoTimeString(date: Date) {
-  // Убедимся, что переданный объект является экземпляром Date
-  if (!(date instanceof Date)) {
-    throw new TypeError('Input должен быть экземпляром Date');
+const getFileIcon = (fileName: string): string => {
+  const ext = fileName.split('.').pop()?.toLowerCase();
+  switch (ext) {
+    case 'pdf':
+      return 'bi-file-earmark-pdf';
+    case 'mp3':
+    case 'wav':
+      return 'bi-file-earmark-music';
+    case 'jpg':
+    case 'jpeg':
+    case 'png':
+    case 'gif':
+      return 'bi-file-earmark-image';
+    case 'pptx':
+      return 'bi-file-earmark-slides';
+    case 'js':
+    case 'css':
+    case 'cpp':
+    case 'go':
+      return 'bi-file-earmark-code';
+    case 'doc':
+    case 'docx':
+    case 'odt':
+      return 'bi-file-earmark-word';
+    case 'txt':
+      return 'bi-file-earmark-text';
+    default:
+      return 'bi-file-earmark';
   }
-
-  // Получаем компоненты даты в UTC
-  const year = date.getUTCFullYear();
-  const month = padZero(date.getUTCMonth() + 1); // Месяцы в JS начинаются с 0
-  const day = padZero(date.getUTCDate());
-  const hours = padZero(date.getUTCHours());
-  const minutes = padZero(date.getUTCMinutes());
-  const seconds = padZero(date.getUTCSeconds());
-
-  // Формируем строку в формате RFC3339
-  return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}Z`;
-}
+};
 
 interface CheckListFieldProps extends ComponentProps {
   field: CheckListField;
@@ -109,7 +85,9 @@ const CheckListFieldComponent = (props: CheckListFieldProps) => {
             }
           );
         }}
-      ></div>
+      >
+        {f.isDone && <i class="bi-check-lg checklist-field__box-check" />}
+      </div>
       <div class="checklist-field__text">{f.title}</div>
       <div
         style="min-width: 1rem; color: red; cursor: pointer"
@@ -185,10 +163,15 @@ export const CardDetailsContainer = (props: ComponentProps) => {
   const [newCheckListField, setNewCheckListField] = useState('');
   const [newAssigned, setNewAssigned] = useState('');
 
+  const [commentInput, setCommentInput] = useState(false);
+  const [checkListInput, setCheckListInput] = useState(false);
+  const [assignedInput, setAssignedInput] = useState(false);
+
   const addCLF = () => {
     addCheckListField(cardDetails.card.id, newCheckListField).then((clf) => {
       if (clf !== undefined) {
         setNewCheckListField('');
+        setCheckListInput(false);
         cardDetails.checkList.push(clf);
         setCardDetailsStore(cardDetails);
       }
@@ -199,6 +182,7 @@ export const CardDetailsContainer = (props: ComponentProps) => {
     createComment(cardDetails.card.id, newComment).then((comment) => {
       if (comment !== undefined) {
         setNewComment('');
+        setCommentInput(false);
         cardDetails.comments.push(comment);
         setCardDetailsStore(cardDetails);
       }
@@ -209,6 +193,7 @@ export const CardDetailsContainer = (props: ComponentProps) => {
     assignUser(cardDetails.card.id, newAssigned).then((u) => {
       if (u !== undefined) {
         setNewAssigned('');
+        setAssignedInput(false);
         cardDetails.assignedUsers.push(u);
         setCardDetailsStore(cardDetails);
       }
@@ -219,7 +204,9 @@ export const CardDetailsContainer = (props: ComponentProps) => {
     <div class="card-details">
       <div class="card-details__left-section">
         <div class="card-details_block">
-          <h2>Чеклист</h2>
+          <h2 style={cardDetails.checkList.length ? '' : 'display:none'}>
+            Чеклист
+          </h2>
           {cardDetails.checkList.map((field) => {
             return (
               <CheckListFieldComponent
@@ -228,35 +215,95 @@ export const CardDetailsContainer = (props: ComponentProps) => {
               />
             );
           })}
-          <Input
-            key="checklist_input"
-            placeholder="Новый пункт чеклиста"
-            onEnter={addCLF}
-            onChanged={(newText) => {
-              setNewCheckListField(newText);
-            }}
-          />
-          <Button
-            key="checklist_add_btn"
-            callback={addCLF}
-            text="Добавить пункт чеклиста"
-            variant="accent"
-          />
+          {checkListInput ? (
+            <div>
+              <Input
+                key="checklist_input"
+                placeholder="Строка чеклиста"
+                focusOnInstance
+                onEnter={addCLF}
+                onEscape={() => {
+                  setCheckListInput(false);
+                }}
+                onChanged={(newText) => {
+                  setNewCheckListField(newText);
+                }}
+              />
+              <Button
+                icon="bi-check2-square"
+                key="checklist_add_btn"
+                callback={addCLF}
+                text="Добавить строку чеклиста"
+                variant="accent"
+              />
+              <Button
+                key="checklist_cancel_add_btn"
+                callback={() => {
+                  setCheckListInput(false);
+                }}
+                text="Отмена"
+                icon="bi-x-lg"
+                variant="default"
+              />
+            </div>
+          ) : (
+            <Button
+              key="checklist_open_input_btn"
+              icon="bi-check2-square"
+              callback={() => {
+                setCheckListInput(true);
+              }}
+              text={
+                cardDetails.checkList.length
+                  ? 'Добавить строку чеклиста'
+                  : 'Добавить чеклист'
+              }
+              variant="default"
+            />
+          )}
         </div>
         <div class="card-details_block">
           <h1>Комментарии</h1>
-          <Input
-            key="comment_input"
-            placeholder="Напишите Ваш комментарий"
-            onEnter={addComm}
-            onChanged={setNewComment}
-          />
-          <Button
-            key="comment_btn"
-            callback={addComm}
-            text="Добавить комментарий"
-            variant="accent"
-          />
+          {commentInput ? (
+            <>
+              <Input
+                key="comment_input"
+                placeholder="Напишите Ваш комментарий"
+                onEnter={addComm}
+                focusOnInstance
+                onEscape={() => {
+                  setCommentInput(false);
+                }}
+                onChanged={setNewComment}
+              />
+              <Button
+                key="comment_btn"
+                callback={addComm}
+                text="Добавить комментарий"
+                variant="accent"
+                icon="bi-chat-left"
+              />
+              <Button
+                key="comment_cancel_add_btn"
+                callback={() => {
+                  setCommentInput(false);
+                }}
+                text="Отмена"
+                icon="bi-x-lg"
+                variant="default"
+              />
+            </>
+          ) : (
+            <Button
+              key="comment_input_btn"
+              callback={() => {
+                setCommentInput(true);
+              }}
+              text="Добавить комментарий"
+              variant="default"
+              icon="bi-chat-left"
+            />
+          )}
           {cardDetails.comments.map((comment) => {
             return (
               <div className="comment">
@@ -326,21 +373,84 @@ export const CardDetailsContainer = (props: ComponentProps) => {
               </div>
             );
           })}
-          <Input
-            key="assign_user"
-            placeholder="Никнейм участника"
-            onEnter={addAssigned}
-            onChanged={(newText) => {
-              setNewAssigned(newText);
-            }}
-          />
-          <Button
-            key="assign_user_btn"
-            text="Назначить участника"
-            variant="accent"
-            callback={addAssigned}
-          />
+          {assignedInput ? (
+            <div>
+              <Input
+                key="assign_user"
+                placeholder="Никнейм участника"
+                focusOnInstance
+                onEnter={addAssigned}
+                onEscape={() => {
+                  setAssignedInput(false);
+                }}
+                onChanged={(newText) => {
+                  setNewAssigned(newText);
+                }}
+              />
+              <Button
+                key="assign_user_btn"
+                text="Назначить участника"
+                icon="bi-person-plus"
+                variant="accent"
+                callback={addAssigned}
+              />
+              <Button
+                key="assign_user_cancel"
+                text="Отмена"
+                callback={() => {
+                  setAssignedInput(false);
+                }}
+                icon="bi-x-lg"
+              />
+            </div>
+          ) : (
+            <Button
+              key="assign_user_open_input"
+              variant="default"
+              text="Назначить участника"
+              icon="bi-person-plus"
+              callback={() => {
+                setAssignedInput(true);
+              }}
+            />
+          )}
         </div>
+        <input
+          id="upload_attachment"
+          type="file"
+          style="display:none"
+          ON_change={(event: InputEvent) => {
+            const files = (event.target as HTMLInputElement).files as FileList;
+            addAttachment(cardDetails.card.id, files[0]).then((attachment) => {
+              if (attachment !== undefined) {
+                showToast('Вложение успешно добавлено!', 'success');
+                cardDetails.attachments.push(attachment);
+                setCardDetailsStore(cardDetails);
+              }
+            });
+          }}
+        />
+        <div>
+          {cardDetails.attachments.map((attachment) => {
+            return (
+              <div>
+                <i class={getFileIcon(attachment.originalName)} />
+                {attachment.originalName}
+              </div>
+            );
+          })}
+        </div>
+        <Button
+          key="add_attachment"
+          text="Добавить вложение"
+          icon="bi-paperclip"
+          callback={() => {
+            const el = document.getElementById(
+              'upload_attachment'
+            ) as HTMLInputElement;
+            el.click();
+          }}
+        />
       </div>
     </div>
   );

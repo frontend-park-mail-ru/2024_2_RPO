@@ -1,4 +1,9 @@
-import { CardComment, CardDetails, CheckListField } from '@/types/card';
+import {
+  Attachment,
+  CardComment,
+  CardDetails,
+  CheckListField,
+} from '@/types/card';
 import {
   apiDelete,
   apiGet,
@@ -15,18 +20,21 @@ import {
   CommentRequest,
 } from './requestTypes';
 import {
+  AttachmentResponse,
   CardDetailsResponse,
   CheckListFieldResponse,
   CommentResponse,
   UserResponse,
 } from './responseTypes';
 import {
+  decodeAttachment,
   decodeCardDetails,
   decodeCheckListField,
   decodeComment,
   decodeUser,
 } from './decode';
 import { User } from '@/types/user';
+import { showToast } from '@/stores/toastNotificationStore';
 
 export const assignUser = async (
   cardId: number,
@@ -161,4 +169,23 @@ export const getCardDetails = async (
     }
   }
   return undefined;
+};
+
+// Добавить вложение
+export const addAttachment = async (
+  cardId: number,
+  file: File
+): Promise<Attachment | undefined> => {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const response = await apiPut(`/attachments/card_${cardId}`, formData);
+
+  switch (response.status) {
+    case HTTP_STATUS_CREATED:
+    case HTTP_STATUS_OK:
+      return decodeAttachment(response.body as AttachmentResponse);
+    default:
+      showToast('Ошибка при добавлении файла', 'error');
+  }
 };

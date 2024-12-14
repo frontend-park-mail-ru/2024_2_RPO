@@ -30,23 +30,32 @@
 .checklist-field {
   display: flex;
   flex-direction: row;
+  align-items: center;
+  column-gap: 5px;
 }
 .checklist-field__text {
   flex-grow: 1;
 }
 
 .checklist-field__box {
-  min-width: 1rem;
+  width: 1rem;
   height: 1rem;
-  border: 2px solid black;
-  border-radius: 2px;
+  border: 1px solid gray;
+  border-radius: 3px;
   cursor: pointer;
 }
 .checklist-field__box__done {
-  background-color: greenyellow;
+  border: none !important;
+  background-color: var(--color-accent);
 }
 .checklist-field__box__undone {
   background-color: white;
+}
+.checklist-field__box-check {
+  color: white;
+  position: relative;
+  top: -3px;
+  left: -1px;
 }
 
 .comment {

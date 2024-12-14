@@ -1,10 +1,12 @@
 import {
+  Attachment,
   CardComment,
   CardDetails,
   CheckListField,
   RealCard,
 } from '@/types/card';
 import {
+  AttachmentResponse,
   CardDetailsResponse,
   CardResponse,
   CheckListFieldResponse,
@@ -61,5 +63,11 @@ export const decodeCardDetails = (d: CardDetailsResponse): CardDetails => {
     attachments: d.attachments,
     comments: d.comments.map(decodeComment),
     assignedUsers: d.assignedUsers.map(decodeUser),
+  };
+};
+
+export const decodeAttachment = (r: AttachmentResponse): Attachment => {
+  return {
+    ...r,
   };
 };
