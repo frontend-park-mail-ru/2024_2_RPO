@@ -1,6 +1,6 @@
 import { ComponentProps } from '@/jsxCore/types';
 import './boardCard.scss';
-import { Board } from '@/types/board';
+import { Board } from '@/types/types';
 import { formatTime } from '@/utils/time';
 import { goToUrl } from '@/stores/routerStore';
 import { useActiveBoardStore } from '@/stores/activeBoardStore';
@@ -22,7 +22,7 @@ export const BoardCard = (props: BoardCardProps) => {
     <div
       className={[
         'board-card',
-        activeBoard?.id === props.board.id ? 'board-card__active' : '',
+        activeBoard?.board.id === props.board.id ? 'board-card__active' : '',
       ]}
       ON_click={() => {
         props.onSelect();

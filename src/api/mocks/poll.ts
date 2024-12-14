@@ -1,4 +1,4 @@
-import { CsatQuestion } from '@/types/poll';
+import { CsatQuestion } from '@/types/types';
 
 export const pollMock: CsatQuestion[] = [
   {

@@ -1,4 +1,4 @@
-import { Board } from '@/types/board';
+import { Board } from '@/types/types';
 import { defineStore } from '@/jsxCore/hooks';
 import { getBoards } from '@/api/boards';
 

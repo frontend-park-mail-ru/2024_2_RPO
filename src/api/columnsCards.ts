@@ -13,8 +13,7 @@ import {
   HTTP_STATUS_UNAUTHORIZED,
 } from './apiHelper';
 import { CardResponse } from './responseTypes';
-import { BoardColumn } from '@/types/activeBoard';
-import { Card } from '@/types/card';
+import { BoardColumn, Card } from '@/types/types';
 import { CardPatchRequest, CardRequest, ColumnRequest } from './requestTypes';
 import { decodeCard } from './decode';
 

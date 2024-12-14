@@ -5,7 +5,7 @@ import {
   useActiveBoardStore,
 } from '@/stores/activeBoardStore';
 import { Button } from '@/components/Button';
-import { ActiveBoard } from '@/types/activeBoard';
+import { ActiveBoard } from '@/types/types';
 import { useState } from '@/jsxCore/hooks';
 import { Input } from '@/components/Input';
 import { createColumn } from '@/api/columnsCards';
@@ -32,14 +32,16 @@ const NewColumnButton = () => {
       showToast('Длина имени колонки может быть до 30 символов', 'error');
       return;
     }
-    createColumn(activeBoardStore.id, { title: value }).then((newColumn) => {
-      if (newColumn !== undefined) {
-        newColumn.cards = [];
-        activeBoardStore.columns.push(newColumn);
-        setActiveBoardStore(activeBoardStore);
-        setNewColumnName('');
+    createColumn(activeBoardStore.board.id, { title: value }).then(
+      (newColumn) => {
+        if (newColumn !== undefined) {
+          newColumn.cards = [];
+          activeBoardStore.columns.push(newColumn);
+          setActiveBoardStore(activeBoardStore);
+          setNewColumnName('');
+        }
       }
-    });
+    );
     setIsOpened(false);
   };
 

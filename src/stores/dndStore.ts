@@ -1,6 +1,5 @@
 import { defineStore } from '@/jsxCore/hooks';
-import { BoardColumn } from '@/types/activeBoard';
-import { RealCard } from '@/types/card';
+import { BoardColumn, RealCard } from '@/types/types';
 
 type DndType = undefined | CardDndType | ColumnDndType;
 type ColumnDndType = {

@@ -1,7 +1,7 @@
 import { getPollResults } from '@/api/poll';
 import { defineStore } from '@/jsxCore/hooks';
 import { ComponentProps } from '@/jsxCore/types';
-import { PollResults } from '@/types/poll';
+import { PollResults } from '@/types/types';
 
 const [useResStore, setResStore] = defineStore<PollResults | undefined>(
   'resstorecsat228',

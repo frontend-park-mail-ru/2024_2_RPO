@@ -1,6 +1,6 @@
 import { getUserMe } from '@/api/users';
 import { defineStore } from '@/jsxCore/hooks';
-import { User } from '@/types/user';
+import { User } from '@/types/types';
 import { goToUrl, useRouterStore } from './routerStore';
 
 export const [useMeStore, setMeStore] = defineStore<User | undefined>(

@@ -5,12 +5,11 @@ import {
   setActiveBoardStore,
   useActiveBoardStore,
 } from '@/stores/activeBoardStore';
-import { ActiveBoard } from '@/types/activeBoard';
+import { ActiveBoard, Card } from '@/types/types';
 import { useEffectRefs, useState } from '@/jsxCore/hooks';
 import { Button } from './Button';
 import { getCardDetails } from '@/api/cardDetails';
 import { setCardDetailsStore } from '@/stores/cardDetailsStore';
-import { Card } from '@/types/card';
 import {
   cardHeights,
   setEditLock,

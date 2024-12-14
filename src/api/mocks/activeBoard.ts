@@ -1,8 +1,14 @@
-import { ActiveBoard } from '@/types/activeBoard';
+import { ActiveBoard } from '@/types/types';
 
 export const activeBoardMock: ActiveBoard = {
-  id: 0,
-  title: 'Моя любимая доска',
+  board: {
+    id: 0,
+    title: 'Моя любимая доска',
+    backgroundImageUrl: '/static/img/backgroundPicture.png',
+    myInviteLinkUuid: undefined,
+    lastVisit: new Date(Date.UTC(2004, 7, 10)),
+    lastUpdate: new Date(Date.UTC(2024, 7, 10)),
+  },
   columns: [
     {
       id: 1,
@@ -32,7 +38,4 @@ export const activeBoardMock: ActiveBoard = {
     },
   ],
   myRole: 'admin',
-  lastVisit: new Date(Date.UTC(2004, 7, 10)),
-  lastUpdate: new Date(Date.UTC(2024, 7, 10)),
-  backgroundImageUrl: '/static/img/backgroundPicture.png',
 };

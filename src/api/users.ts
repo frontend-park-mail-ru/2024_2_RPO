@@ -8,7 +8,7 @@ import {
   HTTP_STATUS_CONFLICT,
   apiPut,
 } from '@/api/apiHelper';
-import { User } from '@/types/user';
+import { User } from '@/types/types';
 import { userMeMock } from './mocks/user';
 import { showToast } from '@/stores/toastNotificationStore';
 import { UserResponse } from './responseTypes';

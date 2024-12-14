@@ -3,7 +3,7 @@ import {
   useCardDetailsStore,
 } from '@/stores/cardDetailsStore';
 import './cardDetails.scss';
-import { CardDetails, CheckListField } from '@/types/card';
+import { CardDetails, CheckListField } from '@/types/types';
 import { ComponentProps } from '@/jsxCore/types';
 import { Input } from '@/components/Input';
 import {

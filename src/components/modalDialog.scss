@@ -5,6 +5,8 @@
   padding-bottom: 15px;
   padding-left: 25px;
   padding-right: 25px;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 @media screen and (min-width: 800px) {
   .modal-dialog {

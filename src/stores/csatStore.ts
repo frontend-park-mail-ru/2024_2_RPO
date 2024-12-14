@@ -1,6 +1,6 @@
 import { pollMock } from '@/api/mocks/poll';
 import { defineStore } from '@/jsxCore/hooks';
-import { CsatQuestion } from '@/types/poll';
+import { CsatQuestion } from '@/types/types';
 
 interface CsatStore {
   isOpened: boolean;

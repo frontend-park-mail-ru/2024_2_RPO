@@ -102,7 +102,7 @@ export const NavBar = (props: NavBarProps) => {
                 >
                   <EditableText
                     key="board_name_text"
-                    text={activeBoard?.title ?? 'Загрузка'}
+                    text={activeBoard?.board.title ?? 'Загрузка'}
                     readOnly={
                       activeBoard.myRole === 'viewer' ||
                       activeBoard.myRole === 'editor'
@@ -110,14 +110,16 @@ export const NavBar = (props: NavBarProps) => {
                     textClassName="navbar__board-name"
                     wrapperClassName="navbar__board-name-wrapper"
                     setText={(newText) => {
-                      updateBoard(activeBoard.id, newText, '').then(() => {
-                        showToast(
-                          'Успешно изменено название доски!',
-                          'success'
-                        );
-                        activeBoard.title = newText;
-                        setActiveBoardStore(activeBoard);
-                      });
+                      updateBoard(activeBoard.board.id, newText, '').then(
+                        () => {
+                          showToast(
+                            'Успешно изменено название доски!',
+                            'success'
+                          );
+                          activeBoard.board.title = newText;
+                          setActiveBoardStore(activeBoard);
+                        }
+                      );
                     }}
                   />
                   <div style="flex-grow:1" class="navbar__mobile-only"></div>

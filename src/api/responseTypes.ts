@@ -1,8 +1,8 @@
-import { CsatQuestion } from '@/types/poll';
+import { CsatQuestion } from "@/types/types";
 
 export interface BoardContentResponse {
   myRole: 'viewer' | 'editor' | 'editor_chief' | 'admin';
-  boardInfo: BoardInfoResponse;
+  boardInfo: BoardResponse;
   allColumns: ColumnResponse[];
   allCards: CardResponse[];
 }
@@ -26,15 +26,6 @@ export interface CardResponse {
   hasComments: boolean;
 }
 
-export interface BoardInfoResponse {
-  id: number;
-  name: string;
-  description: string;
-  backgroundImageUrl: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
 export interface BoardResponse {
   id: number;
   name: string;
@@ -42,6 +33,7 @@ export interface BoardResponse {
   backgroundImageUrl: string;
   createdAt: string;
   updatedAt: string;
+  myInviteLinkUuid?: string;
 }
 
 export interface UserResponse {

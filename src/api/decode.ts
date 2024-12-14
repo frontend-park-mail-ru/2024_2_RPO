@@ -4,9 +4,16 @@ import {
   CardDetails,
   CheckListField,
   RealCard,
-} from '@/types/card';
+  User,
+  Board,
+  ActiveBoard,
+  BoardColumn,
+  UserToBoard,
+} from '@/types/types';
 import {
   AttachmentResponse,
+  BoardContentResponse,
+  BoardResponse,
   CardDetailsResponse,
   CardResponse,
   CheckListFieldResponse,
@@ -14,7 +21,6 @@ import {
   MemberWithPermissionsResponse,
   UserResponse,
 } from './responseTypes';
-import { User, UserToBoard as Member } from '@/types/user';
 
 export const decodeUser = (user: UserResponse): User => {
   return { ...user, pollQuestions: user.pollQuestions };
@@ -28,7 +34,7 @@ export const decodeCard = (card: CardResponse): RealCard => {
   };
 };
 
-export const decodeMember = (r: MemberWithPermissionsResponse): Member => {
+export const decodeMember = (r: MemberWithPermissionsResponse): UserToBoard => {
   return {
     user: decodeUser(r.user),
     addedBy: {
@@ -69,5 +75,31 @@ export const decodeCardDetails = (d: CardDetailsResponse): CardDetails => {
 export const decodeAttachment = (r: AttachmentResponse): Attachment => {
   return {
     ...r,
+  };
+};
+
+export const decodeBoard = (r: BoardResponse): Board => {
+  return {
+    ...r,
+    title: r.name,
+    lastUpdate: new Date(r.updatedAt),
+    lastVisit: new Date(r.updatedAt),
+    myInviteLinkUuid: r.myInviteLinkUuid,
+  };
+};
+
+export const decodeActiveBoard = (r: BoardContentResponse): ActiveBoard => {
+  const colIndex = new Map<number, number>();
+  const columns: BoardColumn[] = r.allColumns.map((cr, idx) => {
+    colIndex.set(cr.id, idx);
+    return { cards: [], id: cr.id, isStub: false, title: cr.title };
+  });
+  r.allCards.forEach((card) => {
+    columns[colIndex.get(card.columnId) as number].cards.push(decodeCard(card));
+  });
+  return {
+    columns: columns,
+    board: decodeBoard(r.boardInfo),
+    myRole: r.myRole,
   };
 };

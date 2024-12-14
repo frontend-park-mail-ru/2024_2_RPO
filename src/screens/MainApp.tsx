@@ -9,7 +9,7 @@ import { BoardSettings } from '@/containers/BoardSettings';
 import { useActiveBoardStore } from '@/stores/activeBoardStore';
 import { setBoardsStore, useBoardsStore } from '@/stores/boardsStore';
 import { getBoards } from '@/api/boards';
-import { Board } from '@/types/board';
+import { Board } from '@/types/types';
 import { setCsatStore, useCsatStore } from '@/stores/csatStore';
 import { ModalDialog } from '@/components/ModalDialog';
 import {
@@ -110,7 +110,7 @@ export const MainApp = (props: ComponentProps) => {
       <main>
         {activeBoard !== undefined && (
           <img
-            src={activeBoard.backgroundImageUrl}
+            src={activeBoard.board.backgroundImageUrl}
             class="app__background-image"
             alt=""
           />

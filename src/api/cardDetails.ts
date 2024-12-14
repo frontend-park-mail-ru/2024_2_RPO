@@ -3,7 +3,8 @@ import {
   CardComment,
   CardDetails,
   CheckListField,
-} from '@/types/card';
+  User,
+} from '@/types/types';
 import {
   apiDelete,
   apiGet,
@@ -33,7 +34,6 @@ import {
   decodeComment,
   decodeUser,
 } from './decode';
-import { User } from '@/types/user';
 import { showToast } from '@/stores/toastNotificationStore';
 
 export const assignUser = async (

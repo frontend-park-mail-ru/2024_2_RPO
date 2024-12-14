@@ -3,7 +3,7 @@ import { ComponentProps } from '@/jsxCore/types';
 import { updateMe, useMeStore } from '@/stores/meStore';
 import { openUserProfileModalDialog } from '@/stores/modalDialogsStore';
 import { goToUrl } from '@/stores/routerStore';
-import { User } from '@/types/user';
+import { User } from '@/types/types';
 import './userPopup.scss';
 import { useEscape } from '@/jsxCore/hooks';
 

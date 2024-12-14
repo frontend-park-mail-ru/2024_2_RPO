@@ -5,7 +5,7 @@ import {
 } from '@/stores/activeBoardStore';
 import { Button } from './Button';
 import { EditableText } from './EditableText';
-import { ActiveBoard } from '@/types/activeBoard';
+import { ActiveBoard } from '@/types/types';
 import { showToast } from '@/stores/toastNotificationStore';
 import { createCard, deleteColumn, updateColumn } from '@/api/columnsCards';
 import { useEffectRefs, useState } from '@/jsxCore/hooks';
@@ -36,7 +36,7 @@ export const KanbanColumn = (props: KanbanColumnProps) => {
       showToast('Длина текста в карточке может быть от 3 символов', 'error');
       return;
     }
-    createCard(activeBoard.id, {
+    createCard(activeBoard.board.id, {
       title: newText,
       columnId: props.columnId,
     }).then((newCard) => {

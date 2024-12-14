@@ -1,5 +1,5 @@
 import { defineStore } from '@/jsxCore/hooks';
-import { CardDetails } from '@/types/card';
+import { CardDetails } from '@/types/types';
 
 export const [useCardDetailsStore, setCardDetailsStore] = defineStore<
   CardDetails | undefined

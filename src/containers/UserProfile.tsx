@@ -11,7 +11,7 @@ import { ComponentProps } from '@/jsxCore/types';
 import { setMeStore, updateMe, useMeStore } from '@/stores/meStore';
 import { closeUserProfileModalDialog } from '@/stores/modalDialogsStore';
 import { showToast } from '@/stores/toastNotificationStore';
-import { User } from '@/types/user';
+import { User } from '@/types/types';
 import './userProfile.scss';
 
 type UserProfileProps = ComponentProps;
