@@ -277,6 +277,9 @@ export const KanbanCard = (props: KanbanCardProps) => {
             <div>{card.title}</div>
             <div>
               {card.deadline !== undefined && <i className="bi-clock" />}
+              {card.hasCheckList && <i class="bi-check2-square" />}
+              {card.hasAttachments && <i class="bi-paperclip" />}
+              {card.hasAssignedUsers && <i class="bi-person-plus" />}
             </div>
           </div>
         )}

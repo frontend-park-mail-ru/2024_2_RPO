@@ -77,7 +77,6 @@ const CheckListFieldComponent = (props: CheckListFieldProps) => {
                   if (fi.id !== f.id) {
                     return fi;
                   }
-                  console.log(cf);
                   return cf;
                 });
                 setCardDetailsStore(store);
@@ -86,11 +85,11 @@ const CheckListFieldComponent = (props: CheckListFieldProps) => {
           );
         }}
       >
-        {f.isDone && <i class="bi-check-lg checklist-field__box-check" />}
+        {f.isDone && <i class="bi-check checklist-field__box-check" />}
       </div>
       <div class="checklist-field__text">{f.title}</div>
       <div
-        style="min-width: 1rem; color: red; cursor: pointer"
+        style="min-width: 1rem; position: relative; top: 2px; color: red; cursor: pointer"
         ON_click={() => {
           deleteCheckListField(f.id).then((t) => {
             if (t) {
@@ -204,9 +203,9 @@ export const CardDetailsContainer = (props: ComponentProps) => {
     <div class="card-details">
       <div class="card-details__left-section">
         <div class="card-details_block">
-          <h2 style={cardDetails.checkList.length ? '' : 'display:none'}>
+          <h1 style={cardDetails.checkList.length ? '' : 'display:none'}>
             Чеклист
-          </h2>
+          </h1>
           {cardDetails.checkList.map((field) => {
             return (
               <CheckListFieldComponent
@@ -307,25 +306,35 @@ export const CardDetailsContainer = (props: ComponentProps) => {
           {cardDetails.comments.map((comment) => {
             return (
               <div className="comment">
-                <div className="comment__author">{comment.createdBy.name}</div>
+                <div className="comment__avatar">
+                  <img
+                    src={comment.createdBy.avatarImageUrl}
+                    class="comment__avatar-image"
+                  />
+                </div>
+                <div className="comment__content">
+                  <div className="comment__author">
+                    {comment.createdBy.name}
+                  </div>
 
-                <div>{comment.text}</div>
-                <div
-                  style="cursor: pointer; color:red"
-                  ON_click={() => {
-                    deleteComment(comment.id).then((t) => {
-                      if (t) {
-                        cardDetails.comments = cardDetails.comments.filter(
-                          (c) => {
-                            return c.id !== comment.id;
-                          }
-                        );
-                        setCardDetailsStore(cardDetails);
-                      }
-                    });
-                  }}
-                >
-                  <i class="bi-x-lg" />
+                  <div>{comment.text}</div>
+                  <div
+                    style="cursor: pointer; color: red"
+                    ON_click={() => {
+                      deleteComment(comment.id).then((t) => {
+                        if (t) {
+                          cardDetails.comments = cardDetails.comments.filter(
+                            (c) => {
+                              return c.id !== comment.id;
+                            }
+                          );
+                          setCardDetailsStore(cardDetails);
+                        }
+                      });
+                    }}
+                  >
+                    <i class="bi-x-lg" />
+                  </div>
                 </div>
               </div>
             );
@@ -336,26 +345,21 @@ export const CardDetailsContainer = (props: ComponentProps) => {
       <div class="card-details__right-section">
         <div class="card-details_block">
           <h1>Дедлайн</h1>
-          <div>
-            Пожалуйста, вводите дату и время! Если Вы не введёте время, оно не
-            сработает
-          </div>
-          <div style="cursor: pointer; color:red">
-            <DeadlineInput
-              key="deadline_input"
-              deadline={cardDetails.card.deadline}
-              cardId={cardDetails.card.id}
-            />
-          </div>
+          <DeadlineInput
+            key="deadline_input"
+            deadline={cardDetails.card.deadline}
+            cardId={cardDetails.card.id}
+          />
         </div>
         <div class="card-details_block">
           <h1>Назначенные пользователи</h1>
           {cardDetails.assignedUsers.map((u) => {
             return (
-              <div style="display: flex; flex-direction: row">
-                <div>{u.name}</div>
+              <div className="assigned-user">
+                <img class="assigned-user__avatar" src={u.avatarImageUrl} />
+                <div style="flex-grow: 1; font-weight: bold">{u.name}</div>
                 <div
-                  style="cursor: pointer; color:red"
+                  style="cursor: pointer; color: red; height: 16px"
                   ON_click={() => {
                     deassignUser(cardDetails.card.id, u.id).then((t) => {
                       if (t) {
@@ -368,7 +372,7 @@ export const CardDetailsContainer = (props: ComponentProps) => {
                     });
                   }}
                 >
-                  <i class="bi-x-lg" />
+                  <i class="bi-x-lg assigned-user__remove" />
                 </div>
               </div>
             );
@@ -433,8 +437,10 @@ export const CardDetailsContainer = (props: ComponentProps) => {
         <div>
           {cardDetails.attachments.map((attachment) => {
             return (
-              <div>
-                <i class={getFileIcon(attachment.originalName)} />
+              <div class="attachment">
+                <div>
+                  <i class={getFileIcon(attachment.originalName)} />
+                </div>
                 {attachment.originalName}
               </div>
             );
