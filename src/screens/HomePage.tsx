@@ -65,7 +65,7 @@ export const HomePage = (props: ComponentProps) => {
               </div>
             </div>
             <div className="top-section__right">
-              <img src="static/img/logo.svg" class="home-page__logo" />
+              <img src="static/img/logo_new.svg" class="home-page__logo" />
             </div>
           </div>
 

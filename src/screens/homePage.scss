@@ -7,7 +7,7 @@
 }
 
 .homepage__top-section {
-  background: radial-gradient(rgba(255, 127, 0, 0.25), rgba(0, 13, 255, 0.25));
+  background: linear-gradient(rgba(255, 127, 0, 0.92), rgba(187, 0, 255, 0.25));
   backdrop-filter: blur(10px);
   display: flex;
   flex-direction: column;
@@ -76,7 +76,7 @@
 }
 
 .top-section__right img {
-  height: 300px;
+  height: 200px;
 }
 
 .top-section__logo {
