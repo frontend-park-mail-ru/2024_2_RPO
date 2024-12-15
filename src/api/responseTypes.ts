@@ -1,4 +1,4 @@
-import { CsatQuestion } from "@/types/types";
+import { CsatQuestion } from '@/types/types';
 
 export interface BoardContentResponse {
   myRole: 'viewer' | 'editor' | 'editor_chief' | 'admin';
@@ -91,4 +91,20 @@ export interface CardDetailsResponse {
   attachments: AttachmentResponse[];
   comments: CommentResponse[];
   assignedUsers: UserResponse[];
+}
+
+export type SharedCardResponse =
+  | MySharedCardResponse
+  | ForeignSharedCardResponse;
+
+export interface MySharedCardResponse {
+  type: 'my';
+  boardId: number;
+  cardId: number;
+}
+
+export interface ForeignSharedCardResponse {
+  type: 'foreign';
+  board: BoardResponse;
+  card: CardDetailsResponse;
 }

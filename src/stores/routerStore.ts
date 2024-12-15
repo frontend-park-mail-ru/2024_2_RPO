@@ -40,5 +40,10 @@ export const [useRouterStore, setRouterStore] = defineStore<RouterFlags>(
     boardId: undefined,
     isCsatResults: false,
     isPoll: false,
+    isBoardPreview: false,
+    isCardPreview: false,
+    isPreview: false,
+    cardUuid: undefined,
+    boardInviteUuid: undefined,
   }
 );

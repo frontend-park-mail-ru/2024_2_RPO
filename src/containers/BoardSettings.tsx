@@ -7,7 +7,7 @@ import {
   useActiveBoardStore,
 } from '@/stores/activeBoardStore';
 import { Input } from '@/components/Input';
-import {  removeMember, updateMember } from '@/api/members';
+import { createInviteLink, removeMember, updateMember } from '@/api/members';
 import { setMembersStore, useMembersStore } from '@/stores/members';
 import { showToast } from '@/stores/toastNotificationStore';
 import { useMeStore } from '@/stores/meStore';
@@ -142,7 +142,7 @@ export const BoardSettings = () => {
                   <h1>Ссылка-приглашение</h1>
                   <Input
                     key="invite_link_input"
-                    initialValue="https://kanban-pumpkin.ru/card/228"
+                    initialValue={`${window.location.origin}/inviteBoard/${activeBoard.board.myInviteLinkUuid}`}
                   />
                 </div>
               ) : (
@@ -151,6 +151,20 @@ export const BoardSettings = () => {
                     key="create_invite_link"
                     text="Создать ссылку-приглашение"
                     icon="bi-link-45deg"
+                    callback={() => {
+                      createInviteLink(activeBoard.board.id).then(
+                        (linkUuid) => {
+                          if (linkUuid !== undefined) {
+                            showToast(
+                              'Успешно задана ссылка-приглашение!',
+                              'success'
+                            );
+                            activeBoard.board.myInviteLinkUuid = linkUuid;
+                            setActiveBoardStore(activeBoard);
+                          }
+                        }
+                      );
+                    }}
                   />
                 </div>
               )}

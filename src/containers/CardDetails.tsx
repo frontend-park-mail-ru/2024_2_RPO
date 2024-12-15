@@ -276,7 +276,7 @@ export const CardDetailsContainer = (props: ComponentProps) => {
           )}
         </div>
         <div class="card-details_block">
-          <h1>Комментарии</h1>
+          {cardDetails.comments.length && <h1>Комментарии</h1>}
           {commentInput ? (
             <>
               <Input
@@ -366,7 +366,9 @@ export const CardDetailsContainer = (props: ComponentProps) => {
           />
         </div>
         <div class="card-details_block">
-          <h1>Назначенные пользователи</h1>
+          {cardDetails.assignedUsers.length && (
+            <h1>Назначенные пользователи</h1>
+          )}
           {cardDetails.assignedUsers.map((u) => {
             return (
               <div className="assigned-user">

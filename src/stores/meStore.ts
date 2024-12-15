@@ -10,12 +10,13 @@ export const [useMeStore, setMeStore] = defineStore<User | undefined>(
 
 export const updateMe = () => {
   setTimeout(() => {
+    const router = useRouterStore();
     getUserMe().then((user) => {
       if (user !== undefined) {
         setMeStore(user);
       } else {
         setMeStore(undefined);
-        if (useRouterStore().isApp) {
+        if (router.isApp && !router.isPreview) {
           goToUrl('/');
         }
       }

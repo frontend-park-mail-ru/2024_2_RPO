@@ -12,6 +12,7 @@ import {
   apiPost,
   apiPut,
   HTTP_STATUS_CREATED,
+  HTTP_STATUS_NOT_FOUND,
   HTTP_STATUS_OK,
 } from './apiHelper';
 import {
@@ -25,6 +26,7 @@ import {
   CardDetailsResponse,
   CheckListFieldResponse,
   CommentResponse,
+  SharedCardResponse,
   UserResponse,
 } from './responseTypes';
 import {
@@ -189,5 +191,24 @@ export const addAttachment = async (
       return decodeAttachment(response.body as AttachmentResponse);
     default:
       showToast('Ошибка при добавлении файла', 'error');
+  }
+};
+
+export const getCardByLink = async (
+  cardUuid: string
+): Promise<SharedCardResponse | undefined> => {
+  const response = await apiGet(`/sharedCard/${cardUuid}`);
+  switch (response.status) {
+    case HTTP_STATUS_CREATED:
+    case HTTP_STATUS_OK: {
+      const res = response.body as SharedCardResponse;
+      return res;
+    }
+    case HTTP_STATUS_NOT_FOUND:
+      showToast('Карточка удалена или ссылка повреждена', 'error');
+      return undefined;
+    default:
+      showToast('Неизвестная ошибка при получении карточки', 'error');
+      return undefined;
   }
 };
