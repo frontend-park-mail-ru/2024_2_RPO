@@ -12,7 +12,6 @@ import { User } from '@/types/types';
 import { userMeMock } from './mocks/user';
 import { showToast } from '@/stores/toastNotificationStore';
 import { UserResponse } from './responseTypes';
-import { setCsatStore, useCsatStore } from '@/stores/csatStore';
 import { UserRequest } from './requestTypes';
 import { decodeUser } from './decode';
 /**
@@ -29,14 +28,15 @@ export const getUserMe = async (): Promise<User | undefined> => {
     switch (response.status) {
       case HTTP_STATUS_OK: {
         const data: UserResponse = response.body;
-        if (data.pollQuestions !== undefined) {
-          const csat = useCsatStore();
-          csat.isOpened = true;
-          csat.questions = data.pollQuestions ?? [];
-          if (csat.questions.length) {
-            setCsatStore(csat);
-          }
-        }
+        //TODO починить CSAT
+        // if (data.pollQuestions !== undefined) {
+        //   const csat = useCsatStore();
+        //   csat.isOpened = true;
+        //   csat.questions = data.pollQuestions ?? [];
+        //   if (csat.questions.length) {
+        //     setCsatStore(csat);
+        //   }
+        // }
         return decodeUser(data);
       }
       case HTTP_STATUS_UNAUTHORIZED:

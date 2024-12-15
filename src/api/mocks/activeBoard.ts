@@ -23,6 +23,7 @@ export const activeBoardMock: ActiveBoard = {
           hasAssignedUsers: false,
           hasAttachments: false,
           hasCheckList: false,
+          linkUuid: '',
         },
         {
           type: 'real',
@@ -33,6 +34,7 @@ export const activeBoardMock: ActiveBoard = {
           hasAssignedUsers: false,
           hasAttachments: false,
           hasCheckList: false,
+          linkUuid: '',
         },
       ],
     },

@@ -29,6 +29,7 @@ export const decodeUser = (user: UserResponse): User => {
 export const decodeCard = (card: CardResponse): RealCard => {
   return {
     ...card,
+    linkUuid: card.cardUuid,
     type: 'real',
     deadline: card.deadline ? new Date(card.deadline) : undefined,
   };

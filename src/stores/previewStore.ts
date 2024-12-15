@@ -1,8 +1,10 @@
-import { getCardByLink } from '@/api/cardDetails';
+import { getCardByLink, getCardDetails } from '@/api/cardDetails';
 import { decodeBoard, decodeCardDetails } from '@/api/decode';
 import { fetchInviteLink } from '@/api/members';
 import { defineStore } from '@/jsxCore/hooks';
 import { Board, CardDetails } from '@/types/types';
+import { goToUrl } from './routerStore';
+import { setCardDetailsStore } from './cardDetailsStore';
 
 type PreviewStore = CardPreviewStore | BoardPreviewStore;
 
@@ -36,6 +38,12 @@ export const loadCardPreview = (cardUuid: string) => {
           type: 'card',
           board: decodeBoard(card.board),
           cardDetails: decodeCardDetails(card.card),
+        });
+        setCardDetailsStore(decodeCardDetails(card.card));
+      } else {
+        goToUrl(`/app/board_${card.boardId}`);
+        getCardDetails(card.cardId).then((details) => {
+          setCardDetailsStore(details);
         });
       }
     }

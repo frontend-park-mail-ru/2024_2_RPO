@@ -23,6 +23,7 @@ import {
 } from './requestTypes';
 import {
   AttachmentResponse,
+  BoardResponse,
   CardDetailsResponse,
   CheckListFieldResponse,
   CommentResponse,
@@ -201,8 +202,19 @@ export const getCardByLink = async (
   switch (response.status) {
     case HTTP_STATUS_CREATED:
     case HTTP_STATUS_OK: {
-      const res = response.body as SharedCardResponse;
-      return res;
+      if (response.body.boardId !== undefined) {
+        return {
+          type: 'my',
+          boardId: response.body.boardId,
+          cardId: response.body.cardId,
+        };
+      } else {
+        return {
+          type: 'foreign',
+          board: response.body.board as BoardResponse,
+          card: response.body.card as CardDetailsResponse,
+        };
+      }
     }
     case HTTP_STATUS_NOT_FOUND:
       showToast('Карточка удалена или ссылка повреждена', 'error');

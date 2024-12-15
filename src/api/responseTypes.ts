@@ -24,6 +24,7 @@ export interface CardResponse {
   hasAttachments: boolean;
   hasAssignedUsers: boolean;
   hasComments: boolean;
+  cardUuid: string;
 }
 
 export interface BoardResponse {

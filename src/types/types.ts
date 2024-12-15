@@ -55,6 +55,7 @@ export interface RealCard {
   hasCheckList: boolean;
   hasAttachments: boolean;
   hasAssignedUsers: boolean;
+  linkUuid: string;
 }
 
 export interface CardDetails {

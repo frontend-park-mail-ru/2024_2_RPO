@@ -108,6 +108,16 @@ export const MainApp = (props: ComponentProps) => {
           title="Подробности карточки"
           key="card_details_modal_dialog"
           closeCallback={() => {
+            if (preview) {
+              setPreviewStore(undefined);
+              setCardDetailsStore(undefined);
+              if (me !== undefined) {
+                goToUrl('/app');
+              } else {
+                goToUrl('/');
+              }
+              return;
+            }
             setCardDetailsStore(undefined);
           }}
         >
@@ -121,7 +131,11 @@ export const MainApp = (props: ComponentProps) => {
           key="board_invite_modal_dialog"
           closeCallback={() => {
             setPreviewStore(undefined);
-            goToUrl('/app');
+            if (me) {
+              goToUrl('/app');
+            } else {
+              goToUrl('/');
+            }
           }}
         >
           <div>
@@ -138,7 +152,11 @@ export const MainApp = (props: ComponentProps) => {
                 text="Отмена"
                 callback={() => {
                   setPreviewStore(undefined);
-                  goToUrl('/app');
+                  if (me) {
+                    goToUrl('/app');
+                  } else {
+                    goToUrl('/');
+                  }
                 }}
               />
               <Button
