@@ -4,10 +4,10 @@ self.addEventListener('install', event => {
     }));
 });
 
-// self.addEventListener('fetch', event => {
-//     event.respondWith(
-//         fetch(event.request).catch(() => {
-//             return caches.match('/static/offline.html');
-//         })
-//     );
-// });
+self.addEventListener('fetch', event => {
+    event.respondWith(
+        fetch(event.request).catch(() => {
+            return caches.match('/static/sw/offline.html');
+        })
+    );
+});

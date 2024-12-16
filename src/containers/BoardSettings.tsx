@@ -118,25 +118,6 @@ export const BoardSettings = () => {
           <div class="board-settings__add-participants">
             <div class="add-participiants__text">Добавить участников</div>
             <div class="add-participiants__main">
-              {/*На будущее - приглашение по ссылке*/
-              /* <div class="main__link-text">Моя ссылка:</div>
-              <div class="main__link-input">
-                <Input
-                  key="board-settings-link"
-                  initialValue="https://pumpkin.com/board/228/join_by_invite/9992"
-                  readOnly
-                  copyOnClick
-                />
-              </div>
-              <div class="main__link-input__btn">
-                <Button key="copy-link" icon="bi-copy" variant="accent" />
-                <Button
-                  key="delete-link"
-                  text="Удалить ссылку"
-                  icon="bi-x-lg"
-                  variant="default"
-                />
-              </div> */}
               {activeBoard.board.myInviteLinkUuid ? (
                 <div>
                   <h1>Ссылка-приглашение</h1>
