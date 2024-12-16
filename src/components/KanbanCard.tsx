@@ -218,12 +218,12 @@ export const KanbanCard = (props: KanbanCardProps) => {
               {activeBoard.myRole !== 'viewer' && (
                 <>
                   <div class="kanban-card__menu-item">
-                    <i class="bi-caret-down-fill" />
-                    Переместить ниже
-                  </div>
-                  <div class="kanban-card__menu-item">
                     <i class="bi-caret-up-fill" />
                     Переместить выше
+                  </div>
+                  <div class="kanban-card__menu-item">
+                    <i class="bi-caret-down-fill" />
+                    Переместить ниже
                   </div>
                   <div class="kanban-card__menu-item">
                     <i class="bi-caret-left-fill" />В левую колонку
@@ -274,11 +274,12 @@ export const KanbanCard = (props: KanbanCardProps) => {
         ) : (
           <div className="kanban-card__title">
             <div>{card.title}</div>
-            <div>
+            <div style="display: flex; flex-direction: row; column-gap: 10px; color: gray">
               {card.deadline !== undefined && <i className="bi-clock" />}
               {card.hasCheckList && <i class="bi-check2-square" />}
               {card.hasAttachments && <i class="bi-paperclip" />}
               {card.hasAssignedUsers && <i class="bi-person-plus" />}
+              {card.hasComments && <i class="bi-chat-left-text" />}
             </div>
           </div>
         )}

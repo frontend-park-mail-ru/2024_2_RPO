@@ -6,9 +6,14 @@
 }
 
 .card-details__left-section {
-  width: 60%;
   display: flex;
   flex-direction: column;
+}
+
+@media screen and (min-width: 800px) {
+  card-details__left-section {
+    width: 60%;
+  }
 }
 
 .card-details__right-section {
@@ -31,6 +36,13 @@
   border-radius: 3px;
   padding-left: 5px;
   padding-right: 3px;
+}
+
+@media screen and (max-width: 800px) {
+  .checklist-field {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
 }
 
 .checklist-field:hover {
@@ -127,4 +139,40 @@
   flex-direction: row;
   align-items: center;
   column-gap: 3px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  padding-left: 5px;
+  padding-right: 3px;
+  border-radius: 3px;
+}
+
+@media screen and (max-width: 800px) {
+  .attachment {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+}
+
+.attachment:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.attachment__remove {
+  color: red;
+}
+
+@media screen and (max-width: 800px) {
+  .attachment__remove {
+    font-size: 1.5rem;
+  }
+}
+
+@media screen and (min-width: 800px) {
+  .attachment .attachment__remove {
+    opacity: 0;
+  }
+}
+
+.attachment:hover .attachment__remove {
+  opacity: 1;
 }

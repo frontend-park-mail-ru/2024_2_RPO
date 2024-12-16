@@ -12,6 +12,7 @@ import {
   assignUser,
   createComment,
   deassignUser,
+  deleteAttachment,
   deleteCheckListField,
   deleteComment,
   editCheckListField,
@@ -21,6 +22,7 @@ import { Button } from '@/components/Button';
 import { updateCard } from '@/api/columnsCards';
 import { formatDateToGoTimeString } from '@/utils/misc';
 import { showToast } from '@/stores/toastNotificationStore';
+import { downloadFile } from '@/utils/download';
 
 const getFileIcon = (fileName: string): string => {
   const ext = fileName.split('.').pop()?.toLowerCase();
@@ -248,12 +250,14 @@ export const CardDetailsContainer = (props: ComponentProps) => {
                 <Button
                   icon="bi-check2-square"
                   key="checklist_add_btn"
+                  fullWidth
                   callback={addCLF}
                   text="Добавить строку чеклиста"
                   variant="accent"
                 />
                 <Button
                   key="checklist_cancel_add_btn"
+                  fullWidth
                   callback={() => {
                     setCheckListInput(false);
                   }}
@@ -266,6 +270,7 @@ export const CardDetailsContainer = (props: ComponentProps) => {
               <Button
                 key="checklist_open_input_btn"
                 icon="bi-check2-square"
+                fullWidth
                 callback={() => {
                   setCheckListInput(true);
                 }}
@@ -294,6 +299,7 @@ export const CardDetailsContainer = (props: ComponentProps) => {
                 />
                 <Button
                   key="comment_btn"
+                  fullWidth
                   callback={addComm}
                   text="Добавить комментарий"
                   variant="accent"
@@ -301,6 +307,7 @@ export const CardDetailsContainer = (props: ComponentProps) => {
                 />
                 <Button
                   key="comment_cancel_add_btn"
+                  fullWidth
                   callback={() => {
                     setCommentInput(false);
                   }}
@@ -312,6 +319,7 @@ export const CardDetailsContainer = (props: ComponentProps) => {
             ) : (
               <Button
                 key="comment_input_btn"
+                fullWidth
                 callback={() => {
                   setCommentInput(true);
                 }}
@@ -413,12 +421,14 @@ export const CardDetailsContainer = (props: ComponentProps) => {
                 <Button
                   key="assign_user_btn"
                   text="Назначить участника"
+                  fullWidth
                   icon="bi-person-plus"
                   variant="accent"
                   callback={addAssigned}
                 />
                 <Button
                   key="assign_user_cancel"
+                  fullWidth
                   text="Отмена"
                   callback={() => {
                     setAssignedInput(false);
@@ -431,6 +441,7 @@ export const CardDetailsContainer = (props: ComponentProps) => {
                 key="assign_user_open_input"
                 variant="default"
                 text="Назначить участника"
+                fullWidth
                 icon="bi-person-plus"
                 callback={() => {
                   setAssignedInput(true);
@@ -459,11 +470,25 @@ export const CardDetailsContainer = (props: ComponentProps) => {
           <div>
             {cardDetails.attachments.map((attachment) => {
               return (
-                <div class="attachment">
+                <div
+                  class="attachment"
+                  ON_click={() => {
+                    downloadFile(attachment.fileName, attachment.originalName);
+                  }}
+                >
                   <div>
                     <i class={getFileIcon(attachment.originalName)} />
                   </div>
-                  {attachment.originalName}
+                  <div style="flex-grow:1">{attachment.originalName}</div>
+                  <div
+                    class="attachment__remove"
+                    ON_click={(ev: Event) => {
+                      ev.stopImmediatePropagation();
+                      deleteAttachment(attachment.id);
+                    }}
+                  >
+                    <i class="bi-trash" />
+                  </div>
                 </div>
               );
             })}
@@ -472,6 +497,7 @@ export const CardDetailsContainer = (props: ComponentProps) => {
             key="add_attachment"
             text="Добавить вложение"
             icon="bi-paperclip"
+            fullWidth
             callback={() => {
               const el = document.getElementById(
                 'upload_attachment'
@@ -490,6 +516,7 @@ export const CardDetailsContainer = (props: ComponentProps) => {
                 variant="accent"
                 icon="bi-copy"
                 text="Скопировать ссылку"
+                fullWidth
               />
             </div>
           ) : (
@@ -498,6 +525,7 @@ export const CardDetailsContainer = (props: ComponentProps) => {
               variant="default"
               icon="bi-share"
               text="Ссылка на карточку"
+              fullWidth
               callback={() => {
                 setLinkOpened(true);
               }}

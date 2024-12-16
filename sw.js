@@ -1,6 +1,6 @@
 self.addEventListener('install', event => {
     event.waitUntil(caches.open('offline-cache').then(cache => {
-        return cache.addAll(['/static/offline.html']);
+        return cache.addAll(['/static/sw/offline.html']);
     }));
 });
 

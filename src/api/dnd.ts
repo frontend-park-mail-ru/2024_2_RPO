@@ -13,7 +13,7 @@ export const moveCard = async (
     previousCardId: previousCardId,
     nextCardId: nextCardId,
   };
-  const response = await apiPut(`/cardOrder/${cardId}`, req);
+  const response = await apiPut(`/cardOrder/card_${cardId}`, req);
   switch (response.status) {
     case HTTP_STATUS_OK:
     case HTTP_STATUS_CREATED:
@@ -33,7 +33,7 @@ export const moveColumn = async (
     nextColumnId: nextColumnId,
     previousColumnId: previousColumnId,
   };
-  const response = await apiPut(`/columnOrder/${columnId}`, req);
+  const response = await apiPut(`/columnOrder/column_${columnId}`, req);
   switch (response.status) {
     case HTTP_STATUS_OK:
     case HTTP_STATUS_CREATED:

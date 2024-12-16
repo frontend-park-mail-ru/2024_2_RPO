@@ -11,8 +11,7 @@ import { getFlagRoutes } from './routes/routesFlag';
 import { CsatPoll } from './screens/CsatPoll';
 import { CsatResults } from './screens/CsatResults';
 import { setCsatStore, useCsatStore } from './stores/csatStore';
-import { loadBoard, useActiveBoardStore } from './stores/activeBoardStore';
-import { useDndStore } from './stores/dndStore';
+
 
 const App: IComponentFunction = () => {
   const routerStore = useRouterStore();
@@ -63,14 +62,14 @@ if ('serviceWorker' in navigator) {
   console.error('Service Worker is not available');
 }
 
-const REFETCH_DELAY = 5000;
+// const REFETCH_DELAY = 5000;
 
-setInterval(() => {
-  const activeBoard = useActiveBoardStore();
-  const dnd = useDndStore();
-  if (dnd === undefined) {
-    if (activeBoard !== undefined) {
-      loadBoard(activeBoard.board.id, true);
-    }
-  }
-}, REFETCH_DELAY);
+// setInterval(() => {
+//   const activeBoard = useActiveBoardStore();
+//   const dnd = useDndStore();
+//   if (dnd === undefined) {
+//     if (activeBoard !== undefined) {
+//       loadBoard(activeBoard.board.id, true);
+//     }
+//   }
+// }, REFETCH_DELAY);

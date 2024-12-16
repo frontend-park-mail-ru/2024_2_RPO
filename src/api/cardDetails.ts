@@ -195,6 +195,19 @@ export const addAttachment = async (
   }
 };
 
+export const deleteAttachment = async (
+  attachmentId: number
+): Promise<boolean> => {
+  const response = await apiDelete(`/attachments/attachment_${attachmentId}`);
+  switch (response.status) {
+    case HTTP_STATUS_OK:
+      return true;
+    default:
+      showToast('Ошибка при удалении вложения', 'error');
+      return false;
+  }
+};
+
 export const getCardByLink = async (
   cardUuid: string
 ): Promise<SharedCardResponse | undefined> => {
