@@ -35,45 +35,17 @@
   justify-content: space-around;
 }
 
-.button {
-  margin-top: 4px;
-  margin-bottom: 4px;
-  border-radius: 3px;
-  height: 32px;
-  padding-right: 8px;
-  padding-left: 8px;
-  padding-top: 5px;
-  cursor: pointer;
+.left-panel-dark {
+  position: fixed;
+  top: 0;
+  left: 246px;
+  width: 100vw;
+  height: 100vh;
+  z-index: 100;
+  background-color: rgba(0, 0, 0, 0.4);
   display: flex;
-  flex-direction: row;
-  width: max-content;
-}
-.button:hover {
-  opacity: 0.9;
-}
-.button__default {
-  background-color: var(--color-default);
-}
-.button__negative {
-  color: white;
-  background-color: var(--color-negative);
-}
-.button__positive {
-  color: white;
-  background-color: var(--color-positive);
-}
-.button__accent {
-  color: white;
-  background-color: var(--color-accent);
-}
-.button__transparent {
-  background-color: rgba(0, 0, 0, 0);
-}
-.button__transparent:hover {
-  background-color: rgba(0, 0, 0, 0.15);
-}
-.button__icon {
-  margin-top: 1px;
+  align-items: center;
+  justify-content: space-around;
 }
 
 .input {
@@ -163,57 +135,6 @@
   height: 1px;
   background-color: #ccc;
   margin-top: 10px;
-}
-
-.user-popup__avatar {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  object-fit: cover;
-  background-color: #b4c0ee;
-  position: relative;
-  align-items: flex-start;
-}
-.user-popup {
-  background-color: white;
-  position: absolute;
-  top: 50px;
-  right: 10px;
-  z-index: 102;
-  border-radius: 12px;
-}
-.user-popup__profile-info {
-  margin-top: 20px;
-  margin-left: 15px;
-  margin-right: 20px;
-  margin-bottom: 20px;
-  display: flex;
-  justify-content: flex-start;
-  column-gap: 8px;
-}
-.user-popup__nickname {
-  font-size: 1.3em;
-  font-weight: bold;
-}
-.user-popup__button {
-  width: 100%;
-  padding-left: 15px;
-  padding-right: 20px;
-  padding-top: 6px;
-  padding-bottom: 6px;
-  display: flex;
-  justify-content: flex-start;
-  cursor: pointer;
-}
-.user-popup__button:hover {
-  background-color: rgba(0, 0, 0, 0.236);
-}
-.user-popup__button-icon {
-  margin-top: 1px;
-  margin-right: 8px;
-}
-.user-popup__button-text {
-  margin-right: 8px;
 }
 
 .display-none {

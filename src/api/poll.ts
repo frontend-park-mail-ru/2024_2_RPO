@@ -1,4 +1,4 @@
-import { PollResults, PollSubmit } from '@/types/poll';
+import { PollResults, PollSubmit } from '@/types/types';
 import { apiGet, apiPost, HTTP_STATUS_OK } from './apiHelper';
 import { showToast } from '@/stores/toastNotificationStore';
 

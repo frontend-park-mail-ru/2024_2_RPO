@@ -40,6 +40,10 @@
   padding-bottom: 3px;
   padding-right: 5px;
   padding-left: 5px;
+  transition: background 0.3s ease;
+  display: flex;
+  flex-direction: row;
+  column-gap: 5px;
 }
 .select-box__option:hover {
   background-color: #eee;

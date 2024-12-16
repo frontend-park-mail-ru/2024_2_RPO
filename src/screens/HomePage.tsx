@@ -65,7 +65,7 @@ export const HomePage = (props: ComponentProps) => {
               </div>
             </div>
             <div className="top-section__right">
-              <img src="static/img/logo.svg" class="home-page__logo" />
+              <img src="static/img/logo_new.svg" class="home-page__logo" />
             </div>
           </div>
 
@@ -78,8 +78,8 @@ export const HomePage = (props: ComponentProps) => {
                 scrollToSection('kanban-info'); // Плавная прокрутка
               }}
             >
-              <div className="scroll-text">Подробнее о Pumpkin</div>
-              <i className="bi bi-arrow-down scroll-arrow"></i>
+              <div className="homepage__scroll-text">Подробнее о Pumpkin</div>
+              <i className="bi-arrow-down scroll-arrow homepage__scroll-text" />
             </a>
           </div>
 
@@ -94,9 +94,11 @@ export const HomePage = (props: ComponentProps) => {
         </div>
 
         <div className="homepage__detail-section homepage__detail-section__odd">
-          <div className="homepage__detail-image">
-            <img src="/static/img/photo_desk.png" width="100%" />
-          </div>
+          <img
+            className="homepage__detail-image"
+            src="/static/img/photo_desk.png"
+          />
+
           <div className="homepage__detail-comment">
             <div className="homepage__detail-header">
               Каждому проекту - по доске
@@ -108,7 +110,7 @@ export const HomePage = (props: ComponentProps) => {
           </div>
         </div>
 
-        <div className="homepage__detail-section homepage__detail-section__odd">
+        <div className="homepage__detail-section homepage__detail-section__even">
           <div className="homepage__detail-comment">
             <div className="homepage__detail-header">
               Размещайте задачи в колонках
@@ -118,23 +120,19 @@ export const HomePage = (props: ComponentProps) => {
               вы точно ничего не забудете
             </div>
           </div>
-          <div className="homepage__detail-image">
-            <img
-              src="/static/img/photo_columns.png"
-              alt="Колонки задач"
-              width="100%"
-            />
-          </div>
+          <img
+            className="homepage__detail-image"
+            src="/static/img/photo_columns.png"
+            alt="Колонки задач"
+          />
         </div>
 
         <div className="homepage__detail-section homepage__detail-section__odd">
-          <div className="homepage__detail-image">
-            <img
-              src="/static/img/photo_desk_settings.png"
-              alt="Работайте вместе"
-              width="100%"
-            />
-          </div>
+          <img
+            className="homepage__detail-image"
+            src="/static/img/photo_desk_settings.png"
+            alt="Работайте вместе"
+          />
           <div className="homepage__detail-comment">
             <div className="homepage__detail-header">Работайте вместе</div>
             <div className="homepage__detail-text">
@@ -144,8 +142,9 @@ export const HomePage = (props: ComponentProps) => {
           </div>
         </div>
 
-        <div class="video-frame">
+        <div className="homepage__video-frame">
           <iframe
+            className="homepage__video-iframe"
             src="https://drive.google.com/file/d/1zIoGZ8QWQVdl0K3-tuuay9XfbQEbu47i/preview"
             width="854"
             height="480"

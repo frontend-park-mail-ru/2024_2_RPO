@@ -1,6 +1,6 @@
-import { Question } from '@/types/poll';
+import { CsatQuestion } from '@/types/types';
 
-export const pollMock: Question[] = [
+export const pollMock: CsatQuestion[] = [
   {
     id: 1,
     text: 'Насколько удобно пользоваться интерфейсом доски?',

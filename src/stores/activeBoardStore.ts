@@ -1,4 +1,4 @@
-import { ActiveBoard } from '@/types/activeBoard';
+import { ActiveBoard } from '@/types/types';
 import { defineStore } from '@/jsxCore/hooks';
 import { activeBoardMock } from '@/api/mocks/activeBoard';
 import { getBoardContent } from '@/api/boards';
@@ -18,7 +18,7 @@ export const loadBoard = (
   } else {
     const abStore = useActiveBoardStore();
     if (abStore !== undefined) {
-      if (abStore.id === boardId && !refetch) {
+      if (abStore.board.id === boardId && !refetch) {
         return;
       }
     }

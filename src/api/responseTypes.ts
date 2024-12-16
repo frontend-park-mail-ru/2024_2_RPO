@@ -1,8 +1,8 @@
-import { PollQuestion } from '@/stores/csatStore';
+import { CsatQuestion } from '@/types/types';
 
 export interface BoardContentResponse {
   myRole: 'viewer' | 'editor' | 'editor_chief' | 'admin';
-  boardInfo: BoardInfoResponse;
+  boardInfo: BoardResponse;
   allColumns: ColumnResponse[];
   allCards: CardResponse[];
 }
@@ -24,15 +24,7 @@ export interface CardResponse {
   hasAttachments: boolean;
   hasAssignedUsers: boolean;
   hasComments: boolean;
-}
-
-export interface BoardInfoResponse {
-  id: number;
-  name: string;
-  description: string;
-  backgroundImageUrl: string;
-  createdAt: string;
-  updatedAt: string;
+  cardUuid: string;
 }
 
 export interface BoardResponse {
@@ -42,6 +34,7 @@ export interface BoardResponse {
   backgroundImageUrl: string;
   createdAt: string;
   updatedAt: string;
+  myInviteLinkUuid?: string;
 }
 
 export interface UserResponse {
@@ -50,7 +43,7 @@ export interface UserResponse {
   email: string;
   createdAt: string;
   avatarImageUrl: string;
-  questions?: PollQuestion[];
+  pollQuestions?: CsatQuestion[];
 }
 
 export interface UserPermissionsResponse {
@@ -99,4 +92,20 @@ export interface CardDetailsResponse {
   attachments: AttachmentResponse[];
   comments: CommentResponse[];
   assignedUsers: UserResponse[];
+}
+
+export type SharedCardResponse =
+  | MySharedCardResponse
+  | ForeignSharedCardResponse;
+
+export interface MySharedCardResponse {
+  type: 'my';
+  boardId: number;
+  cardId: number;
+}
+
+export interface ForeignSharedCardResponse {
+  type: 'foreign';
+  board: BoardResponse;
+  card: CardDetailsResponse;
 }

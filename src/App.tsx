@@ -10,6 +10,8 @@ import { updateMe } from './stores/meStore';
 import { getFlagRoutes } from './routes/routesFlag';
 import { CsatPoll } from './screens/CsatPoll';
 import { CsatResults } from './screens/CsatResults';
+import { setCsatStore, useCsatStore } from './stores/csatStore';
+
 
 const App: IComponentFunction = () => {
   const routerStore = useRouterStore();
@@ -34,6 +36,14 @@ setTimeout(() => {
   setRouterStore(getFlagRoutes(window.location.pathname));
 }, 0);
 
+window.addEventListener('message', (ev: MessageEvent<string>) => {
+  if (ev.data === 'close_csat') {
+    setTimeout(() => {
+      setCsatStore({ ...useCsatStore(), isOpened: false });
+    }, 0);
+  }
+});
+
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function () {
     navigator.serviceWorker.register('/sw.js').then(
@@ -56,7 +66,10 @@ if ('serviceWorker' in navigator) {
 
 // setInterval(() => {
 //   const activeBoard = useActiveBoardStore();
-//   if (activeBoard !== undefined) {
-//     loadBoard(activeBoard.id, true);
+//   const dnd = useDndStore();
+//   if (dnd === undefined) {
+//     if (activeBoard !== undefined) {
+//       loadBoard(activeBoard.board.id, true);
+//     }
 //   }
 // }, REFETCH_DELAY);

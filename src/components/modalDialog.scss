@@ -11,6 +11,8 @@
     border-radius: 12px;
     min-width: 300px;
     min-height: 200px;
+    max-height: 90vh;
+    overflow-y: auto;
   }
 }
 @media screen and (max-width: 800px) {
@@ -55,6 +57,7 @@
   margin-top: 4px;
   margin-right: 4px;
   padding-left: 2px;
+  transition: 0.3s ease;
 }
 .modal-dialog__close-button i {
   margin-top: -1px;

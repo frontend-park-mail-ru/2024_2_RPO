@@ -3,14 +3,16 @@ import {
   useCardDetailsStore,
 } from '@/stores/cardDetailsStore';
 import './cardDetails.scss';
-import { CardDetails, CheckListField } from '@/types/card';
+import { CardDetails, CheckListField } from '@/types/types';
 import { ComponentProps } from '@/jsxCore/types';
 import { Input } from '@/components/Input';
 import {
+  addAttachment,
   addCheckListField,
   assignUser,
   createComment,
   deassignUser,
+  deleteAttachment,
   deleteCheckListField,
   deleteComment,
   editCheckListField,
@@ -18,64 +20,40 @@ import {
 import { useEffectRefs, useState } from '@/jsxCore/hooks';
 import { Button } from '@/components/Button';
 import { updateCard } from '@/api/columnsCards';
+import { formatDateToGoTimeString } from '@/utils/misc';
+import { showToast } from '@/stores/toastNotificationStore';
+import { downloadFile } from '@/utils/download';
 
-// interface UploadedFile {
-//   id: string;
-//   name: string;
-//   icon: string;
-// }
-// const getFileIcon = (fileName: string): string => {
-//   const ext = fileName.split('.').pop()?.toLowerCase();
-//   switch (ext) {
-//     case 'pdf':
-//       return 'bi-file-earmark-pdf';
-//     case 'mp3':
-//     case 'wav':
-//       return 'bi-file-earmark-music';
-//     case 'jpg':
-//     case 'jpeg':
-//     case 'png':
-//     case 'gif':
-//       return 'bi-file-earmark-image';
-//     case 'pptx':
-//       return 'bi-file-earmark-slides';
-//     case 'js':
-//     case 'css':
-//     case 'cpp':
-//     case 'go':
-//       return 'bi-file-earmark-code';
-//     case 'doc':
-//     case 'docx':
-//     case 'odt':
-//       return 'bi-file-earmark-word';
-//     case 'txt':
-//       return 'bi-file-earmark-text';
-//     default:
-//       return 'bi-file-earmark';
-//   }
-// };
-
-function padZero(num: number) {
-  return num.toString().padStart(2, '0');
-}
-
-function formatDateToGoTimeString(date: Date) {
-  // Убедимся, что переданный объект является экземпляром Date
-  if (!(date instanceof Date)) {
-    throw new TypeError('Input должен быть экземпляром Date');
+const getFileIcon = (fileName: string): string => {
+  const ext = fileName.split('.').pop()?.toLowerCase();
+  switch (ext) {
+    case 'pdf':
+      return 'bi-file-earmark-pdf';
+    case 'mp3':
+    case 'wav':
+      return 'bi-file-earmark-music';
+    case 'jpg':
+    case 'jpeg':
+    case 'png':
+    case 'gif':
+      return 'bi-file-earmark-image';
+    case 'pptx':
+      return 'bi-file-earmark-slides';
+    case 'js':
+    case 'css':
+    case 'cpp':
+    case 'go':
+      return 'bi-file-earmark-code';
+    case 'doc':
+    case 'docx':
+    case 'odt':
+      return 'bi-file-earmark-word';
+    case 'txt':
+      return 'bi-file-earmark-text';
+    default:
+      return 'bi-file-earmark';
   }
-
-  // Получаем компоненты даты в UTC
-  const year = date.getUTCFullYear();
-  const month = padZero(date.getUTCMonth() + 1); // Месяцы в JS начинаются с 0
-  const day = padZero(date.getUTCDate());
-  const hours = padZero(date.getUTCHours());
-  const minutes = padZero(date.getUTCMinutes());
-  const seconds = padZero(date.getUTCSeconds());
-
-  // Формируем строку в формате RFC3339
-  return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}Z`;
-}
+};
 
 interface CheckListFieldProps extends ComponentProps {
   field: CheckListField;
@@ -101,7 +79,6 @@ const CheckListFieldComponent = (props: CheckListFieldProps) => {
                   if (fi.id !== f.id) {
                     return fi;
                   }
-                  console.log(cf);
                   return cf;
                 });
                 setCardDetailsStore(store);
@@ -109,10 +86,12 @@ const CheckListFieldComponent = (props: CheckListFieldProps) => {
             }
           );
         }}
-      ></div>
+      >
+        {f.isDone && <i class="bi-check checklist-field__box-check" />}
+      </div>
       <div class="checklist-field__text">{f.title}</div>
       <div
-        style="min-width: 1rem; color: red; cursor: pointer"
+        style="min-width: 1rem; position: relative; top: 2px; color: red; cursor: pointer"
         ON_click={() => {
           deleteCheckListField(f.id).then((t) => {
             if (t) {
@@ -181,120 +160,378 @@ const DeadlineInput = (props: DeadlineProps) => {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const CardDetailsContainer = (props: ComponentProps) => {
   const cardDetails = useCardDetailsStore() as CardDetails;
+  const [newComment, setNewComment] = useState('');
+  const [newCheckListField, setNewCheckListField] = useState('');
+  const [newAssigned, setNewAssigned] = useState('');
+
+  const [commentInput, setCommentInput] = useState(false);
+  const [checkListInput, setCheckListInput] = useState(false);
+  const [assignedInput, setAssignedInput] = useState(false);
+  const [linkOpened, setLinkOpened] = useState(false);
+
+  const addCLF = () => {
+    if (newCheckListField.length < 3) {
+      showToast('Строка чеклиста должна быть от 3 символов', 'error');
+      return;
+    }
+    addCheckListField(cardDetails.card.id, newCheckListField).then((clf) => {
+      if (clf !== undefined) {
+        setNewCheckListField('');
+        setCheckListInput(false);
+        cardDetails.checkList.push(clf);
+        setCardDetailsStore(cardDetails);
+      }
+    });
+  };
+
+  const addComm = () => {
+    if (newComment.length < 3) {
+      showToast('Комментарий должен быть от 3 символов', 'error');
+      return;
+    }
+    createComment(cardDetails.card.id, newComment).then((comment) => {
+      if (comment !== undefined) {
+        setNewComment('');
+        setCommentInput(false);
+        cardDetails.comments.push(comment);
+        setCardDetailsStore(cardDetails);
+      }
+    });
+  };
+
+  const addAssigned = () => {
+    if (newAssigned.length < 3) {
+      if (newComment.length < 3) {
+        showToast('Имя польователя может быть от 3 символов', 'error');
+        return;
+      }
+    }
+    assignUser(cardDetails.card.id, newAssigned).then((u) => {
+      if (u !== undefined) {
+        setNewAssigned('');
+        setAssignedInput(false);
+        cardDetails.assignedUsers.push(u);
+        setCardDetailsStore(cardDetails);
+      }
+    });
+  };
+
   return (
-    <div class="card-details">
-      <div class="card-details__left-section">
-        <h2>Чеклист</h2>
-        {cardDetails.checkList.map((field) => {
-          return (
-            <CheckListFieldComponent
-              key={`component_${field.id}`}
-              field={field}
-            />
-          );
-        })}
-        <Input
-          key="checklist_input"
-          placeholder="Новый пункт чеклиста"
-          onEnter={(text) => {
-            addCheckListField(cardDetails.card.id, text).then((clf) => {
-              if (clf !== undefined) {
-                cardDetails.checkList.push(clf);
-                setCardDetailsStore(cardDetails);
-              }
-            });
-          }}
-        />
-        <h1>Комментарии</h1>
-        <Input
-          key="comment_input"
-          placeholder="Напишите Ваш комментарий"
-          onEnter={(text) => {
-            createComment(cardDetails.card.id, text).then((comment) => {
-              if (comment !== undefined) {
-                cardDetails.comments.push(comment);
-                setCardDetailsStore(cardDetails);
-              }
-            });
-          }}
-        />
-        {cardDetails.comments.map((comment) => {
-          return (
-            <div className="comment">
-              <div className="comment__author">{comment.createdBy.name}</div>
-
-              <div>{comment.text}</div>
-              <div
-                style="cursor: pointer; color:red"
-                ON_click={() => {
-                  deleteComment(comment.id).then((t) => {
-                    if (t) {
-                      cardDetails.comments = cardDetails.comments.filter(
-                        (c) => {
-                          return c.id !== comment.id;
-                        }
-                      );
-                      setCardDetailsStore(cardDetails);
-                    }
-                  });
-                }}
-              >
-                <i class="bi-x-lg" />
+    <div>
+      <div style="margin-bottom: 15px">{cardDetails.card.title}</div>
+      <div class="card-details">
+        <div class="card-details__left-section">
+          <div class="card-details_block">
+            <h1 style={cardDetails.checkList.length ? '' : 'display:none'}>
+              Чеклист
+            </h1>
+            {cardDetails.checkList.map((field) => {
+              return (
+                <CheckListFieldComponent
+                  key={`component_${field.id}`}
+                  field={field}
+                />
+              );
+            })}
+            {checkListInput ? (
+              <div>
+                <Input
+                  key="checklist_input"
+                  placeholder="Строка чеклиста"
+                  focusOnInstance
+                  onEnter={addCLF}
+                  onEscape={() => {
+                    setCheckListInput(false);
+                  }}
+                  onChanged={(newText) => {
+                    setNewCheckListField(newText);
+                  }}
+                />
+                <Button
+                  icon="bi-check2-square"
+                  key="checklist_add_btn"
+                  fullWidth
+                  callback={addCLF}
+                  text="Добавить строку чеклиста"
+                  variant="accent"
+                />
+                <Button
+                  key="checklist_cancel_add_btn"
+                  fullWidth
+                  callback={() => {
+                    setCheckListInput(false);
+                  }}
+                  text="Отмена"
+                  icon="bi-x-lg"
+                  variant="default"
+                />
               </div>
-            </div>
-          );
-        })}
-      </div>
+            ) : (
+              <Button
+                key="checklist_open_input_btn"
+                icon="bi-check2-square"
+                fullWidth
+                callback={() => {
+                  setCheckListInput(true);
+                }}
+                text={
+                  cardDetails.checkList.length
+                    ? 'Добавить строку чеклиста'
+                    : 'Добавить чеклист'
+                }
+                variant="default"
+              />
+            )}
+          </div>
+          <div class="card-details_block">
+            {cardDetails.comments.length && <h1>Комментарии</h1>}
+            {commentInput ? (
+              <>
+                <Input
+                  key="comment_input"
+                  placeholder="Напишите Ваш комментарий"
+                  onEnter={addComm}
+                  focusOnInstance
+                  onEscape={() => {
+                    setCommentInput(false);
+                  }}
+                  onChanged={setNewComment}
+                />
+                <Button
+                  key="comment_btn"
+                  fullWidth
+                  callback={addComm}
+                  text="Добавить комментарий"
+                  variant="accent"
+                  icon="bi-chat-left"
+                />
+                <Button
+                  key="comment_cancel_add_btn"
+                  fullWidth
+                  callback={() => {
+                    setCommentInput(false);
+                  }}
+                  text="Отмена"
+                  icon="bi-x-lg"
+                  variant="default"
+                />
+              </>
+            ) : (
+              <Button
+                key="comment_input_btn"
+                fullWidth
+                callback={() => {
+                  setCommentInput(true);
+                }}
+                text="Добавить комментарий"
+                variant="default"
+                icon="bi-chat-left"
+              />
+            )}
+            {cardDetails.comments.map((comment) => {
+              return (
+                <div className="comment">
+                  <div className="comment__avatar">
+                    <img
+                      src={comment.createdBy.avatarImageUrl}
+                      class="comment__avatar-image"
+                    />
+                  </div>
+                  <div className="comment__content">
+                    <div className="comment__author">
+                      {comment.createdBy.name}
+                    </div>
 
-      <div class="card-details__right-section">
-        <h1>Дедлайн</h1>
-        <div>
-          Пожалуйста, вводите дату и время! Если Вы не введёте время, оно не
-          сработает
+                    <div>{comment.text}</div>
+                    <div
+                      style="cursor: pointer; color: red"
+                      ON_click={() => {
+                        deleteComment(comment.id).then((t) => {
+                          if (t) {
+                            cardDetails.comments = cardDetails.comments.filter(
+                              (c) => {
+                                return c.id !== comment.id;
+                              }
+                            );
+                            setCardDetailsStore(cardDetails);
+                          }
+                        });
+                      }}
+                    >
+                      <i class="bi-x-lg" />
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
 
-        <DeadlineInput
-          key="deadline_input"
-          deadline={cardDetails.card.deadline}
-          cardId={cardDetails.card.id}
-        />
-        <h1>Назначенные пользователи</h1>
-        {cardDetails.assignedUsers.map((u) => {
-          return (
-            <div style="display: flex; flex-direction: row">
-              <div>{u.name}</div>
-              <div
-                style="cursor: pointer; color:red"
-                ON_click={() => {
-                  deassignUser(cardDetails.card.id, u.id).then((t) => {
-                    if (t) {
-                      cardDetails.assignedUsers =
-                        cardDetails.assignedUsers.filter((au) => {
-                          return au.id !== u.id;
-                        });
-                      setCardDetailsStore(cardDetails);
-                    }
-                  });
-                }}
-              >
-                <i class="bi-x-lg" />
+        <div class="card-details__right-section">
+          <div class="card-details_block">
+            <h1>Дедлайн</h1>
+            <DeadlineInput
+              key="deadline_input"
+              deadline={cardDetails.card.deadline}
+              cardId={cardDetails.card.id}
+            />
+          </div>
+          <div class="card-details_block">
+            {cardDetails.assignedUsers.length && (
+              <h1>Назначенные пользователи</h1>
+            )}
+            {cardDetails.assignedUsers.map((u) => {
+              return (
+                <div className="assigned-user">
+                  <img class="assigned-user__avatar" src={u.avatarImageUrl} />
+                  <div style="flex-grow: 1; font-weight: bold">{u.name}</div>
+                  <div
+                    style="cursor: pointer; color: red; height: 16px"
+                    ON_click={() => {
+                      deassignUser(cardDetails.card.id, u.id).then((t) => {
+                        if (t) {
+                          cardDetails.assignedUsers =
+                            cardDetails.assignedUsers.filter((au) => {
+                              return au.id !== u.id;
+                            });
+                          setCardDetailsStore(cardDetails);
+                        }
+                      });
+                    }}
+                  >
+                    <i class="bi-x-lg assigned-user__remove" />
+                  </div>
+                </div>
+              );
+            })}
+            {assignedInput ? (
+              <div>
+                <Input
+                  key="assign_user"
+                  placeholder="Никнейм участника"
+                  focusOnInstance
+                  onEnter={addAssigned}
+                  onEscape={() => {
+                    setAssignedInput(false);
+                  }}
+                  onChanged={(newText) => {
+                    setNewAssigned(newText);
+                  }}
+                />
+                <Button
+                  key="assign_user_btn"
+                  text="Назначить участника"
+                  fullWidth
+                  icon="bi-person-plus"
+                  variant="accent"
+                  callback={addAssigned}
+                />
+                <Button
+                  key="assign_user_cancel"
+                  fullWidth
+                  text="Отмена"
+                  callback={() => {
+                    setAssignedInput(false);
+                  }}
+                  icon="bi-x-lg"
+                />
               </div>
+            ) : (
+              <Button
+                key="assign_user_open_input"
+                variant="default"
+                text="Назначить участника"
+                fullWidth
+                icon="bi-person-plus"
+                callback={() => {
+                  setAssignedInput(true);
+                }}
+              />
+            )}
+          </div>
+          <input
+            id="upload_attachment"
+            type="file"
+            style="display:none"
+            ON_change={(event: InputEvent) => {
+              const files = (event.target as HTMLInputElement)
+                .files as FileList;
+              addAttachment(cardDetails.card.id, files[0]).then(
+                (attachment) => {
+                  if (attachment !== undefined) {
+                    showToast('Вложение успешно добавлено!', 'success');
+                    cardDetails.attachments.push(attachment);
+                    setCardDetailsStore(cardDetails);
+                  }
+                }
+              );
+            }}
+          />
+          <div>
+            {cardDetails.attachments.map((attachment) => {
+              return (
+                <div
+                  class="attachment"
+                  ON_click={() => {
+                    downloadFile(attachment.fileName, attachment.originalName);
+                  }}
+                >
+                  <div>
+                    <i class={getFileIcon(attachment.originalName)} />
+                  </div>
+                  <div style="flex-grow:1">{attachment.originalName}</div>
+                  <div
+                    class="attachment__remove"
+                    ON_click={(ev: Event) => {
+                      ev.stopImmediatePropagation();
+                      deleteAttachment(attachment.id);
+                    }}
+                  >
+                    <i class="bi-trash" />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          <Button
+            key="add_attachment"
+            text="Добавить вложение"
+            icon="bi-paperclip"
+            fullWidth
+            callback={() => {
+              const el = document.getElementById(
+                'upload_attachment'
+              ) as HTMLInputElement;
+              el.click();
+            }}
+          />
+          {linkOpened ? (
+            <div>
+              <Input
+                key="card_link_showdown"
+                initialValue={`${window.location.origin}/card/${cardDetails.card.linkUuid}`}
+              />
+              <Button
+                key="copy_card_link_btn"
+                variant="accent"
+                icon="bi-copy"
+                text="Скопировать ссылку"
+                fullWidth
+              />
             </div>
-          );
-        })}
-        <Input
-          key="assign_user"
-          placeholder="Назначить участника"
-          onEnter={(text) => {
-            assignUser(cardDetails.card.id, text).then((u) => {
-              if (u !== undefined) {
-                console.log(u);
-                cardDetails.assignedUsers.push(u);
-                setCardDetailsStore(cardDetails);
-              }
-            });
-          }}
-        />
+          ) : (
+            <Button
+              key="open_link_button"
+              variant="default"
+              icon="bi-share"
+              text="Ссылка на карточку"
+              fullWidth
+              callback={() => {
+                setLinkOpened(true);
+              }}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

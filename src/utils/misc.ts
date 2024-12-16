@@ -14,3 +14,25 @@ export const flatten = (arr: any[]): any[] => {
   }
   return flattenedArray;
 };
+
+function padZero(num: number) {
+  return num.toString().padStart(2, '0');
+}
+
+export function formatDateToGoTimeString(date: Date) {
+  // Убедимся, что переданный объект является экземпляром Date
+  if (!(date instanceof Date)) {
+    throw new TypeError('Input должен быть экземпляром Date');
+  }
+
+  // Получаем компоненты даты в UTC
+  const year = date.getUTCFullYear();
+  const month = padZero(date.getUTCMonth() + 1); // Месяцы в JS начинаются с 0
+  const day = padZero(date.getUTCDate());
+  const hours = padZero(date.getUTCHours());
+  const minutes = padZero(date.getUTCMinutes());
+  const seconds = padZero(date.getUTCSeconds());
+
+  // Формируем строку в формате RFC3339
+  return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}Z`;
+}

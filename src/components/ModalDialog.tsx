@@ -1,5 +1,6 @@
 import { ComponentProps, JsxNode } from '@/jsxCore/types';
 import './modalDialog.scss';
+import { useEscape } from '@/jsxCore/hooks';
 
 interface ModalDialogProps extends ComponentProps {
   title?: string;
@@ -17,10 +18,15 @@ export const ModalDialog = (props: ModalDialogProps) => {
   if (!props.isOpened) {
     return <div style="display:none" />;
   }
-  console.log("I AM OPENED")
+  useEscape(props.closeCallback);
   return (
-    <div class="full-screen-dark">
-      <div class="modal-dialog">
+    <div class="full-screen-dark" ON_click={props.closeCallback}>
+      <div
+        class="modal-dialog"
+        ON_click={(ev: Event) => {
+          ev.stopPropagation();
+        }}
+      >
         <div class="modal-dialog__header-block">
           <div className="modal-dialog__title-wrapper">
             <div class="modal-dialog__title">{props.title}</div>

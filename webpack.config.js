@@ -6,6 +6,7 @@ const path = require('path');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const lightningcss = require('lightningcss');
 const browserslist = require('browserslist');
+const TerserPlugin = require("terser-webpack-plugin");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
@@ -30,9 +31,13 @@ module.exports = {
   },
   devtool: 'inline-source-map',
   devServer: {
+    server: 'https',
     static: [path.resolve(__dirname)],
     liveReload: true,
     historyApiFallback: true,
+    client: {
+      overlay: false,
+    },
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
@@ -58,6 +63,7 @@ module.exports = {
     runtimeChunk: 'single',
     minimize: true,
     minimizer: [
+      new TerserPlugin(),
       new CssMinimizerPlugin({
         minify: CssMinimizerPlugin.lightningCssMinify,
         minimizerOptions: {

@@ -1,8 +1,7 @@
 import { getBoardPermissions } from '@/api/members';
 import { defineStore } from '@/jsxCore/hooks';
-import { UserToBoard } from '@/types/user';
 import { useActiveBoardStore } from './activeBoardStore';
-import { ActiveBoard } from '@/types/activeBoard';
+import { ActiveBoard, UserToBoard } from '@/types/types';
 
 export const [useMembersStore, setMembersStore] = defineStore<UserToBoard[]>(
   'members',
@@ -12,7 +11,7 @@ export const [useMembersStore, setMembersStore] = defineStore<UserToBoard[]>(
 export const updateMembers = () => {
   setMembersStore([]);
   const ab = useActiveBoardStore() as ActiveBoard;
-  getBoardPermissions(ab.id).then((newStore) => {
+  getBoardPermissions(ab.board.id).then((newStore) => {
     setMembersStore(newStore);
   });
 };

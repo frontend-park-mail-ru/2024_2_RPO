@@ -36,3 +36,14 @@ export interface CheckListFieldPutRequest {
 export interface CheckListFieldPostRequest {
   title: string;
 }
+
+export interface CardMoveRequest {
+  newColumnId: number;
+  previousCardId: number;
+  nextCardId: number;
+}
+
+export interface ColumnMoveRequest {
+  previousColumnId: number;
+  nextColumnId: number;
+}

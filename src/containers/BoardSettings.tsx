@@ -7,15 +7,13 @@ import {
   useActiveBoardStore,
 } from '@/stores/activeBoardStore';
 import { Input } from '@/components/Input';
-import { addMember, removeMember, updateMember } from '@/api/members';
-import { ActiveBoard } from '@/types/activeBoard';
+import { createInviteLink, removeMember, updateMember } from '@/api/members';
 import { setMembersStore, useMembersStore } from '@/stores/members';
 import { showToast } from '@/stores/toastNotificationStore';
 import { useMeStore } from '@/stores/meStore';
-import { User } from '@/types/user';
+import { ActiveBoard, User } from '@/types/types';
 import { goToUrl } from '@/stores/routerStore';
 import { deleteBoard, setBoardBackgroundImage } from '@/api/boards';
-import { useState } from '@/jsxCore/hooks';
 import './boardSettings.scss';
 
 // На будущее
@@ -37,17 +35,6 @@ export const BoardSettings = () => {
   const activeBoard = useActiveBoardStore() as ActiveBoard;
   const me = useMeStore() as User;
   const members = useMembersStore();
-  const [memberNickname, setMemberNickname] = useState('');
-  const submitMember = (nickname: string) => {
-    if (memberNickname.length === 0) {
-      return;
-    }
-    addMember(activeBoard.id, nickname).then((newMember) => {
-      showToast('Успешно добавлен пользователь', 'success');
-      members.push(newMember);
-      setMembersStore(members);
-    });
-  };
   return (
     <ModalDialog
       key="modal_dialog"
@@ -60,7 +47,7 @@ export const BoardSettings = () => {
           <div class="board-settings__left">
             <img
               class="board-settings__background-image"
-              src={activeBoard?.backgroundImageUrl}
+              src={activeBoard?.board.backgroundImageUrl}
               alt="Задний фон доски"
             />
             <input
@@ -70,10 +57,10 @@ export const BoardSettings = () => {
               ON_change={(event: InputEvent) => {
                 const files = (event.target as HTMLInputElement).files;
                 if (files && files.length > 0) {
-                  setBoardBackgroundImage(activeBoard.id, files[0]).then(
+                  setBoardBackgroundImage(activeBoard.board.id, files[0]).then(
                     (resp) => {
                       showToast('Успешно изменён фон!', 'success');
-                      activeBoard.backgroundImageUrl =
+                      activeBoard.board.backgroundImageUrl =
                         resp.body.backgroundImageUrl;
                       setActiveBoardStore(activeBoard);
                     }
@@ -97,7 +84,7 @@ export const BoardSettings = () => {
                   }}
                 />
               )}
-            <Button
+            {/* <Button
               key="leave_btn"
               fullWidth
               text="Выйти из доски"
@@ -110,7 +97,7 @@ export const BoardSettings = () => {
                   goToUrl('/app');
                 });
               }}
-            />
+            /> */}
             {activeBoard.myRole === 'admin' && (
               <Button
                 key="delete_btn"
@@ -119,7 +106,7 @@ export const BoardSettings = () => {
                 icon="bi-trash"
                 variant="negative"
                 callback={() => {
-                  deleteBoard(activeBoard.id).then(() => {
+                  deleteBoard(activeBoard.board.id).then(() => {
                     showToast('Доска успешно удалена', 'success');
                     closeBoardSettingsModalDialog();
                     goToUrl('/app');
@@ -131,44 +118,38 @@ export const BoardSettings = () => {
           <div class="board-settings__add-participants">
             <div class="add-participiants__text">Добавить участников</div>
             <div class="add-participiants__main">
-              {/*На будущее - приглашение по ссылке*/
-              /* <div class="main__link-text">Моя ссылка:</div>
-              <div class="main__link-input">
-                <Input
-                  key="board-settings-link"
-                  initialValue="https://pumpkin.com/board/228/join_by_invite/9992"
-                  readOnly
-                  copyOnClick
-                />
-              </div>
-              <div class="main__link-input__btn">
-                <Button key="copy-link" icon="bi-copy" variant="accent" />
-                <Button
-                  key="delete-link"
-                  text="Удалить ссылку"
-                  icon="bi-x-lg"
-                  variant="default"
-                />
-              </div> */}
-              <div class="main__add-collaborator-text">Добавить зрителя:</div>
-              <div class="main__add-collaborator-input">
-                <Input
-                  key="add_member_inp"
-                  placeholder="Введите никнейм"
-                  onChanged={setMemberNickname}
-                  onEnter={() => {
-                    submitMember(memberNickname);
-                  }}
-                />
-              </div>
-              <Button
-                key="add_member"
-                icon="bi-plus-square"
-                variant={memberNickname.length ? 'positive' : 'default'}
-                callback={() => {
-                  submitMember(memberNickname);
-                }}
-              />
+              {activeBoard.board.myInviteLinkUuid ? (
+                <div>
+                  <h1>Ссылка-приглашение</h1>
+                  <Input
+                    key="invite_link_input"
+                    initialValue={`${window.location.origin}/inviteBoard/${activeBoard.board.myInviteLinkUuid}`}
+                  />
+                </div>
+              ) : (
+                <div>
+                  <Button
+                    key="create_invite_link"
+                    text="Создать ссылку-приглашение"
+                    icon="bi-link-45deg"
+                    callback={() => {
+                      createInviteLink(activeBoard.board.id).then(
+                        (linkUuid) => {
+                          if (linkUuid !== undefined) {
+                            showToast(
+                              'Успешно задана ссылка-приглашение!',
+                              'success'
+                            );
+                            activeBoard.board.myInviteLinkUuid = linkUuid;
+                            setActiveBoardStore(activeBoard);
+                          }
+                        }
+                      );
+                    }}
+                  />
+                </div>
+              )}
+
               {/* На будущее - настройки уведомлений */
               /* <div class="main__notifications-text">Уведомления:</div>
               <div class="main__notificatons">
@@ -230,7 +211,7 @@ export const BoardSettings = () => {
                           return;
                         }
                         updateMember(
-                          activeBoard.id,
+                          activeBoard.board.id,
                           user.user.id,
                           ['viewer', 'editor', 'editor_chief', 'admin'][
                             newIndex
@@ -265,7 +246,7 @@ export const BoardSettings = () => {
                           if (user.user.id === me.id) {
                             return;
                           }
-                          removeMember(activeBoard.id, user.user.id).then(
+                          removeMember(activeBoard.board.id, user.user.id).then(
                             () => {
                               showToast(
                                 'Пользователь успешно удален',

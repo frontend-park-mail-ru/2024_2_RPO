@@ -8,12 +8,12 @@ import {
   HTTP_STATUS_CONFLICT,
   apiPut,
 } from '@/api/apiHelper';
-import { User } from '@/types/user';
+import { User } from '@/types/types';
 import { userMeMock } from './mocks/user';
 import { showToast } from '@/stores/toastNotificationStore';
 import { UserResponse } from './responseTypes';
-import { setCsatStore, useCsatStore } from '@/stores/csatStore';
 import { UserRequest } from './requestTypes';
+import { decodeUser } from './decode';
 /**
  * Получить информацию о текущем пользователе
  * @returns промис, который возвращает или User (если залогинен), или undefined (если не залогинен)
@@ -28,19 +28,16 @@ export const getUserMe = async (): Promise<User | undefined> => {
     switch (response.status) {
       case HTTP_STATUS_OK: {
         const data: UserResponse = response.body;
-        if (data.questions !== null) {
-          const csat = useCsatStore();
-          csat.isOpened = true;
-          csat.questions = data.questions ?? [];
-          setCsatStore(csat);
-        }
-        return {
-          name: data.name,
-          id: data.id,
-          email: data.email,
-          avatarImageUrl: data.avatarImageUrl,
-          pollQuestions: data.questions,
-        };
+        //TODO починить CSAT
+        // if (data.pollQuestions !== undefined) {
+        //   const csat = useCsatStore();
+        //   csat.isOpened = true;
+        //   csat.questions = data.pollQuestions ?? [];
+        //   if (csat.questions.length) {
+        //     setCsatStore(csat);
+        //   }
+        // }
+        return decodeUser(data);
       }
       case HTTP_STATUS_UNAUTHORIZED:
         return undefined;
@@ -142,7 +139,7 @@ export const loginUser = async (
         return true;
       case HTTP_STATUS_UNAUTHORIZED:
         showToast('Неверные учётные данные', 'error');
-        throw new Error('Неверные учетные данные');
+        return false;
       default:
         showToast('Неизвестная ошибка', 'error');
         throw new Error('Беды на бэке');

@@ -2,12 +2,18 @@
   display: flex;
   flex-direction: row;
   min-width: 70vw;
+  gap: 20px;
 }
 
 .card-details__left-section {
-  width: 60%;
   display: flex;
   flex-direction: column;
+}
+
+@media screen and (min-width: 800px) {
+  card-details__left-section {
+    width: 60%;
+  }
 }
 
 .card-details__right-section {
@@ -15,36 +21,158 @@
   flex-direction: column;
 }
 
+@media screen and (max-width: 800px) {
+  .card-details {
+    flex-direction: column !important;
+  }
+}
+
 .checklist-field {
   display: flex;
   flex-direction: row;
+  align-items: center;
+  column-gap: 5px;
+  transition: background 0.3s ease;
+  border-radius: 3px;
+  padding-left: 5px;
+  padding-right: 3px;
 }
+
+@media screen and (max-width: 800px) {
+  .checklist-field {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+}
+
+.checklist-field:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
 .checklist-field__text {
   flex-grow: 1;
 }
 
 .checklist-field__box {
-  min-width: 1rem;
+  width: 1rem;
   height: 1rem;
-  border: 2px solid black;
-  border-radius: 2px;
+  border: 1px solid gray;
+  border-radius: 3px;
   cursor: pointer;
 }
 .checklist-field__box__done {
-  background-color: greenyellow;
+  border: none !important;
+  background-color: var(--color-accent);
 }
 .checklist-field__box__undone {
   background-color: white;
 }
+.checklist-field__box-check {
+  color: white;
+  position: relative;
+  top: -2px;
+  left: 0;
+}
 
 .comment {
+  display: flex;
+  flex-direction: row;
+  column-gap: 5px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+.comment__content {
   padding: 10px;
   background-color: #eee;
   border-radius: 10px;
   border: solid 1px black;
-  margin-bottom: 10px;
-  margin-top: 10px;
+  flex-grow: 1;
 }
+
+.comment__avatar-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 .comment__author {
   font-weight: bold;
+}
+
+.assigned-user {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  column-gap: 10px;
+  transition: background 0.3s ease;
+  border-radius: 3px;
+}
+
+.assigned-user:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.assigned-user__avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.assigned-user:hover .assigned-user__remove {
+  opacity: 1;
+}
+
+.assigned-user .assigned-user__remove {
+  opacity: 0;
+}
+
+.attachment {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 3px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  padding-left: 5px;
+  padding-right: 3px;
+  border-radius: 3px;
+}
+
+@media screen and (max-width: 800px) {
+  .attachment {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+}
+
+.attachment:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.attachment__remove {
+  color: red;
+}
+
+@media screen and (max-width: 800px) {
+  .attachment__remove {
+    font-size: 1.5rem;
+  }
+}
+
+@media screen and (min-width: 800px) {
+  .attachment .attachment__remove {
+    opacity: 0;
+  }
+}
+
+.attachment:hover .attachment__remove {
+  opacity: 1;
 }

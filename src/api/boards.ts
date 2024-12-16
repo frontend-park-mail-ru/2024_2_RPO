@@ -1,4 +1,3 @@
-import { Board } from '@/types/board';
 import {
   apiGet,
   apiPost,
@@ -11,16 +10,12 @@ import {
   HTTP_STATUS_UNAUTHORIZED,
   useMocks,
 } from '@/api/apiHelper';
-import { ActiveBoard, BoardColumn } from '@/types/activeBoard';
+import { ActiveBoard, Board, BoardColumn } from '@/types/types';
 import { activeBoardMock } from './mocks/activeBoard';
 import { myBoardsMock } from './mocks/myBoards';
-import {
-  BoardContentResponse,
-  BoardInfoResponse,
-  BoardResponse,
-} from './responseTypes';
+import { BoardContentResponse, BoardResponse } from './responseTypes';
 import { showToast } from '@/stores/toastNotificationStore';
-import { decodeCard } from './decode';
+import { decodeActiveBoard, decodeBoard, decodeCard } from './decode';
 
 // Получить все доски пользователя
 export const getBoards = async (): Promise<Board[]> => {
@@ -30,18 +25,10 @@ export const getBoards = async (): Promise<Board[]> => {
 
   try {
     const response = await apiGet('/boards/my');
-    const json: BoardInfoResponse[] = await response.body;
+    const json: BoardResponse[] = await response.body;
 
     if (response.status === HTTP_STATUS_OK) {
-      return json.map(
-        (el: BoardInfoResponse): Board => ({
-          id: el.id,
-          title: el.name,
-          lastUpdate: new Date(el.updatedAt),
-          lastVisit: new Date(el.updatedAt), // TODO избавиться от недоразумения
-          backgroundImageUrl: el.backgroundImageUrl,
-        })
-      );
+      return json.map((el: BoardResponse): Board => decodeBoard(el));
     } else {
       handleErrors(response.status, 'Получение списка досок');
     }
@@ -71,6 +58,7 @@ export const getBoardContent = async (
           columnIndex.set(column.id, idx);
           return {
             ...column,
+            isStub: false,
             cards: [], // инициализация пустым массивом для типа BoardColumn
           };
         }
@@ -80,15 +68,7 @@ export const getBoardContent = async (
         columns[colIdx].cards.push(decodeCard(card));
       });
 
-      return {
-        id: boardContentResponse.boardInfo.id,
-        title: boardContentResponse.boardInfo.name,
-        columns, // обновленный массив columns
-        myRole: boardContentResponse.myRole,
-        lastUpdate: new Date(boardContentResponse.boardInfo.updatedAt),
-        lastVisit: new Date(boardContentResponse.boardInfo.updatedAt),
-        backgroundImageUrl: boardContentResponse.boardInfo.backgroundImageUrl,
-      };
+      return decodeActiveBoard(boardContentResponse);
     } else {
       handleErrors(response.status, 'Get board content');
     }
@@ -108,13 +88,7 @@ export const createBoard = async (boardName: string): Promise<Board> => {
       response.status === HTTP_STATUS_CREATED
     ) {
       const boardInfo: BoardResponse = response.body;
-      return {
-        id: boardInfo.id,
-        title: boardInfo.name,
-        lastUpdate: new Date(boardInfo.updatedAt),
-        lastVisit: new Date(boardInfo.updatedAt), // TODO избавиться от недоразумения
-        backgroundImageUrl: boardInfo.backgroundImageUrl,
-      };
+      return decodeBoard(boardInfo);
     } else {
       throw new Error('Unexpected error in createBoard');
     }
@@ -137,13 +111,7 @@ export const updateBoard = async (
 
   if (response.status === HTTP_STATUS_OK) {
     const updatedBoard: BoardResponse = response.body;
-    return {
-      id: updatedBoard.id,
-      title: updatedBoard.name,
-      lastUpdate: new Date(updatedBoard.updatedAt),
-      lastVisit: new Date(updatedBoard.updatedAt), //TODO избавиться от неоднозначности
-      backgroundImageUrl: updatedBoard.backgroundImageUrl,
-    };
+    return decodeBoard(updatedBoard);
   } else {
     handleErrors(response.status, 'Update board');
     throw new Error('Ошибка при обновлении доски');
