@@ -60,9 +60,9 @@ export const NavBar = (props: NavBarProps) => {
             <div class="navbar__logo-icon">
               <img
                 draggable="false"
-                src="/static/img/logo.svg"
+                src="/static/img/logo_new6.svg"
                 alt="Logo"
-                style="margin-bottom: 8px;"
+                style="margin-bottom: 8px; height: 45px;  margin-top: 8px;"
               />
               <div draggable="false" class="navbar__logo-link">
                 Pumpkin

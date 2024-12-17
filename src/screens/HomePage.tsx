@@ -65,7 +65,7 @@ export const HomePage = (props: ComponentProps) => {
               </div>
             </div>
             <div className="top-section__right">
-              <img src="static/img/logo_new.svg" class="home-page__logo" />
+              <img src="static/img/logo_new6.svg" class="home-page__logo" />
             </div>
           </div>
 
@@ -96,7 +96,7 @@ export const HomePage = (props: ComponentProps) => {
         <div className="homepage__detail-section homepage__detail-section__odd">
           <img
             className="homepage__detail-image"
-            src="/static/img/photo_desk.png"
+            src="/static/img/photo_desk.webp"
           />
 
           <div className="homepage__detail-comment">
@@ -122,7 +122,7 @@ export const HomePage = (props: ComponentProps) => {
           </div>
           <img
             className="homepage__detail-image"
-            src="/static/img/photo_columns.png"
+            src="/static/img/photo_columns.webp"
             alt="Колонки задач"
           />
         </div>
@@ -130,7 +130,7 @@ export const HomePage = (props: ComponentProps) => {
         <div className="homepage__detail-section homepage__detail-section__odd">
           <img
             className="homepage__detail-image"
-            src="/static/img/photo_desk_settings.png"
+            src="/static/img/photo_desk_settings.webp"
             alt="Работайте вместе"
           />
           <div className="homepage__detail-comment">
