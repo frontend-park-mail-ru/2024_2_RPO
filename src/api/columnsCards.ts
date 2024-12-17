@@ -109,7 +109,6 @@ export const updateCard = async (
     switch (response.status) {
       case HTTP_STATUS_OK:
       case HTTP_STATUS_CREATED:
-        showToast('Успешно изменена карточка', 'success');
         return decodeCard(response.body as CardResponse);
       default:
         handleErrorResponse(response.status, response.body.text);

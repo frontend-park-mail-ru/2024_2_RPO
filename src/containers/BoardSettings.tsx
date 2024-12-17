@@ -54,6 +54,7 @@ export const BoardSettings = () => {
               id="uploadbg"
               type="file"
               style="display:none"
+              accept="image/*"
               ON_change={(event: InputEvent) => {
                 const files = (event.target as HTMLInputElement).files;
                 if (files && files.length > 0) {
