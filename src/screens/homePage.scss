@@ -262,3 +262,27 @@ html {
     padding: 0;
   }
 }
+
+#scrollToTopBtn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  background-color: rgba(255, 127, 0);
+  color: rgb(0, 0, 0);
+  border: none;
+  border-radius: 50%;
+  display: none; /* Скрыто изначально */
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  font-size: 3rem;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#scrollToTopBtn:hover {
+  background-color: rgb(203, 101, 0);
+}
