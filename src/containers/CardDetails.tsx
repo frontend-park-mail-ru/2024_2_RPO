@@ -16,6 +16,7 @@ import {
   deleteCheckListField,
   deleteComment,
   editCheckListField,
+  getCardDetails,
 } from '@/api/cardDetails';
 import { useEffectRefs, useState } from '@/jsxCore/hooks';
 import { Button } from '@/components/Button';
@@ -23,6 +24,7 @@ import { updateCard } from '@/api/columnsCards';
 import { formatDateToGoTimeString } from '@/utils/misc';
 import { showToast } from '@/stores/toastNotificationStore';
 import { downloadFile } from '@/utils/download';
+import { loadBoard, useActiveBoardStore } from '@/stores/activeBoardStore';
 
 const getFileIcon = (fileName: string): string => {
   const ext = fileName.split('.').pop()?.toLowerCase();
@@ -91,7 +93,7 @@ const CheckListFieldComponent = (props: CheckListFieldProps) => {
       </div>
       <div class="checklist-field__text">{f.title}</div>
       <div
-        style="min-width: 1rem; position: relative; top: 2px; color: red; cursor: pointer"
+        class="checklist-field__close"
         ON_click={() => {
           deleteCheckListField(f.id).then((t) => {
             if (t) {
@@ -113,7 +115,15 @@ const CheckListFieldComponent = (props: CheckListFieldProps) => {
 interface DeadlineProps extends ComponentProps {
   deadline: Date | undefined;
   cardId: number;
+  closeCallback: () => void;
 }
+
+export const reloadContent = () => {
+  loadBoard(useActiveBoardStore()?.board.id);
+  getCardDetails(useCardDetailsStore()?.card.id ?? -1).then((cardDetails) => {
+    setCardDetailsStore(cardDetails);
+  });
+};
 
 const DeadlineInput = (props: DeadlineProps) => {
   const [init, setInit] = useState(true);
@@ -122,7 +132,6 @@ const DeadlineInput = (props: DeadlineProps) => {
     if (init) {
       setInit(false);
       const inp = refs.get('deadline') as HTMLInputElement;
-      console.log(inp);
       if (props.deadline) {
         const now = props.deadline;
         console.log(now);
@@ -138,20 +147,33 @@ const DeadlineInput = (props: DeadlineProps) => {
         ref="deadline"
         ON_input={(ev: InputEvent) => {
           const vvv = (ev.target as HTMLInputElement).value;
-          console.log(vvv);
           setVal(vvv);
         }}
       />
       <Button
         key="set"
         text="Задать"
+        icon="bi-clock"
+        fullWidth
         variant="accent"
         callback={() => {
           updateCard(props.cardId, {
             deadline:
               val !== '' ? formatDateToGoTimeString(new Date(val)) : null,
+          }).then(() => {
+            reloadContent();
+            showToast('Успешно обновлён дедлайн!', 'success');
+            props.closeCallback();
           });
         }}
+      />
+      <Button
+        key="deadline_cancel_btn"
+        icon="bi-x-lg"
+        variant="default"
+        fullWidth
+        text="Отмена"
+        callback={props.closeCallback}
       />
     </div>
   );
@@ -165,6 +187,7 @@ export const CardDetailsContainer = (props: ComponentProps) => {
   const [newAssigned, setNewAssigned] = useState('');
 
   const [commentInput, setCommentInput] = useState(false);
+  const [deadlineInput, setDeadlineInput] = useState(false);
   const [checkListInput, setCheckListInput] = useState(false);
   const [assignedInput, setAssignedInput] = useState(false);
   const [linkOpened, setLinkOpened] = useState(false);
@@ -369,12 +392,48 @@ export const CardDetailsContainer = (props: ComponentProps) => {
 
         <div class="card-details__right-section">
           <div class="card-details_block">
-            <h1>Дедлайн</h1>
-            <DeadlineInput
-              key="deadline_input"
-              deadline={cardDetails.card.deadline}
-              cardId={cardDetails.card.id}
-            />
+            {cardDetails.card.deadline !== undefined && <h1>Дедлайн</h1>}
+            {cardDetails.card.deadline !== undefined && (
+              <div class="deadline-block">
+                <div style="flex-grow: 1">
+                  {cardDetails.card.deadline.toLocaleString(undefined, {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: '2-digit',
+                  })}
+                </div>
+                <div class="deadline-block__close">
+                  <i class="bi-x-lg" />
+                </div>
+              </div>
+            )}
+            {deadlineInput && (
+              <DeadlineInput
+                key="deadline_input"
+                deadline={cardDetails.card.deadline}
+                cardId={cardDetails.card.id}
+                closeCallback={() => {
+                  setDeadlineInput(false);
+                }}
+              />
+            )}
+            {!deadlineInput && (
+              <Button
+                key="open_deadline_input_btn"
+                icon="bi-clock"
+                fullWidth
+                text={
+                  cardDetails.card.deadline
+                    ? 'Сменить дедлайн'
+                    : 'Добавить дедлайн'
+                }
+                callback={() => {
+                  setDeadlineInput(true);
+                }}
+              />
+            )}
           </div>
           <div class="card-details_block">
             {cardDetails.assignedUsers.length && (
@@ -517,6 +576,15 @@ export const CardDetailsContainer = (props: ComponentProps) => {
                 icon="bi-copy"
                 text="Скопировать ссылку"
                 fullWidth
+                callback={() => {
+                  navigator.clipboard
+                    .writeText(
+                      `${window.location.origin}/card/${cardDetails.card.linkUuid}`
+                    )
+                    .then(() => {
+                      showToast('Ссылка успешно скопирована!', 'success');
+                    });
+                }}
               />
             </div>
           ) : (

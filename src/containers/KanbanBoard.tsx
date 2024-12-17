@@ -17,7 +17,7 @@ import {
   setDndStore,
   useDndStore,
 } from '@/stores/dndStore';
-import { moveCard } from '@/api/dnd';
+import { moveCard, moveColumn } from '@/api/dnd';
 
 const NewColumnButton = () => {
   const activeBoardStore = useActiveBoardStore() as ActiveBoard;
@@ -138,7 +138,11 @@ export const KanbanBoard = (props: KanbanBoardProps) => {
         nextCard
       );
     } else if (dndStore?.type === 'column') {
-      //TODO
+      moveColumn(
+        dndStore.activeColumn.id,
+        activeBoard.columns[dndStore.activeColumnIdx + 1]?.id ?? -1,
+        activeBoard.columns[dndStore.activeColumnIdx - 1]?.id ?? -1
+      );
     }
     setActiveBoardStore(activeBoard);
     setDndStore(undefined);

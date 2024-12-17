@@ -83,6 +83,7 @@ export const UserProfile = (props: UserProfileProps) => {
           <input
             id="uploadavatar"
             type="file"
+            accept="image/*"
             style="display:none"
             ON_change={(event: InputEvent) => {
               const files = (event.target as HTMLInputElement).files;

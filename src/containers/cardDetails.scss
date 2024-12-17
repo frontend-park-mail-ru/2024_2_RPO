@@ -1,7 +1,6 @@
 .card-details {
   display: flex;
   flex-direction: row;
-  min-width: 70vw;
   gap: 20px;
 }
 
@@ -45,6 +44,27 @@
   }
 }
 
+.checklist-field:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.checklist-field__close {
+  min-width: 1rem;
+  position: relative;
+  top: 2px;
+  color: red;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+@media screen and (min-width: 800px) {
+  .checklist-field__close {
+    opacity: 0;
+  }
+}
+.checklist-field:hover .checklist-field__close {
+  opacity: 1;
+}
 .checklist-field:hover {
   background-color: rgba(0, 0, 0, 0.1);
 }
@@ -101,6 +121,39 @@
   font-weight: bold;
 }
 
+.deadline-block {
+  display: flex;
+  flex-direction: row;
+  transition: background 0.3s ease;
+  border-radius: 3px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  align-items: center;
+  font-weight: bold;
+  padding-left: 3px;
+  padding-right: 5px;
+}
+
+.deadline-block:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.deadline-block__close {
+  transition: opacity 0.3s ease;
+  color: red;
+  cursor: pointer;
+}
+
+@media screen and (min-width: 800px) {
+  .deadline-block__close {
+    opacity: 0;
+  }
+}
+
+.deadline-block:hover .deadline-block__close {
+  opacity: 1;
+}
+
 .assigned-user {
   display: flex;
   flex-direction: row;
@@ -130,8 +183,9 @@
   opacity: 1;
 }
 
-.assigned-user .assigned-user__remove {
+.assigned-user__remove {
   opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .attachment {
@@ -159,6 +213,7 @@
 
 .attachment__remove {
   color: red;
+  transition: opacity 0.3s ease;
 }
 
 @media screen and (max-width: 800px) {
