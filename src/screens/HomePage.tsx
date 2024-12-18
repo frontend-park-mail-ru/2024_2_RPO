@@ -7,6 +7,7 @@ import { useMeStore } from '@/stores/meStore';
 import { goToUrl } from '@/stores/routerStore';
 
 import './homePage.scss';
+import { useEffect } from '@/jsxCore/hooks';
 
 function scrollToSection(id: string): void {
   const element = document.getElementById(id);
@@ -21,6 +22,35 @@ export const HomePage = (props: ComponentProps) => {
   const [isLoginOpened, setIsLoginOpened] = useState(false);
   const userMe = useMeStore();
 
+  useEffect(() => {
+    const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+    if (!scrollToTopBtn) return;
+
+    // Показать или скрыть кнопку при прокрутке
+    const handleScroll = () => {
+      if (window.scrollY > 300) {
+        scrollToTopBtn.style.display = 'flex';
+      } else {
+        scrollToTopBtn.style.display = 'none';
+      }
+    };
+
+    // Прокрутка наверх
+    const scrollToTop = () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    // Добавляем слушателей
+    window.addEventListener('scroll', handleScroll);
+    scrollToTopBtn.addEventListener('click', scrollToTop);
+
+    // Очистка слушателей при размонтировании компонента
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      scrollToTopBtn.removeEventListener('click', scrollToTop);
+    };
+  });
+
   return (
     <>
       <div class="homepage">
@@ -31,6 +61,8 @@ export const HomePage = (props: ComponentProps) => {
               <div className="top-section__comment">
                 Облачный канбан со сверхспособностями
               </div>
+              <a id="top"></a>
+
               <div className="top-section__motto">Следи за своими делами!</div>
               <div className="top-section__buttons">
                 {userMe === undefined && (
@@ -153,6 +185,10 @@ export const HomePage = (props: ComponentProps) => {
             title="Embedded Video"
           ></iframe>
         </div>
+
+        <button id="scrollToTopBtn" aria-label="Прокрутить вверх">
+          <i class="bi bi-arrow-up" style="font-size: 1.5rem;"></i>
+        </button>
 
         <footer class="homepage__footer">
           (c) Team RPO, Texnopark Mail.ru, 2024
