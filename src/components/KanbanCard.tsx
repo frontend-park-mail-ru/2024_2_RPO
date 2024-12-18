@@ -148,6 +148,7 @@ export const KanbanCard = (props: KanbanCardProps) => {
                   offset: dragOffset,
                   cardData: card,
                   prevColIdx: props.columnIdx,
+                  started: false,
                 });
                 console.log('offset', dragOffset);
                 setDragStart(undefined);

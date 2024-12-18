@@ -13,6 +13,7 @@ interface CardDndType {
   offset: [x: number, y: number];
   cardData: RealCard;
   prevColIdx: number;
+  started: boolean;
 }
 
 export const [useDndStore, setDndStore] = defineStore<DndType>(

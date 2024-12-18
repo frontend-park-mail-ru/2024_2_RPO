@@ -112,31 +112,36 @@ export const KanbanBoard = (props: KanbanBoardProps) => {
   const dndStore = useDndStore();
   const stopDnd = () => {
     if (dndStore?.type === 'card') {
-      let prevCard: number = -1,
-        nextCard: number = -1;
-      activeBoard.columns[dndStore.prevColIdx].cards = activeBoard.columns[
-        dndStore.prevColIdx
-      ].cards.map((crd, idx) => {
-        if (crd.type === 'stub') {
-          if (idx > 0) {
-            prevCard =
-              activeBoard.columns[dndStore.prevColIdx].cards[idx - 1].id;
+      if (dndStore.started) {
+        let prevCard: number = -1,
+          nextCard: number = -1;
+        activeBoard.columns[dndStore.prevColIdx].cards = activeBoard.columns[
+          dndStore.prevColIdx
+        ].cards.map((crd, idx) => {
+          if (crd.type === 'stub') {
+            if (idx > 0) {
+              prevCard =
+                activeBoard.columns[dndStore.prevColIdx].cards[idx - 1].id;
+            }
+            if (
+              idx <
+              activeBoard.columns[dndStore.prevColIdx].cards.length - 1
+            ) {
+              nextCard =
+                activeBoard.columns[dndStore.prevColIdx].cards[idx + 1].id;
+            }
+            return dndStore.cardData;
           }
-          if (idx < activeBoard.columns[dndStore.prevColIdx].cards.length - 1) {
-            nextCard =
-              activeBoard.columns[dndStore.prevColIdx].cards[idx + 1].id;
-          }
-          return dndStore.cardData;
-        }
-        return crd;
-      });
+          return crd;
+        });
 
-      moveCard(
-        dndStore.cardData.id,
-        activeBoard.columns[dndStore.prevColIdx].id,
-        prevCard,
-        nextCard
-      );
+        moveCard(
+          dndStore.cardData.id,
+          activeBoard.columns[dndStore.prevColIdx].id,
+          prevCard,
+          nextCard
+        );
+      }
     } else if (dndStore?.type === 'column') {
       moveColumn(
         dndStore.activeColumn.id,
@@ -200,6 +205,7 @@ export const KanbanBoard = (props: KanbanBoardProps) => {
                 id: movingCardId,
               });
               dndStore.prevColIdx = destColIdx;
+              dndStore.started = true;
 
               // Обновить Store
               setActiveBoardStore(activeBoard);
