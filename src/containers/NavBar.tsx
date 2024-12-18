@@ -110,6 +110,15 @@ export const NavBar = (props: NavBarProps) => {
                     textClassName="navbar__board-name"
                     wrapperClassName="navbar__board-name-wrapper"
                     setText={(newText) => {
+                      // Проверка на длину названия
+                      if (newText.length < 3) {
+                        showToast('Должно быть хотя бы 3 символа', 'error');
+                        return;
+                      } else if (newText.length > 10) {
+                        showToast('Должно быть не больше 10 символов', 'error');
+                        return;
+                      }
+
                       updateBoard(activeBoard.board.id, newText, '').then(
                         () => {
                           showToast(
@@ -122,6 +131,7 @@ export const NavBar = (props: NavBarProps) => {
                       );
                     }}
                   />
+
                   <div style="flex-grow:1" class="navbar__mobile-only"></div>
                   <Button
                     key="settings"
