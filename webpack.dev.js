@@ -3,10 +3,6 @@
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-const lightningcss = require('lightningcss');
-const browserslist = require('browserslist');
-const TerserPlugin = require("terser-webpack-plugin");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
@@ -58,18 +54,5 @@ module.exports = {
       template: './index.html',
     }),
     new MiniCssExtractPlugin(),
-  ],
-  optimization: {
-    runtimeChunk: 'single',
-    minimize: true,
-    minimizer: [
-      new TerserPlugin(),
-      new CssMinimizerPlugin({
-        minify: CssMinimizerPlugin.lightningCssMinify,
-        minimizerOptions: {
-          targets: lightningcss.browserslistToTargets(browserslist('>= 0.25%')),
-        },
-      }),
-    ],
-  },
+  ]
 };

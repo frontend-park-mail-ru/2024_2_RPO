@@ -45,5 +45,7 @@ export const [useRouterStore, setRouterStore] = defineStore<RouterFlags>(
     isPreview: false,
     cardUuid: undefined,
     boardInviteUuid: undefined,
+    isKanban: false,
+    isList: false,
   }
 );

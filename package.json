@@ -1,11 +1,10 @@
 {
   "name": "pumpkin_frontend",
-  "version": "1.0.0",
+  "version": "1.4.1",
   "description": "Фронтенд для технопарка",
-  "main": "server.ts",
   "scripts": {
-    "start": "webpack-dev-server --config webpack.config.js --hot true",
-    "build": "webpack",
+    "start": "webpack-dev-server --config webpack.dev.js --hot true",
+    "build": "webpack --config ./webpack.build.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint ./src",
     "prepare": "husky"

@@ -1,9 +1,6 @@
 import { loadBoard } from '@/stores/activeBoardStore';
 import { updateBoards } from '@/stores/boardsStore';
-import {
-  loadBoardInvitePreview,
-  loadCardPreview,
-} from '@/stores/previewStore';
+import { loadBoardInvitePreview, loadCardPreview } from '@/stores/previewStore';
 
 export interface RouterFlags {
   isHome: boolean;
@@ -12,6 +9,8 @@ export interface RouterFlags {
   isPreview: boolean; // Является ли просмотром карточки по ссылке или просмотром приглашения
   isCardPreview: boolean;
   isBoardPreview: boolean;
+  isKanban: boolean;
+  isList: boolean;
   cardUuid: string | undefined;
   boardInviteUuid: string | undefined;
   isCsatResults: boolean;
@@ -57,6 +56,8 @@ export const getFlagRoutes = (currentPath: string): RouterFlags => {
     isApp,
     boardId,
     boardInviteUuid,
+    isKanban: currentPath.endsWith("kanban"),
+    isList: currentPath.endsWith("list"),
     cardUuid,
     isPreview: isBoardPreview || isCardPreview,
     isBoardPreview,

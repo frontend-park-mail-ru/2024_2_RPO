@@ -26,25 +26,21 @@ export const HomePage = (props: ComponentProps) => {
     const scrollToTopBtn = document.getElementById('scrollToTopBtn');
     if (!scrollToTopBtn) return;
 
-    // Показать или скрыть кнопку при прокрутке
     const handleScroll = () => {
       if (window.scrollY > 300) {
-        scrollToTopBtn.style.display = 'flex';
+        scrollToTopBtn.style.opacity = '1';
       } else {
-        scrollToTopBtn.style.display = 'none';
+        scrollToTopBtn.style.opacity = '0';
       }
     };
 
-    // Прокрутка наверх
     const scrollToTop = () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    // Добавляем слушателей
     window.addEventListener('scroll', handleScroll);
     scrollToTopBtn.addEventListener('click', scrollToTop);
 
-    // Очистка слушателей при размонтировании компонента
     return () => {
       window.removeEventListener('scroll', handleScroll);
       scrollToTopBtn.removeEventListener('click', scrollToTop);
@@ -106,8 +102,8 @@ export const HomePage = (props: ComponentProps) => {
               href="#kanban-info"
               className="scroll-link"
               onclick={(e: MouseEvent) => {
-                e.preventDefault(); // Предотвращаем стандартное поведение ссылки
-                scrollToSection('kanban-info'); // Плавная прокрутка
+                e.preventDefault();
+                scrollToSection('kanban-info');
               }}
             >
               <div className="homepage__scroll-text">Подробнее о Pumpkin</div>
@@ -186,7 +182,11 @@ export const HomePage = (props: ComponentProps) => {
           ></iframe>
         </div>
 
-        <button id="scrollToTopBtn" aria-label="Прокрутить вверх">
+        <button
+          id="scrollToTopBtn"
+          class="navbar__mobile-hidden"
+          aria-label="Прокрутить вверх"
+        >
           <i class="bi bi-arrow-up" style="font-size: 1.5rem;"></i>
         </button>
 

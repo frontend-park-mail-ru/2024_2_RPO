@@ -10,14 +10,20 @@
 }
 
 @media screen and (min-width: 800px) {
-  card-details__left-section {
-    width: 60%;
+  .card-details__left-section {
+    width: 50%;
   }
 }
 
 .card-details__right-section {
   display: flex;
   flex-direction: column;
+}
+
+@media screen and (min-width: 800px) {
+  .card-details__right-section {
+    width: 50%;
+  }
 }
 
 @media screen and (max-width: 800px) {

@@ -70,9 +70,14 @@ export const NavBar = (props: NavBarProps) => {
             </div>
           </span>
         </div>
-        {activeBoard === undefined && <div style="flex-grow:99999"></div>}
+        {activeBoard === undefined && props.leftPanelOpened && (
+          <div style="flex-grow:99999"></div>
+        )}
+        {activeBoard === undefined && !props.leftPanelOpened && (
+          <div style="flex-grow:99999" class="navbar__mobile-hidden"></div>
+        )}
         <div class="navbar__rest-group">
-          {activeBoard !== undefined && (
+          {activeBoard !== undefined ? (
             <>
               <div
                 className={[
@@ -87,7 +92,7 @@ export const NavBar = (props: NavBarProps) => {
                   currentIndex={0}
                   onChange={(idx) => {
                     if (idx === 1) {
-                      showToast('Эта функция в разработке', 'warning');
+                      goToUrl(`${window.location.origin}/app/board_${activeBoard.board.id}/list`)
                     }
                   }}
                 />
@@ -145,10 +150,28 @@ export const NavBar = (props: NavBarProps) => {
                 <div style="flex-grow:1" class="navbar__mobile-hidden"></div>
               </div>
             </>
+          ) : (
+            !props.leftPanelOpened && (
+              <div
+                class="navbar__logo-icon navbar__mobile-only"
+                style="flex-grow: 1; justify-self: center; width: 100%"
+              >
+                <img
+                  draggable="false"
+                  src="/static/img/logo_new6.svg"
+                  alt="Logo"
+                  style="margin-bottom: 8px; height: 45px;  margin-top: 8px;"
+                />
+                <div draggable="false" class="navbar__logo-link">
+                  Pumpkin
+                </div>
+              </div>
+            )
           )}
-          <div class="navbar__right-group">
-            {/* <Button key="notification_btn" icon="bi-bell" /> */}
-            {/* Для будущего функционала: уведомлений и поиска
+          {me !== undefined && (
+            <div class="navbar__right-group">
+              {/* <Button key="notification_btn" icon="bi-bell" /> */}
+              {/* Для будущего функционала: уведомлений и поиска
             <input
               class="search-input"
               type="text"
@@ -160,23 +183,24 @@ export const NavBar = (props: NavBarProps) => {
               style="position: absolute;"
             ></i>
             */}
-            <div
-              className={[
-                'navbar__profile-picture',
-                props.leftPanelOpened || 'navbar__mobile-hidden',
-              ]}
-              ON_click={() => {
-                setUserPopupOpened(true);
-              }}
-            >
-              <img
-                class="navbar__profile-picture"
-                draggable="false"
-                src={me?.avatarImageUrl}
-                alt="ProfilePicture"
-              />
+              <div
+                className={[
+                  'navbar__profile-picture',
+                  props.leftPanelOpened || 'navbar__mobile-hidden',
+                ]}
+                ON_click={() => {
+                  setUserPopupOpened(true);
+                }}
+              >
+                <img
+                  class="navbar__profile-picture"
+                  draggable="false"
+                  src={me?.avatarImageUrl}
+                  alt="ProfilePicture"
+                />
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </nav>
       {userPopupOpened && (

@@ -23,6 +23,7 @@ import { Button } from '@/components/Button';
 import './mainApp.scss';
 import { joinInviteLink } from '@/api/members';
 import { useMeStore } from '@/stores/meStore';
+import { ListBoard } from '@/containers/ListBoard';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const MainApp = (props: ComponentProps) => {
@@ -34,6 +35,7 @@ export const MainApp = (props: ComponentProps) => {
   const csat = useCsatStore();
   const cardDetails = useCardDetailsStore();
   const me = useMeStore();
+  const router = useRouterStore();
 
   if (boards === undefined) {
     getBoards().then((newBoards: Board[]) => {
@@ -212,7 +214,12 @@ export const MainApp = (props: ComponentProps) => {
           </div>
         )}
 
-        {activeBoard !== undefined && <KanbanBoard key="kanban-board" />}
+        {activeBoard !== undefined && router.isKanban && (
+          <KanbanBoard key="kanban-board" />
+        )}
+        {activeBoard !== undefined && router.isList && (
+          <ListBoard key="list-board" />
+        )}
       </main>
     </>
   );

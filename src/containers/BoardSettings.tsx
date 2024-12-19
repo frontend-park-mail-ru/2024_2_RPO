@@ -47,7 +47,7 @@ export const BoardSettings = () => {
           <div class="board-settings__left">
             <img
               class="board-settings__background-image"
-              src={activeBoard?.board.backgroundImageUrl}
+              src={activeBoard.board.backgroundImageUrl}
               alt="Задний фон доски"
             />
             <input
@@ -60,10 +60,10 @@ export const BoardSettings = () => {
                 if (files && files.length > 0) {
                   setBoardBackgroundImage(activeBoard.board.id, files[0]).then(
                     (resp) => {
-                      showToast('Успешно изменён фон!', 'success');
                       activeBoard.board.backgroundImageUrl =
                         resp.body.backgroundImageUrl;
                       setActiveBoardStore(activeBoard);
+                      showToast('Успешно изменён фон!', 'success');
                     }
                   );
                 }
@@ -117,14 +117,30 @@ export const BoardSettings = () => {
             )}
           </div>
           <div class="board-settings__add-participants">
-            <div class="add-participiants__text">Добавить участников</div>
             <div class="add-participiants__main">
               {activeBoard.board.myInviteLinkUuid ? (
                 <div>
                   <h1>Ссылка-приглашение</h1>
+                  <div style="height: 10px" />
                   <Input
                     key="invite_link_input"
                     initialValue={`${window.location.origin}/inviteBoard/${activeBoard.board.myInviteLinkUuid}`}
+                  />
+                  <Button
+                    key="copy_invite_link_button"
+                    variant="accent"
+                    fullWidth
+                    text="Скопировать"
+                    icon="bi-copy"
+                    callback={() => {
+                      navigator.clipboard
+                        .writeText(
+                          `${window.location.origin}/inviteBoard/${activeBoard.board.myInviteLinkUuid}`
+                        )
+                        .then(() => {
+                          showToast('Ссылка успешно скопирована!', 'success');
+                        });
+                    }}
                   />
                 </div>
               ) : (
@@ -166,8 +182,8 @@ export const BoardSettings = () => {
           </div>
         </div>
         <div class="permissions-table">
-          <div class="permissions-table__title">Права пользователей</div>
           <hr class="mb-16px" />
+          <div class="permissions-table__title">Права пользователей</div>
           <div class="permissions-table__table">
             <div class="permissions-table__table__headers">Имя</div>
             <div class="permissions-table__table__headers">Добавил</div>
@@ -181,9 +197,7 @@ export const BoardSettings = () => {
                       alt=""
                       class="navbar__profile-picture"
                     />
-                    <div class="permissions-table__table__user-title">
-                      {user.user.name}
-                    </div>
+                    <div style="font-weight: bold">{user.user.name}</div>
                   </div>
                   <div class="permissions-table__table__user-add">
                     {user.addedBy.name}

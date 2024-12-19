@@ -6,15 +6,17 @@
   z-index: 40;
   overflow-y: auto;
 }
+
 @media screen and (max-width: 800px) {
   .left-menu {
     width: 100vw;
   }
 }
+
 @media screen and (min-width: 800px) {
   .left-menu {
     padding: 0px 20px;
-    width: 246px;
+    width: 256px;
   }
 }
 
@@ -24,6 +26,7 @@
   justify-content: center;
   gap: 10px;
 }
+
 .left-menu__header {
   position: fixed;
   width: 100%;
@@ -32,29 +35,35 @@
   align-items: center;
   gap: 10px;
 }
+
 .left-menu__body {
   padding-top: calc(var(--navbar-height) + 50px);
   padding-bottom: 80px;
   height: 100%;
 }
+
 .left-menu__first-level {
   width: 100%;
   gap: 50px;
   margin-top: 20px;
 }
+
 @media screen and (max-width: 800px) {
   .left-menu__first-level {
     text-align: center;
   }
 }
+
 .left-menu__body-name span {
   font-size: 22px;
   font-weight: 600;
 }
+
 .left-menu__body-name {
   width: 100%;
   margin-bottom: 20px;
 }
+
 .left-menu__card-list {
   padding-bottom: 30px;
   display: flex;
