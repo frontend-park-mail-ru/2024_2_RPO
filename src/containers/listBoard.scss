@@ -2,8 +2,40 @@
   padding-top: var(--navbar-height);
 }
 
-.list-board__container{
-    background-color: white;
-    border-radius: 12px;
+.list-board__container {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border-radius: 12px;
+  margin-top: 16px;
+  margin-bottom: 40px;
+  margin-left: 14px;
+  margin-right: 20px;
+  padding-top: 6px;
+}
 
+.list-card {
+  display: flex;
+  flex-direction: row;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 8px;
+  padding-right: 8px;
+  transition: background 0.3s ease;
+  cursor: pointer;
+}
+
+.list-card:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.list-card__title {
+  flex-grow: 1;
+}
+
+.list-card__properties {
+  display: flex;
+  flex-direction: row;
+  column-gap: 3px;
+  color: gray;
 }

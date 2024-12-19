@@ -8,7 +8,7 @@ import {
 } from '@/stores/activeBoardStore';
 import { UserPopup } from './UserPopup';
 import { useState } from '@/jsxCore/hooks';
-import { goToUrl } from '@/stores/routerStore';
+import { goToUrl, useRouterStore } from '@/stores/routerStore';
 import { openBoardSettingsModalDialog } from '@/stores/modalDialogsStore';
 import { useMeStore } from '@/stores/meStore';
 import { updateMembers } from '@/stores/members';
@@ -33,6 +33,7 @@ export const NavBar = (props: NavBarProps) => {
   const activeBoard = useActiveBoardStore();
   const me = useMeStore();
   const [userPopupOpened, setUserPopupOpened] = useState(false);
+  const router = useRouterStore();
   return (
     <>
       <nav className={['navbar']}>
@@ -89,10 +90,16 @@ export const NavBar = (props: NavBarProps) => {
                   widthRem={10}
                   key="mode_select"
                   options={modeOptions}
-                  currentIndex={0}
+                  currentIndex={router.isList ? 1 : 0}
                   onChange={(idx) => {
                     if (idx === 1) {
-                      goToUrl(`${window.location.origin}/app/board_${activeBoard.board.id}/list`)
+                      goToUrl(
+                        `${window.location.origin}/app/board_${activeBoard.board.id}/list`
+                      );
+                    } else {
+                      goToUrl(
+                        `${window.location.origin}/app/board_${activeBoard.board.id}/kanban`
+                      );
                     }
                   }}
                 />
