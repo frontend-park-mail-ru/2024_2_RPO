@@ -102,5 +102,6 @@ export const decodeActiveBoard = (r: BoardContentResponse): ActiveBoard => {
     columns: columns,
     board: decodeBoard(r.boardInfo),
     myRole: r.myRole,
+    tags: r.allTags,
   };
 };

@@ -1,0 +1,22 @@
+.tag__circle {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+}
+
+.tag__entry {
+  display: flex;
+  flex-direction: row;
+  column-gap: 5px;
+  align-items: center;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  transition: background-color 0.3s ease;
+  border-radius: 3px;
+  padding-left: 3px;
+  padding-right: 3px;
+}
+
+.tag__entry:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}

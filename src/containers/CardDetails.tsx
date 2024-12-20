@@ -9,12 +9,14 @@ import { Input } from '@/components/Input';
 import {
   addAttachment,
   addCheckListField,
+  addCover,
   assignUser,
   createComment,
   deassignUser,
   deleteAttachment,
   deleteCheckListField,
   deleteComment,
+  deleteCover,
   editCheckListField,
   getCardDetails,
 } from '@/api/cardDetails';
@@ -120,14 +122,16 @@ interface DeadlineProps extends ComponentProps {
 
 export const reloadContent = () => {
   loadBoard(useActiveBoardStore()?.board.id, true);
-  const cardDetails = useCardDetailsStore();
-  if (cardDetails !== undefined) {
-    getCardDetails(cardDetails.card.id).then((cardDetails) => {
-      if (cardDetails !== undefined) {
-        setCardDetailsStore(cardDetails);
-      }
-    });
-  }
+  setTimeout(() => {
+    const cardDetails = useCardDetailsStore();
+    if (cardDetails !== undefined) {
+      getCardDetails(cardDetails.card.id).then((cardDetails) => {
+        if (cardDetails !== undefined) {
+          setCardDetailsStore(cardDetails);
+        }
+      });
+    }
+  }, 40);
 };
 
 const DeadlineInput = (props: DeadlineProps) => {
@@ -197,7 +201,9 @@ export const CardDetailsContainer = (props: ComponentProps) => {
   const [assignedInput, setAssignedInput] = useState(false);
   const [linkOpened, setLinkOpened] = useState(false);
 
-  const activeBoard = useActiveBoardStore();
+  const activeBoard: { myRole: string } = useActiveBoardStore() ?? {
+    myRole: 'viewer',
+  };
 
   const addCLF = () => {
     if (newCheckListField.length < 3) {
@@ -618,6 +624,49 @@ export const CardDetailsContainer = (props: ComponentProps) => {
               fullWidth
               callback={() => {
                 setLinkOpened(true);
+              }}
+            />
+          )}
+          <input
+            id="upload_cover"
+            type="file"
+            accept="image/*"
+            style="display:none"
+            ON_change={(event: InputEvent) => {
+              const files = (event.target as HTMLInputElement)
+                .files as FileList;
+              addCover(cardDetails.card.id, files[0]).then((attachment) => {
+                if (attachment !== undefined) {
+                  showToast('Обложка успешно добавлена!', 'success');
+                  reloadContent();
+                }
+              });
+            }}
+          />
+          {activeBoard?.myRole !== 'viewer' && (
+            <Button
+              key="add_cover"
+              text={
+                !cardDetails.card.coverImageUrl
+                  ? 'Добавить обложку карточки'
+                  : 'Удалить обложку карточки'
+              }
+              icon={
+                !cardDetails.card.coverImageUrl ? 'bi-paperclip' : 'bi-x-lg'
+              }
+              fullWidth
+              callback={() => {
+                if (cardDetails.card.coverImageUrl) {
+                  deleteCover(cardDetails.card.id).then(() => {
+                    showToast('Обложка удалена!', 'success');
+                    reloadContent();
+                  });
+                } else {
+                  const el = document.getElementById(
+                    'upload_cover'
+                  ) as HTMLInputElement;
+                  el.click();
+                }
               }}
             />
           )}

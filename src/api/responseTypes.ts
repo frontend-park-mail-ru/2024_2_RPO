@@ -5,6 +5,13 @@ export interface BoardContentResponse {
   boardInfo: BoardResponse;
   allColumns: ColumnResponse[];
   allCards: CardResponse[];
+  allTags: Tag[];
+}
+
+export interface Tag {
+  id: number;
+  text: string;
+  color: string;
 }
 
 export interface ColumnResponse {

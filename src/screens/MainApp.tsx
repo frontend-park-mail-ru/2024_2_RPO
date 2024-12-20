@@ -27,7 +27,7 @@ import './mainApp.scss';
 import { joinInviteLink } from '@/api/members';
 import { useMeStore } from '@/stores/meStore';
 import { ListBoard } from '@/containers/ListBoard';
-import { TagSettings } from '@/components/TagSettings';
+import { TagSettings } from '@/containers/TagSettings';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const MainApp = (props: ComponentProps) => {
@@ -210,6 +210,7 @@ export const MainApp = (props: ComponentProps) => {
         {modalDialogsStore.isTagSettingsOpened && (
           <ModalDialog
             key="tag_settings_modal_dialog"
+            title="Настройки тегов"
             isOpened={true}
             closeCallback={closeTagsModalDialog}
           >
