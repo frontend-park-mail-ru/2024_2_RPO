@@ -1,3 +1,5 @@
+import { Tag } from "@/api/responseTypes";
+
 export interface User {
   name: string;
   id: number;
@@ -110,5 +112,6 @@ export interface BoardColumn {
 export interface ActiveBoard {
   board: Board;
   columns: BoardColumn[];
+  tags: Tag[];
   myRole: 'viewer' | 'editor' | 'editor_chief' | 'admin';
 }

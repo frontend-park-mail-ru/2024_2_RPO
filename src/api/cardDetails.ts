@@ -1,5 +1,6 @@
 import {
   Attachment,
+  Card,
   CardComment,
   CardDetails,
   CheckListField,
@@ -25,6 +26,7 @@ import {
   AttachmentResponse,
   BoardResponse,
   CardDetailsResponse,
+  CardResponse,
   CheckListFieldResponse,
   CommentResponse,
   SharedCardResponse,
@@ -32,12 +34,14 @@ import {
 } from './responseTypes';
 import {
   decodeAttachment,
+  decodeCard,
   decodeCardDetails,
   decodeCheckListField,
   decodeComment,
   decodeUser,
 } from './decode';
 import { showToast } from '@/stores/toastNotificationStore';
+import { useActiveBoardStore } from '@/stores/activeBoardStore';
 
 export const assignUser = async (
   cardId: number,
@@ -170,7 +174,19 @@ export const getCardDetails = async (
   switch (res.status) {
     case HTTP_STATUS_OK: {
       const body: CardDetailsResponse = res.body;
-      return decodeCardDetails(body);
+      const ret = decodeCardDetails(body);
+      let card: Card | undefined = undefined;
+      useActiveBoardStore()?.columns.forEach((col) => {
+        col.cards.forEach((card1) => {
+          if (card1.id === cardId) {
+            card = card1;
+          }
+        });
+      });
+      if (card !== undefined) {
+        ret.card = card;
+      }
+      return ret;
     }
   }
   return undefined;
@@ -195,6 +211,25 @@ export const addAttachment = async (
   }
 };
 
+// Добавить вложение
+export const addCover = async (
+  cardId: number,
+  file: File
+): Promise<Card | undefined> => {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const response = await apiPut(`/cardCover/card_${cardId}`, formData);
+
+  switch (response.status) {
+    case HTTP_STATUS_CREATED:
+    case HTTP_STATUS_OK:
+      return decodeCard(response.body as CardResponse);
+    default:
+      showToast('Ошибка при добавлении обложки', 'error');
+  }
+};
+
 export const deleteAttachment = async (
   attachmentId: number
 ): Promise<boolean> => {
@@ -204,6 +239,19 @@ export const deleteAttachment = async (
       return true;
     default:
       showToast('Ошибка при удалении вложения', 'error');
+      return false;
+  }
+};
+
+export const deleteCover = async (
+  cardId: number
+): Promise<boolean> => {
+  const response = await apiDelete(`/cardCover/card_${cardId}`);
+  switch (response.status) {
+    case HTTP_STATUS_OK:
+      return true;
+    default:
+      showToast('Ошибка при удалении обложки', 'error');
       return false;
   }
 };

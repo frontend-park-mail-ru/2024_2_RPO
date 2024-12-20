@@ -126,8 +126,8 @@ export const NavBar = (props: NavBarProps) => {
                       if (newText.length < 3) {
                         showToast('Должно быть хотя бы 3 символа', 'error');
                         return;
-                      } else if (newText.length > 10) {
-                        showToast('Должно быть не больше 10 символов', 'error');
+                      } else if (newText.length > 30) {
+                        showToast('Должно быть не больше 30 символов', 'error');
                         return;
                       }
 

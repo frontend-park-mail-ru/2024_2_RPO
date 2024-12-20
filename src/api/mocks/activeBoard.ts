@@ -41,5 +41,6 @@ export const activeBoardMock: ActiveBoard = {
       ],
     },
   ],
+  tags: [],
   myRole: 'admin',
 };
