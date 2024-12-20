@@ -16,6 +16,7 @@ interface CardPreviewStore {
 interface BoardPreviewStore {
   type: 'board';
   board: Board;
+  uuid: string;
 }
 
 export const [usePreviewStore, setPreviewStore] = defineStore<
@@ -25,7 +26,7 @@ export const [usePreviewStore, setPreviewStore] = defineStore<
 export const loadBoardInvitePreview = (inviteLinkUuid: string) => {
   fetchInviteLink(inviteLinkUuid).then((result) => {
     if (result !== undefined) {
-      setPreviewStore({ type: 'board', board: result });
+      setPreviewStore({ type: 'board', board: result, uuid: inviteLinkUuid });
     }
   });
 };

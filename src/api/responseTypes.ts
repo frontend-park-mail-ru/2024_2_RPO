@@ -32,6 +32,7 @@ export interface CardResponse {
   hasAssignedUsers: boolean;
   hasComments: boolean;
   cardUuid: string;
+  tags: number[];
 }
 
 export interface BoardResponse {

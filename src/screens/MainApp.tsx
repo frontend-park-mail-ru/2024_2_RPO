@@ -144,7 +144,7 @@ export const MainApp = (props: ComponentProps) => {
             }
           }}
         >
-          <div>
+          <div style="display: flex; flex-direction: column; align-items: center;">
             <div class="board-invite__title">{preview.board.title}</div>
             <img
               class="board-invite__image"
@@ -155,6 +155,7 @@ export const MainApp = (props: ComponentProps) => {
                 key="board_invite_reject_btn"
                 variant="default"
                 icon="bi-x-lg"
+                fullWidth
                 text="Отмена"
                 callback={() => {
                   setPreviewStore(undefined);
@@ -168,6 +169,7 @@ export const MainApp = (props: ComponentProps) => {
               <Button
                 key="board_invite_accept_btn"
                 variant="accent"
+                fullWidth
                 icon="bi-rocket-takeoff"
                 text={
                   me !== undefined
@@ -179,9 +181,7 @@ export const MainApp = (props: ComponentProps) => {
                     goToUrl('/');
                     return;
                   }
-                  joinInviteLink(
-                    useRouterStore().boardInviteUuid as string
-                  ).then(() => {
+                  joinInviteLink(preview.uuid).then(() => {
                     goToUrl(`/app/board_${preview.board.id}/kanban`);
                     setPreviewStore(undefined);
                   });

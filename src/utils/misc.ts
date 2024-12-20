@@ -36,3 +36,34 @@ export function formatDateToGoTimeString(date: Date) {
   // Формируем строку в формате RFC3339
   return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}Z`;
 }
+
+export const truncateFileName = (
+  fileName: string,
+  maxLength: number = 30
+): string => {
+  const lastDotIndex = fileName.lastIndexOf('.');
+
+  if (lastDotIndex === -1) {
+    if (fileName.length > maxLength) {
+      return fileName.substring(0, maxLength - 3) + '...';
+    } else {
+      return fileName;
+    }
+  }
+
+  const name = fileName.substring(0, lastDotIndex);
+  const extension = fileName.substring(lastDotIndex);
+
+  if (fileName.length <= maxLength) {
+    return fileName;
+  }
+
+  const allowedNameLength = maxLength - extension.length - 3;
+
+  if (allowedNameLength <= 0) {
+    return '...' + extension;
+  }
+
+  const truncatedName = name.substring(0, allowedNameLength);
+  return `${truncatedName}...${extension}`;
+};

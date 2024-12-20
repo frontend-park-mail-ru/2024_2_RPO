@@ -23,10 +23,13 @@ import {
 import { useEffectRefs, useState } from '@/jsxCore/hooks';
 import { Button } from '@/components/Button';
 import { updateCard } from '@/api/columnsCards';
-import { formatDateToGoTimeString } from '@/utils/misc';
+import { formatDateToGoTimeString, truncateFileName } from '@/utils/misc';
 import { showToast } from '@/stores/toastNotificationStore';
 import { downloadFile } from '@/utils/download';
 import { loadBoard, useActiveBoardStore } from '@/stores/activeBoardStore';
+import { SelectBox } from '@/components/SelectBox';
+import { Tag } from '@/api/responseTypes';
+import { attachTagToCard, removeTagFromCard } from '@/api/tags';
 
 const getFileIcon = (fileName: string): string => {
   const ext = fileName.split('.').pop()?.toLowerCase();
@@ -201,9 +204,11 @@ export const CardDetailsContainer = (props: ComponentProps) => {
   const [assignedInput, setAssignedInput] = useState(false);
   const [linkOpened, setLinkOpened] = useState(false);
 
-  const activeBoard: { myRole: string } = useActiveBoardStore() ?? {
-    myRole: 'viewer',
-  };
+  const activeBoard: { myRole: string; tags: Tag[] } =
+    useActiveBoardStore() ?? {
+      myRole: 'viewer',
+      tags: [],
+    };
 
   const addCLF = () => {
     if (newCheckListField.length < 3) {
@@ -253,7 +258,7 @@ export const CardDetailsContainer = (props: ComponentProps) => {
   };
 
   return (
-    <div style="min-width: 400px">
+    <div style="min-width: 450px">
       <div style="margin-bottom: 15px">{cardDetails.card.title}</div>
       <div class="card-details">
         <div class="card-details__left-section">
@@ -405,6 +410,70 @@ export const CardDetailsContainer = (props: ComponentProps) => {
               );
             })}
           </div>
+
+          {(cardDetails.card.tags.length > 0 ||
+            activeBoard.myRole !== 'viewer') && <h2>Теги</h2>}
+          {cardDetails.card.tags.map((tag) => {
+            const realTag = activeBoard.tags.find((t) => {
+              return t.id === tag;
+            });
+            if (realTag === undefined) {
+              return <div>Ошибка</div>;
+            }
+            return (
+              <div class="tag__entry">
+                <div
+                  class="tag__circle"
+                  style={`background-color: ${realTag.color}`}
+                ></div>
+                <div style="flex-grow:1">{realTag.text}</div>
+                {activeBoard.myRole !== 'viewer' && (
+                  <div
+                    class="tag__remove"
+                    ON_click={() => {
+                      removeTagFromCard(cardDetails.card.id, realTag.id).then(
+                        (ok) => {
+                          if (ok) {
+                            showToast('Успешно откреплён тег!', 'success');
+                            reloadContent();
+                          }
+                        }
+                      );
+                    }}
+                  >
+                    <i class="bi-x-lg" />
+                  </div>
+                )}
+              </div>
+            );
+          })}
+          {activeBoard.myRole !== 'viewer' && (
+            <SelectBox
+              key="select_add_tag"
+              currentIndex={0}
+              widthRem={20}
+              onChange={(newIndex) => {
+                attachTagToCard(
+                  cardDetails.card.id,
+                  activeBoard.tags[newIndex - 1].id
+                ).then((ok) => {
+                  if (ok) {
+                    showToast('Добавлен тег!', 'success');
+                    reloadContent();
+                  }
+                });
+              }}
+              options={[
+                { icon: 'bi-tags', title: 'Добавить тег' },
+                ...activeBoard.tags.map((tag) => {
+                  return {
+                    icon: 'bi-tag',
+                    title: tag.text,
+                  };
+                }),
+              ]}
+            />
+          )}
         </div>
 
         <div class="card-details__right-section">
@@ -467,11 +536,11 @@ export const CardDetailsContainer = (props: ComponentProps) => {
                       ON_click={() => {
                         deassignUser(cardDetails.card.id, u.id).then((t) => {
                           if (t) {
-                            cardDetails.assignedUsers =
-                              cardDetails.assignedUsers.filter((au) => {
-                                return au.id !== u.id;
-                              });
-                            setCardDetailsStore(cardDetails);
+                            showToast(
+                              'Пользователь отстранён от данной задачи!',
+                              'success'
+                            );
+                            reloadContent();
                           }
                         });
                       }}
@@ -559,7 +628,9 @@ export const CardDetailsContainer = (props: ComponentProps) => {
                   <div>
                     <i class={getFileIcon(attachment.originalName)} />
                   </div>
-                  <div style="flex-grow:1">{attachment.originalName}</div>
+                  <div style="flex-grow:1">
+                    {truncateFileName(attachment.originalName)}
+                  </div>
                   {activeBoard?.myRole !== 'viewer' && (
                     <div
                       class="attachment__remove"
@@ -648,8 +719,8 @@ export const CardDetailsContainer = (props: ComponentProps) => {
               key="add_cover"
               text={
                 !cardDetails.card.coverImageUrl
-                  ? 'Добавить обложку карточки'
-                  : 'Удалить обложку карточки'
+                  ? 'Добавить обложку'
+                  : 'Удалить обложку'
               }
               icon={
                 !cardDetails.card.coverImageUrl ? 'bi-paperclip' : 'bi-x-lg'

@@ -4,8 +4,9 @@ import { useActiveBoardStore } from '@/stores/activeBoardStore';
 import { useState } from '@/jsxCore/hooks';
 import { Input } from '@/components/Input';
 import { Button } from '@/components/Button';
-import { addTag } from '@/api/tags';
+import { addTag, removeTag } from '@/api/tags';
 import { showToast } from '@/stores/toastNotificationStore';
+import { reloadContent } from './CardDetails';
 
 const pleasantColors = [
   '#FF5733', // Яркий апельсиновый
@@ -110,8 +111,26 @@ export const TagSettings = (props: ComponentProps) => {
           {activeBoard.tags.map((tag) => {
             return (
               <div class="tag__entry">
-                <div class="tag__circle" style={`background-color: ${tag.color}`}></div>
-                {tag.text}
+                <div
+                  class="tag__circle"
+                  style={`background-color: ${tag.color}`}
+                ></div>
+                <div style="flex-grow:1">{tag.text}</div>
+                {activeBoard.myRole !== 'viewer' && (
+                  <div
+                    class="tag__remove"
+                    ON_click={() => {
+                      removeTag(tag.id).then((ok) => {
+                        if (ok) {
+                          showToast('Успешно удалён тег!', 'success');
+                          reloadContent();
+                        }
+                      });
+                    }}
+                  >
+                    <i class="bi-trash" />
+                  </div>
+                )}
               </div>
             );
           })}

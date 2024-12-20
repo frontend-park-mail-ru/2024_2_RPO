@@ -345,7 +345,11 @@ export const KanbanCard = (props: KanbanCardProps) => {
         )}
 
         {card.coverImageUrl !== undefined ? (
-          <img src={card.coverImageUrl} class="kanban-card__cover"></img>
+          <img
+            draggable={false}
+            src={card.coverImageUrl}
+            class="kanban-card__cover"
+          ></img>
         ) : undefined}
         {isInput ? (
           <Editable
@@ -376,6 +380,26 @@ export const KanbanCard = (props: KanbanCardProps) => {
               {card.hasAssignedUsers && <i class="bi-person-plus" />}
               {card.hasComments && <i class="bi-chat-left-text" />}
             </div>
+            {card.tags.length > 0 && (
+              <div style="display: flex; flex-direction: row; column-gap: 10px; flex-wrap: wrap; row-gap: 3px; color: gray; margin-top: 10px; margin-bottom: 4px">
+                {card.tags.map((idx) => {
+                  const tag = activeBoard.tags.find((t) => {
+                    return t.id === idx;
+                  });
+                  if (tag === undefined) {
+                    return <div>Ошибка</div>;
+                  }
+                  return (
+                    <div
+                      class="tag-badge"
+                      style={`background-color: ${tag.color}`}
+                    >
+                      {tag.text}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         )}
       </div>

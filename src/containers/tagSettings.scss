@@ -9,8 +9,8 @@
   flex-direction: row;
   column-gap: 5px;
   align-items: center;
-  padding-top: 5px;
-  padding-bottom: 5px;
+  padding-top: 7px;
+  padding-bottom: 7px;
   transition: background-color 0.3s ease;
   border-radius: 3px;
   padding-left: 3px;
@@ -19,4 +19,26 @@
 
 .tag__entry:hover {
   background-color: rgba(0, 0, 0, 0.1);
+}
+
+.tag__remove {
+  color: red;
+  transition: opacity 0.3s ease;
+  cursor: pointer;
+}
+
+@media screen and (min-width: 800px) {
+  .tag__remove {
+    opacity: 0;
+  }
+}
+
+.tag__entry:hover .tag__remove {
+  opacity: 1 !important;
+}
+
+.tag-badge {
+  border-radius: 6px;
+  padding: 1px 4px;
+  color: white;
 }

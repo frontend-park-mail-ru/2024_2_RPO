@@ -1,4 +1,4 @@
-import { Tag } from "@/api/responseTypes";
+import { Tag } from '@/api/responseTypes';
 
 export interface User {
   name: string;
@@ -59,6 +59,7 @@ export interface RealCard {
   hasAssignedUsers: boolean;
   hasComments: boolean;
   linkUuid: string;
+  tags: number[];
 }
 
 export interface CardDetails {

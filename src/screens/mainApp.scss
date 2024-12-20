@@ -11,6 +11,11 @@
   justify-content: end;
   column-gap: 10px;
 }
+@media screen and (max-width: 800px) {
+  .board-invite__buttons {
+    flex-direction: column-reverse !important;
+  }
+}
 
 .board-invite__title {
   font-size: 1.5rem;

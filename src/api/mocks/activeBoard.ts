@@ -25,6 +25,7 @@ export const activeBoardMock: ActiveBoard = {
           hasCheckList: false,
           hasComments: false,
           linkUuid: '',
+          tags: [],
         },
         {
           type: 'real',
@@ -37,6 +38,7 @@ export const activeBoardMock: ActiveBoard = {
           hasCheckList: false,
           hasComments: false,
           linkUuid: '',
+          tags: [],
         },
       ],
     },
