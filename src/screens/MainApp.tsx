@@ -4,7 +4,10 @@ import { ComponentProps } from '@/jsxCore/types';
 import { useState } from '@/jsxCore/hooks';
 import { UserProfile } from '@/containers/UserProfile';
 import { KanbanBoard } from '@/containers/KanbanBoard';
-import { useModalDialogsStore } from '@/stores/modalDialogsStore';
+import {
+  closeTagsModalDialog,
+  useModalDialogsStore,
+} from '@/stores/modalDialogsStore';
 import { BoardSettings } from '@/containers/BoardSettings';
 import { useActiveBoardStore } from '@/stores/activeBoardStore';
 import { setBoardsStore, useBoardsStore } from '@/stores/boardsStore';
@@ -24,6 +27,7 @@ import './mainApp.scss';
 import { joinInviteLink } from '@/api/members';
 import { useMeStore } from '@/stores/meStore';
 import { ListBoard } from '@/containers/ListBoard';
+import { TagSettings } from '@/components/TagSettings';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const MainApp = (props: ComponentProps) => {
@@ -178,7 +182,7 @@ export const MainApp = (props: ComponentProps) => {
                   joinInviteLink(
                     useRouterStore().boardInviteUuid as string
                   ).then(() => {
-                    goToUrl(`/app/board_${preview.board.id}`);
+                    goToUrl(`/app/board_${preview.board.id}/kanban`);
                     setPreviewStore(undefined);
                   });
                 }}
@@ -202,6 +206,15 @@ export const MainApp = (props: ComponentProps) => {
             class="app__background-image"
             alt=""
           />
+        )}
+        {modalDialogsStore.isTagSettingsOpened && (
+          <ModalDialog
+            key="tag_settings_modal_dialog"
+            isOpened={true}
+            closeCallback={closeTagsModalDialog}
+          >
+            <TagSettings key="real_tag_settings" />
+          </ModalDialog>
         )}
         {activeBoard === undefined && preview === undefined && (
           <div class="onboarding__wrapper-bg">

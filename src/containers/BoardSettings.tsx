@@ -1,5 +1,8 @@
 import { ModalDialog } from '@/components/ModalDialog';
-import { closeBoardSettingsModalDialog } from '@/stores/modalDialogsStore';
+import {
+  closeBoardSettingsModalDialog,
+  openTagsModalDialog,
+} from '@/stores/modalDialogsStore';
 import { Button } from '@/components/Button';
 import { SelectBox, SelectBoxOption } from '@/components/SelectBox';
 import {
@@ -85,20 +88,29 @@ export const BoardSettings = () => {
                   }}
                 />
               )}
-            {/* <Button
-              key="leave_btn"
-              fullWidth
-              text="Выйти из доски"
-              icon="bi-box-arrow-right"
-              variant="negative"
-              callback={() => {
-                removeMember(activeBoard.id, me.id).then(() => {
-                  showToast('Вы вышли из этой доски!', 'success');
-                  closeBoardSettingsModalDialog();
-                  goToUrl('/app');
-                });
-              }}
-            /> */}
+            {(activeBoard.myRole !== 'admin' ||
+              members
+                .map((member) => {
+                  return member.role === 'admin' ? 1 : 0;
+                })
+                .reduce<number>((a, item) => {
+                  return a + item;
+                }, 0) > 1) && (
+              <Button
+                key="leave_btn"
+                fullWidth
+                text="Выйти из доски"
+                icon="bi-box-arrow-right"
+                variant="negative"
+                callback={() => {
+                  removeMember(activeBoard.board.id, me.id).then(() => {
+                    showToast('Вы вышли из этой доски!', 'success');
+                    closeBoardSettingsModalDialog();
+                    goToUrl('/app');
+                  });
+                }}
+              />
+            )}
             {activeBoard.myRole === 'admin' && (
               <Button
                 key="delete_btn"
@@ -144,40 +156,43 @@ export const BoardSettings = () => {
                   />
                 </div>
               ) : (
-                <div>
-                  <Button
-                    key="create_invite_link"
-                    text="Создать ссылку-приглашение"
-                    icon="bi-link-45deg"
-                    callback={() => {
-                      createInviteLink(activeBoard.board.id).then(
-                        (linkUuid) => {
-                          if (linkUuid !== undefined) {
-                            showToast(
-                              'Успешно задана ссылка-приглашение!',
-                              'success'
-                            );
-                            activeBoard.board.myInviteLinkUuid = linkUuid;
-                            setActiveBoardStore(activeBoard);
+                activeBoard.myRole !== 'viewer' && (
+                  <div>
+                    <Button
+                      key="create_invite_link"
+                      text="Создать ссылку-приглашение"
+                      icon="bi-link-45deg"
+                      callback={() => {
+                        createInviteLink(activeBoard.board.id).then(
+                          (linkUuid) => {
+                            if (linkUuid !== undefined) {
+                              showToast(
+                                'Успешно задана ссылка-приглашение!',
+                                'success'
+                              );
+                              activeBoard.board.myInviteLinkUuid = linkUuid;
+                              setActiveBoardStore(activeBoard);
+                            }
                           }
-                        }
-                      );
-                    }}
-                  />
-                </div>
+                        );
+                      }}
+                    />
+                  </div>
+                )
               )}
-
-              {/* На будущее - настройки уведомлений */
-              /* <div class="main__notifications-text">Уведомления:</div>
-              <div class="main__notificatons">
-                <div class="main__notifications-input">
-                  <SelectBox
-                    key="mode_select"
-                    options={modeOptions}
-                    currentIndex={0}
-                  />
-                </div>
-              </div> */}
+            </div>
+            <div class="add-participiants__main">
+              <div>
+                <h1>Настройки тегов</h1>
+                <Button
+                  key="trigger-tags-settings"
+                  icon="bi-tag"
+                  fullWidth
+                  text="Настроить теги"
+                  variant="accent"
+                  callback={openTagsModalDialog}
+                />
+              </div>
             </div>
           </div>
         </div>

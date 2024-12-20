@@ -3,32 +3,37 @@ import { defineStore } from '@/jsxCore/hooks';
 interface ModalDialogs {
   isUserProfileOpened: boolean;
   isBoardSettingsOpened: boolean;
+  isTagSettingsOpened: boolean;
 }
 
+const defaultFlags: ModalDialogs = {
+  isUserProfileOpened: false,
+  isBoardSettingsOpened: false,
+  isTagSettingsOpened: false,
+};
+
 export const [useModalDialogsStore, setModalDialogsStore] =
-  defineStore<ModalDialogs>('modalDialogs', {
-    isUserProfileOpened: false,
-    isBoardSettingsOpened: false,
-  });
+  defineStore<ModalDialogs>('modalDialogs', defaultFlags);
 
 export const openUserProfileModalDialog = () => {
-  const modalDialogsStore = useModalDialogsStore();
-  modalDialogsStore.isUserProfileOpened = true;
-  setModalDialogsStore(modalDialogsStore);
+  setModalDialogsStore({ ...defaultFlags, isUserProfileOpened: true });
 };
 export const closeUserProfileModalDialog = () => {
-  const modalDialogsStore = useModalDialogsStore();
-  modalDialogsStore.isUserProfileOpened = false;
-  setModalDialogsStore(modalDialogsStore);
+  setModalDialogsStore(defaultFlags);
 };
 
 export const openBoardSettingsModalDialog = () => {
-  const modalDialogsStore = useModalDialogsStore();
-  modalDialogsStore.isBoardSettingsOpened = true;
-  setModalDialogsStore(modalDialogsStore);
+  setModalDialogsStore({ ...defaultFlags, isBoardSettingsOpened: true });
 };
+
 export const closeBoardSettingsModalDialog = () => {
-  const modalDialogsStore = useModalDialogsStore();
-  modalDialogsStore.isBoardSettingsOpened = false;
-  setModalDialogsStore(modalDialogsStore);
+  setModalDialogsStore(defaultFlags);
+};
+
+export const openTagsModalDialog = () => {
+  setModalDialogsStore({ ...defaultFlags, isTagSettingsOpened: true });
+};
+
+export const closeTagsModalDialog = () => {
+  setModalDialogsStore(defaultFlags);
 };

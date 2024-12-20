@@ -92,7 +92,6 @@ export function defineStore<S>(
 }
 
 function keyDownHandler(ev: KeyboardEvent) {
-  console.log(ev);
   if (ev.key === 'Escape') {
     escapeListeners.forEach((value) => {
       value.forEach((handler) => {

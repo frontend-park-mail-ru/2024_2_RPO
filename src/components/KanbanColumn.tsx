@@ -71,6 +71,10 @@ export const KanbanColumn = (props: KanbanColumnProps) => {
             ) {
               const dndStore = useDndStore();
               if (dndStore === undefined) {
+                setDragStart(undefined);
+                if (activeBoard.myRole === 'viewer') {
+                  return;
+                }
                 setDndStore({
                   type: 'column',
                   activeColumnIdx: props.columnIndex,
@@ -78,7 +82,6 @@ export const KanbanColumn = (props: KanbanColumnProps) => {
                   activeColumn: activeBoard.columns[props.columnIndex],
                 });
                 console.log('offset', dragOffset);
-                setDragStart(undefined);
               }
             }
           }
@@ -144,10 +147,11 @@ export const KanbanColumn = (props: KanbanColumnProps) => {
           </div>
         )}
       </div>
-      {activeBoard.columns[props.columnIndex].cards.map((card) => {
+      {activeBoard.columns[props.columnIndex].cards.map((card, idx) => {
         return (
           <div style="position: relative">
             <KanbanCard
+              cardIdx={idx}
               key={`card_${card.id}`}
               card={card}
               columnIdx={props.columnIndex}

@@ -41,7 +41,7 @@ export const loadCardPreview = (cardUuid: string) => {
         });
         setCardDetailsStore(decodeCardDetails(card.card));
       } else {
-        goToUrl(`/app/board_${card.boardId}`);
+        goToUrl(`/app/board_${card.boardId}/kanban`);
         getCardDetails(card.cardId).then((details) => {
           setCardDetailsStore(details);
         });

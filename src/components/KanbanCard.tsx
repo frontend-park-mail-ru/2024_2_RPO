@@ -18,9 +18,12 @@ import {
   editLock,
 } from '@/stores/dndStore';
 import { showToast } from '@/stores/toastNotificationStore';
+import { moveCard } from '@/api/dnd';
+import { reloadContent } from '@/containers/CardDetails';
 
 interface KanbanCardProps extends ComponentProps {
   card: Card;
+  cardIdx: number;
   columnIdx: number;
 }
 
@@ -142,6 +145,10 @@ export const KanbanCard = (props: KanbanCardProps) => {
               ) > DND_THRESHOLD
             ) {
               const dndStore = useDndStore();
+              if (activeBoard.myRole === 'viewer') {
+                setDragStart(undefined);
+                return;
+              }
               if (dndStore === undefined) {
                 setDndStore({
                   type: 'card',
@@ -218,20 +225,107 @@ export const KanbanCard = (props: KanbanCardProps) => {
               </div>
               {activeBoard.myRole !== 'viewer' && (
                 <>
-                  <div class="kanban-card__menu-item">
-                    <i class="bi-caret-up-fill" />
-                    Переместить выше
-                  </div>
-                  <div class="kanban-card__menu-item">
-                    <i class="bi-caret-down-fill" />
-                    Переместить ниже
-                  </div>
-                  <div class="kanban-card__menu-item">
-                    <i class="bi-caret-left-fill" />В левую колонку
-                  </div>
-                  <div class="kanban-card__menu-item">
-                    <i class="bi-caret-right-fill" />В правую колонку
-                  </div>
+                  {props.cardIdx > 0 && (
+                    <div
+                      class="kanban-card__menu-item"
+                      ON_click={() => {
+                        moveCard(
+                          props.card.id,
+                          activeBoard.columns[props.columnIdx].id,
+                          (
+                            activeBoard.columns[props.columnIdx].cards[
+                              props.cardIdx - 2
+                            ] ?? { id: -1 }
+                          ).id,
+                          activeBoard.columns[props.columnIdx].cards[
+                            props.cardIdx - 1
+                          ].id
+                        ).then(() => {
+                          setTimeout(() => {
+                            reloadContent();
+                          }, 50);
+                        });
+                      }}
+                    >
+                      <i class="bi-caret-up-fill" />
+                      Переместить выше
+                    </div>
+                  )}
+                  {props.cardIdx <
+                    activeBoard.columns[props.columnIdx].cards.length - 1 && (
+                    <div
+                      class="kanban-card__menu-item"
+                      ON_click={() => {
+                        moveCard(
+                          props.card.id,
+                          activeBoard.columns[props.columnIdx].id,
+                          activeBoard.columns[props.columnIdx].cards[
+                            props.cardIdx + 1
+                          ].id,
+                          (
+                            activeBoard.columns[props.columnIdx].cards[
+                              props.cardIdx + 2
+                            ] ?? { id: -1 }
+                          ).id
+                        ).then(() => {
+                          setTimeout(() => {
+                            reloadContent();
+                          }, 50);
+                        });
+                      }}
+                    >
+                      <i class="bi-caret-down-fill" />
+                      Переместить ниже
+                    </div>
+                  )}
+                  {props.columnIdx > 0 && (
+                    <div
+                      class="kanban-card__menu-item"
+                      ON_click={() => {
+                        moveCard(
+                          props.card.id,
+                          activeBoard.columns[props.columnIdx - 1].id,
+                          (
+                            activeBoard.columns[props.columnIdx - 1].cards[
+                              activeBoard.columns[props.columnIdx - 1].cards
+                                .length - 1
+                            ] ?? { id: -1 }
+                          ).id,
+                          -1
+                        ).then(() => {
+                          setTimeout(() => {
+                            reloadContent();
+                          }, 50);
+                        });
+                      }}
+                    >
+                      <i class="bi-caret-left-fill" />В левую колонку
+                    </div>
+                  )}
+                  {props.columnIdx < activeBoard.columns.length - 1 && (
+                    <div
+                      class="kanban-card__menu-item"
+                      ON_click={() => {
+                        moveCard(
+                          props.card.id,
+                          activeBoard.columns[props.columnIdx + 1].id,
+                          (
+                            activeBoard.columns[props.columnIdx + 1].cards[
+                              activeBoard.columns[props.columnIdx + 1].cards
+                                .length - 1
+                            ] ?? { id: -1 }
+                          ).id,
+                          -1
+                        ).then(() => {
+                          setTimeout(() => {
+                            reloadContent();
+                          }, 50);
+                        });
+                      }}
+                    >
+                      <i class="bi-caret-right-fill" />В правую колонку
+                    </div>
+                  )}
                 </>
               )}
             </div>

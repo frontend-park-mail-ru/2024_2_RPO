@@ -249,6 +249,7 @@ export const KanbanBoard = (props: KanbanBoardProps) => {
             left: ${dndPos[0]}px; top: ${dndPos[1]}px`}
         >
           <KanbanCard
+            cardIdx={12345}
             key="draggable_card"
             card={dndStore?.cardData}
             columnIdx={0}

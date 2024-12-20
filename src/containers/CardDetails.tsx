@@ -119,10 +119,15 @@ interface DeadlineProps extends ComponentProps {
 }
 
 export const reloadContent = () => {
-  loadBoard(useActiveBoardStore()?.board.id);
-  getCardDetails(useCardDetailsStore()?.card.id ?? -1).then((cardDetails) => {
-    setCardDetailsStore(cardDetails);
-  });
+  loadBoard(useActiveBoardStore()?.board.id, true);
+  const cardDetails = useCardDetailsStore();
+  if (cardDetails !== undefined) {
+    getCardDetails(cardDetails.card.id).then((cardDetails) => {
+      if (cardDetails !== undefined) {
+        setCardDetailsStore(cardDetails);
+      }
+    });
+  }
 };
 
 const DeadlineInput = (props: DeadlineProps) => {
@@ -192,6 +197,8 @@ export const CardDetailsContainer = (props: ComponentProps) => {
   const [assignedInput, setAssignedInput] = useState(false);
   const [linkOpened, setLinkOpened] = useState(false);
 
+  const activeBoard = useActiveBoardStore();
+
   const addCLF = () => {
     if (newCheckListField.length < 3) {
       showToast('Строка чеклиста должна быть от 3 символов', 'error');
@@ -240,7 +247,7 @@ export const CardDetailsContainer = (props: ComponentProps) => {
   };
 
   return (
-    <div>
+    <div style="min-width: 400px">
       <div style="margin-bottom: 15px">{cardDetails.card.title}</div>
       <div class="card-details">
         <div class="card-details__left-section">
@@ -290,20 +297,22 @@ export const CardDetailsContainer = (props: ComponentProps) => {
                 />
               </div>
             ) : (
-              <Button
-                key="checklist_open_input_btn"
-                icon="bi-check2-square"
-                fullWidth
-                callback={() => {
-                  setCheckListInput(true);
-                }}
-                text={
-                  cardDetails.checkList.length
-                    ? 'Добавить строку чеклиста'
-                    : 'Добавить чеклист'
-                }
-                variant="default"
-              />
+              activeBoard?.myRole !== 'viewer' && (
+                <Button
+                  key="checklist_open_input_btn"
+                  icon="bi-check2-square"
+                  fullWidth
+                  callback={() => {
+                    setCheckListInput(true);
+                  }}
+                  text={
+                    cardDetails.checkList.length
+                      ? 'Добавить строку чеклиста'
+                      : 'Добавить чеклист'
+                  }
+                  variant="default"
+                />
+              )
             )}
           </div>
           <div class="card-details_block">
@@ -340,16 +349,18 @@ export const CardDetailsContainer = (props: ComponentProps) => {
                 />
               </>
             ) : (
-              <Button
-                key="comment_input_btn"
-                fullWidth
-                callback={() => {
-                  setCommentInput(true);
-                }}
-                text="Добавить комментарий"
-                variant="default"
-                icon="bi-chat-left"
-              />
+              activeBoard?.myRole !== 'viewer' && (
+                <Button
+                  key="comment_input_btn"
+                  fullWidth
+                  callback={() => {
+                    setCommentInput(true);
+                  }}
+                  text="Добавить комментарий"
+                  variant="default"
+                  icon="bi-chat-left"
+                />
+              )
             )}
             {cardDetails.comments.map((comment) => {
               return (
@@ -419,7 +430,7 @@ export const CardDetailsContainer = (props: ComponentProps) => {
                 }}
               />
             )}
-            {!deadlineInput && (
+            {!deadlineInput && activeBoard?.myRole !== 'viewer' && (
               <Button
                 key="open_deadline_input_btn"
                 icon="bi-clock"
@@ -444,22 +455,24 @@ export const CardDetailsContainer = (props: ComponentProps) => {
                 <div className="assigned-user">
                   <img class="assigned-user__avatar" src={u.avatarImageUrl} />
                   <div style="flex-grow: 1; font-weight: bold">{u.name}</div>
-                  <div
-                    style="cursor: pointer; color: red; height: 16px"
-                    ON_click={() => {
-                      deassignUser(cardDetails.card.id, u.id).then((t) => {
-                        if (t) {
-                          cardDetails.assignedUsers =
-                            cardDetails.assignedUsers.filter((au) => {
-                              return au.id !== u.id;
-                            });
-                          setCardDetailsStore(cardDetails);
-                        }
-                      });
-                    }}
-                  >
-                    <i class="bi-x-lg assigned-user__remove" />
-                  </div>
+                  {activeBoard?.myRole !== 'viewer' && (
+                    <div
+                      style="cursor: pointer; color: red; height: 16px"
+                      ON_click={() => {
+                        deassignUser(cardDetails.card.id, u.id).then((t) => {
+                          if (t) {
+                            cardDetails.assignedUsers =
+                              cardDetails.assignedUsers.filter((au) => {
+                                return au.id !== u.id;
+                              });
+                            setCardDetailsStore(cardDetails);
+                          }
+                        });
+                      }}
+                    >
+                      <i class="bi-x-lg assigned-user__remove" />
+                    </div>
+                  )}
                 </div>
               );
             })}
@@ -496,16 +509,18 @@ export const CardDetailsContainer = (props: ComponentProps) => {
                 />
               </div>
             ) : (
-              <Button
-                key="assign_user_open_input"
-                variant="default"
-                text="Назначить участника"
-                fullWidth
-                icon="bi-person-plus"
-                callback={() => {
-                  setAssignedInput(true);
-                }}
-              />
+              activeBoard?.myRole !== 'viewer' && (
+                <Button
+                  key="assign_user_open_input"
+                  variant="default"
+                  text="Назначить участника"
+                  fullWidth
+                  icon="bi-person-plus"
+                  callback={() => {
+                    setAssignedInput(true);
+                  }}
+                />
+              )
             )}
           </div>
           <input
@@ -519,13 +534,13 @@ export const CardDetailsContainer = (props: ComponentProps) => {
                 (attachment) => {
                   if (attachment !== undefined) {
                     showToast('Вложение успешно добавлено!', 'success');
-                    cardDetails.attachments.push(attachment);
-                    setCardDetailsStore(cardDetails);
+                    reloadContent();
                   }
                 }
               );
             }}
           />
+          {cardDetails.attachments.length > 0 && <h2>Вложения</h2>}
           <div>
             {cardDetails.attachments.map((attachment) => {
               return (
@@ -539,31 +554,38 @@ export const CardDetailsContainer = (props: ComponentProps) => {
                     <i class={getFileIcon(attachment.originalName)} />
                   </div>
                   <div style="flex-grow:1">{attachment.originalName}</div>
-                  <div
-                    class="attachment__remove"
-                    ON_click={(ev: Event) => {
-                      ev.stopImmediatePropagation();
-                      deleteAttachment(attachment.id);
-                    }}
-                  >
-                    <i class="bi-trash" />
-                  </div>
+                  {activeBoard?.myRole !== 'viewer' && (
+                    <div
+                      class="attachment__remove"
+                      ON_click={(ev: Event) => {
+                        ev.stopImmediatePropagation();
+                        deleteAttachment(attachment.id).then(() => {
+                          reloadContent();
+                          showToast('Успешно удалено вложение!', 'success');
+                        });
+                      }}
+                    >
+                      <i class="bi-trash" />
+                    </div>
+                  )}
                 </div>
               );
             })}
           </div>
-          <Button
-            key="add_attachment"
-            text="Добавить вложение"
-            icon="bi-paperclip"
-            fullWidth
-            callback={() => {
-              const el = document.getElementById(
-                'upload_attachment'
-              ) as HTMLInputElement;
-              el.click();
-            }}
-          />
+          {activeBoard?.myRole !== 'viewer' && (
+            <Button
+              key="add_attachment"
+              text="Добавить вложение"
+              icon="bi-paperclip"
+              fullWidth
+              callback={() => {
+                const el = document.getElementById(
+                  'upload_attachment'
+                ) as HTMLInputElement;
+                el.click();
+              }}
+            />
+          )}
           {linkOpened ? (
             <div>
               <Input
