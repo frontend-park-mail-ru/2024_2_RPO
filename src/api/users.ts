@@ -69,6 +69,11 @@ export const registerUser = async (
   email: string,
   password: string
 ): Promise<RegStatus> => {
+  if (!nickname || !email || !password) {
+    showToast('Вы заполнили не все поля', 'error');
+    return 'error';
+  }
+
   try {
     const response = await apiPost('/auth/register', {
       name: nickname,
@@ -128,6 +133,11 @@ export const loginUser = async (
   email: string,
   password: string
 ): Promise<boolean> => {
+  if (!email || !password) {
+    showToast('Вы заполнили не все поля', 'error');
+    return false;
+  }
+
   try {
     const response = await apiPost('/auth/login', {
       email,
