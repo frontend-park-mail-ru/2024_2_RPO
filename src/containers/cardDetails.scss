@@ -204,6 +204,13 @@
   padding-left: 5px;
   padding-right: 3px;
   border-radius: 3px;
+  word-wrap: break-word; /* Для переноса слов */
+  word-break: break-word; /* Для длинных слов */
+}
+
+.attachment div {
+  white-space: normal;
+  overflow-wrap: break-word;
 }
 
 @media screen and (max-width: 800px) {
