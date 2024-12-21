@@ -219,8 +219,7 @@ export const CardDetailsContainer = (props: ComponentProps) => {
       if (clf !== undefined) {
         setNewCheckListField('');
         setCheckListInput(false);
-        cardDetails.checkList.push(clf);
-        setCardDetailsStore(cardDetails);
+        reloadContent();
       }
     });
   };
@@ -234,8 +233,7 @@ export const CardDetailsContainer = (props: ComponentProps) => {
       if (comment !== undefined) {
         setNewComment('');
         setCommentInput(false);
-        cardDetails.comments.push(comment);
-        setCardDetailsStore(cardDetails);
+        reloadContent();
       }
     });
   };
@@ -250,15 +248,13 @@ export const CardDetailsContainer = (props: ComponentProps) => {
     assignUser(cardDetails.card.id, newAssigned).then((u) => {
       if (u !== undefined) {
         setNewAssigned('');
-        setAssignedInput(false);
-        cardDetails.assignedUsers.push(u);
-        setCardDetailsStore(cardDetails);
+        reloadContent();
       }
     });
   };
 
   return (
-    <div style="min-width: 450px">
+    <div style="min-width: 500px">
       <div style="margin-bottom: 15px">{cardDetails.card.title}</div>
       <div class="card-details">
         <div class="card-details__left-section">
@@ -375,14 +371,17 @@ export const CardDetailsContainer = (props: ComponentProps) => {
             )}
             {cardDetails.comments.map((comment) => {
               return (
-                <div className="comment">
+                <div
+                  className="comment"
+                  style="max-width: 100%; text-wrap: wrap"
+                >
                   <div className="comment__avatar">
                     <img
                       src={comment.createdBy.avatarImageUrl}
                       class="comment__avatar-image"
                     />
                   </div>
-                  <div className="comment__content">
+                  <div className="comment__content" style="overflow: hidden">
                     <div className="comment__author">
                       {comment.createdBy.name}
                     </div>
