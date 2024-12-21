@@ -173,7 +173,7 @@ export const HomePage = (props: ComponentProps) => {
         <div className="homepage__video-frame">
           <iframe
             className="homepage__video-iframe"
-            src="https://drive.google.com/file/d/1zIoGZ8QWQVdl0K3-tuuay9XfbQEbu47i/preview"
+            src="https://drive.google.com/file/d/1fnTLdybjhgmM3GdlpuILm_ELiIlx-p1l/view?usp=sharing"
             width="854"
             height="480"
             frameborder="0"
