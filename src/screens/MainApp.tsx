@@ -130,6 +130,7 @@ export const MainApp = (props: ComponentProps) => {
           <CardDetailsContainer key="card_details"></CardDetailsContainer>
         </ModalDialog>
       )}
+
       {preview !== undefined && preview.type === 'board' && (
         <ModalDialog
           isOpened={true}
@@ -219,12 +220,36 @@ export const MainApp = (props: ComponentProps) => {
         )}
         {activeBoard === undefined && preview === undefined && (
           <div class="onboarding__wrapper-bg">
-            <div class="onboarding__advice-container">
-              <img class="onboarding__image" src="/static/img/onboarding.svg" />
-              <span class="onboarding__text">
-                Чтобы приступить к работе, выберите доску в левом меню
-              </span>
-            </div>
+            {me === undefined ? (
+              <div class="section__buttons">
+                <img
+                  class="onboarding__image"
+                  src="/static/img/onboarding.svg"
+                />
+                <Button
+                  text="Зарегистрироваться"
+                  callback={() => goToUrl('/register')}
+                  key="register-button"
+                  variant="accent"
+                />
+                <Button
+                  text="Войти"
+                  callback={() => goToUrl('/login')}
+                  key="login-button"
+                  variant="default"
+                />
+              </div>
+            ) : (
+              <div class="onboarding__advice-container">
+                <img
+                  class="onboarding__image"
+                  src="/static/img/onboarding.svg"
+                />
+                <span class="onboarding__text">
+                  Чтобы приступить к работе, выберите доску в левом меню
+                </span>
+              </div>
+            )}
           </div>
         )}
 
