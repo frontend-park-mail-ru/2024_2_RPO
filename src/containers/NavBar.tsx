@@ -15,6 +15,8 @@ import { updateMembers } from '@/stores/members';
 import { updateBoard } from '@/api/boards';
 import { showToast } from '@/stores/toastNotificationStore';
 import './navBar.scss';
+import { searchInElastic } from '@/api/search';
+import { setSearchResultStore } from '@/stores/searchResultStore';
 
 interface NavBarProps extends ComponentProps {
   leftPanelOpened: boolean;
@@ -177,19 +179,35 @@ export const NavBar = (props: NavBarProps) => {
           )}
           {me !== undefined && (
             <div class="navbar__right-group">
-              {/* <Button key="notification_btn" icon="bi-bell" /> */}
-              {/* Для будущего функционала: уведомлений и поиска
-            <input
-              class="search-input"
-              type="text"
-              placeholder="Поиск"
-              style="padding-left: 36px"
-            />
-            <i
-              class="search-input__search-icon bi-search"
-              style="position: absolute;"
-            ></i>
-            */}
+              <div class="search-input__wrapper navbar__mobile-hidden">
+                <input
+                  class="search-input"
+                  type="text"
+                  placeholder="Поиск"
+                  style="padding-left: 36px"
+                  ON_keydown={(ev: KeyboardEvent) => {
+                    if (ev.key === 'Enter') {
+                      const query = (ev.target as HTMLInputElement).value;
+                      if (query.length < 2) {
+                        showToast('Введите запрос!', 'error');
+                      }
+                      (ev.target as HTMLInputElement).value = '';
+
+                      searchInElastic(query).then((res: any) => {
+                        if (res !== undefined) {
+                          setSearchResultStore(
+                            res.map((r: any) => {
+                              return { cardUuid: r.cardUuid, text: r.title };
+                            })
+                          );
+                        }
+                      });
+                    }
+                  }}
+                />
+                <i class="search-input__search-icon bi-search"></i>
+              </div>
+
               <div
                 className={[
                   'navbar__profile-picture',

@@ -100,6 +100,7 @@ export const TagSettings = (props: ComponentProps) => {
     ).then((newTag) => {
       if (newTag !== undefined) {
         showToast('Успешно добавлен тег!', 'success');
+        reloadContent();
       }
     });
   };

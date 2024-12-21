@@ -30,7 +30,7 @@ interface KanbanCardProps extends ComponentProps {
 interface EditableProps extends ComponentProps {
   initialText: string;
   cardId: number;
-  onNewCard: (newCard: Card) => void;
+  onNewCard: () => void;
 }
 
 const Editable = (props: EditableProps) => {
@@ -58,11 +58,11 @@ const Editable = (props: EditableProps) => {
   });
 
   const submit = () => {
-    updateCard(props.cardId, { title: newText }).then((newCard) => {
-      if (newCard !== undefined) {
-        setEditLock(false);
-        props.onNewCard(newCard);
-      }
+    updateCard(props.cardId, { title: newText }).then(() => {
+      setEditLock(false);
+      showToast('Карточка успешно изменена!', 'success');
+      props.onNewCard()
+      reloadContent();
     });
   };
 
@@ -356,17 +356,8 @@ export const KanbanCard = (props: KanbanCardProps) => {
             key="editable_card"
             initialText={card.title}
             cardId={card.id}
-            onNewCard={(crd) => {
+            onNewCard={() => {
               setDragStart(undefined);
-              activeBoard.columns[props.columnIdx].cards = activeBoard.columns[
-                props.columnIdx
-              ].cards.map((oldCard) => {
-                if (oldCard.id !== crd.id) {
-                  return oldCard;
-                }
-                return crd;
-              });
-              setActiveBoardStore(activeBoard);
               setIsInput(false);
             }}
           />

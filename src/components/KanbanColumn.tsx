@@ -13,6 +13,7 @@ import { Input } from './Input';
 import './kanbanColumn.scss';
 import { KanbanCard } from './KanbanCard';
 import { colHeaderHeights, setDndStore, useDndStore } from '@/stores/dndStore';
+import { reloadContent } from '@/containers/CardDetails';
 
 interface KanbanColumnProps extends ComponentProps {
   columnIndex: number;
@@ -41,7 +42,7 @@ export const KanbanColumn = (props: KanbanColumnProps) => {
       columnId: props.columnId,
     }).then((newCard) => {
       if (newCard !== undefined) {
-        activeBoard.columns[props.columnIndex].cards.push(newCard);
+        reloadContent();
         setIsInputOpened(false);
       }
     });

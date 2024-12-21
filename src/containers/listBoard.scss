@@ -1,28 +1,26 @@
 .list-board {
   padding-top: var(--navbar-height);
+  overflow-x: auto;
 }
 
 .list-board__container {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 6fr 2fr 2fr 1fr;
   background-color: white;
   border-radius: 12px;
   margin-top: 16px;
   margin-bottom: 40px;
   margin-left: 14px;
   margin-right: 20px;
-  padding-top: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  row-gap: 10px;
+  width: fit-content;
+  min-width: 800px;
 }
 
 .list-card {
-  display: flex;
-  flex-direction: row;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  padding-left: 8px;
-  padding-right: 8px;
-  transition: background 0.3s ease;
-  cursor: pointer;
+  display: contents;
 }
 
 .list-card:hover {
@@ -31,6 +29,20 @@
 
 .list-card__title {
   flex-grow: 1;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 6px;
+  padding-right: 6px;
+  transition: background-color 0.3s ease;
+  border-radius: 3px;
+}
+.list-card__title:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+.list-card__header {
+  padding-top: 16px;
+  padding-bottom: 16px;
+  font-weight: bold;
 }
 
 .list-card__properties {

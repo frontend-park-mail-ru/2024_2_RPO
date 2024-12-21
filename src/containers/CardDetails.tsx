@@ -451,7 +451,7 @@ export const CardDetailsContainer = (props: ComponentProps) => {
             <SelectBox
               key="select_add_tag"
               currentIndex={0}
-              widthRem={20}
+              widthRem={12}
               onChange={(newIndex) => {
                 attachTagToCard(
                   cardDetails.card.id,

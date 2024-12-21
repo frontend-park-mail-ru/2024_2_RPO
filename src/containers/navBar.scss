@@ -116,6 +116,10 @@
   align-items: center;
 }
 .navbar__right-group {
+  display: flex;
+  flex-direction: row;
+  column-gap: 8px;
+  align-items: center;
 }
 .navbar__selectbox {
 }
@@ -125,4 +129,16 @@
     top: calc(var(--navbar-height) + 10px);
     left: 10px;
   }
+}
+
+.search-input__wrapper {
+  position: relative;
+  height: 32px;
+}
+
+.search-input__search-icon {
+  position: absolute;
+  left: 4px;
+  z-index: 1000;
+  top: 5px;
 }

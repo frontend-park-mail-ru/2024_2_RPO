@@ -7,6 +7,8 @@ import { ComponentProps } from '@/jsxCore/types';
 import { updateBoards, useBoardsStore } from '@/stores/boardsStore';
 import './leftPanel.scss';
 import { showToast } from '@/stores/toastNotificationStore';
+import { searchInElastic } from '@/api/search';
+import { setSearchResultStore } from '@/stores/searchResultStore';
 
 interface LeftPanelProps extends ComponentProps {
   closeCallback: () => void;
@@ -48,12 +50,83 @@ export const LeftPanel = (props: LeftPanelProps) => {
 
   return (
     <>
-      <div className="left-panel-dark navbar__mobile-hidden" ON_click={props.closeCallback}></div>
+      <div
+        className="left-panel-dark navbar__mobile-hidden"
+        ON_click={props.closeCallback}
+      ></div>
       <aside class="left-menu">
         <div class="left-menu__header">
           <div class="left-menu__left-elements"></div>
         </div>
         <div class="left-menu__body">
+          <div style="height: 20px" class="navbar__mobile-only" />
+
+          <div
+            class="search-input__wrapper navbar__mobile-only"
+            style="width: 100%"
+          >
+            <input
+              class="search-input"
+              type="text"
+              id="search-bad-228"
+              placeholder="Поиск"
+              style="padding-left: 36px; width: 100%"
+              ON_keydown={(ev: KeyboardEvent) => {
+                if (ev.key === 'Enter') {
+                  const query = (ev.target as HTMLInputElement).value;
+                  if (query.length < 2) {
+                    showToast('Введите запрос!', 'error');
+                  }
+
+                  (ev.target as HTMLInputElement).value = '';
+                  props.closeCallback();
+
+                  searchInElastic(query).then((res: any) => {
+                    if (res !== undefined) {
+                      setSearchResultStore(
+                        res.map((r: any) => {
+                          return { cardUuid: r.cardUuid, text: r.title };
+                        })
+                      );
+                    }
+                  });
+                }
+              }}
+            />
+            <i class="search-input__search-icon bi-search"></i>
+          </div>
+          <div class="navbar__mobile-only">
+            <Button
+              key="bad-search"
+              variant="accent"
+              icon="bi-search"
+              text="Искать!"
+              fullWidth
+              callback={() => {
+                const tgt = document.getElementById(
+                  'search-bad-228'
+                ) as HTMLInputElement;
+                const query = tgt.value;
+                if (query.length < 2) {
+                  showToast('Введите запрос!', 'error');
+                }
+
+                tgt.value = '';
+                props.closeCallback();
+
+                searchInElastic(query).then((res: any) => {
+                  if (res !== undefined) {
+                    setSearchResultStore(
+                      res.map((r: any) => {
+                        return { cardUuid: r.cardUuid, text: r.title };
+                      })
+                    );
+                  }
+                });
+              }}
+            />
+          </div>
+          <div style="height: 20px" class="navbar__mobile-only" />
           <div style="width:100%">
             {inputOpened && (
               <>
@@ -101,12 +174,14 @@ export const LeftPanel = (props: LeftPanelProps) => {
                 variant="accent"
                 icon="bi-plus-square"
                 text="Добавить доску"
+                fullWidth
                 callback={() => {
                   setInputOpened(true);
                 }}
               />
             )}
           </div>
+
           <div class="left-menu__first-level">
             <div class="left-menu__body-name">
               <span>Мои доски</span>

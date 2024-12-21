@@ -44,11 +44,17 @@
   padding-bottom: 50px;
   display: flex;
   flex-direction: row;
-  column-gap: 40px;
+  column-gap: 60px;
   align-self: center;
   margin-left: 30px;
   margin-right: 30px;
   align-items: center;
+}
+
+@media screen and (min-width: 800px) {
+  .top-section {
+    padding-top: 100px;
+  }
 }
 
 .top-section__left {
@@ -70,9 +76,25 @@
   border-radius: 12px;
 }
 
+@media screen and (max-width:800px) {
+  .top-section__motto {
+    font-size: 1.5rem;
+  }
+}
+
+.top-section__comment {
+  font-size: 1.25rem;
+}
+
 .top-section__buttons {
   display: flex;
   column-gap: 20px;
+}
+
+@media (max-width: 800px) {
+  .top-section__buttons {
+    justify-content: center;
+  }
 }
 
 .top-section__right img {
@@ -83,6 +105,12 @@
   font-family: Montserrat, sans-serif;
   font-size: 4rem;
   font-weight: bold;
+}
+
+@media (max-width: 800px) {
+  .top-section__logo {
+    text-align: center;
+  }
 }
 
 .homepage__scroll-text {

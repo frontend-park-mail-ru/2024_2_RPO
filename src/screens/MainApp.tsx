@@ -28,6 +28,10 @@ import { joinInviteLink } from '@/api/members';
 import { useMeStore } from '@/stores/meStore';
 import { ListBoard } from '@/containers/ListBoard';
 import { TagSettings } from '@/containers/TagSettings';
+import {
+  setSearchResultStore,
+  useSearchResultStore,
+} from '@/stores/searchResultStore';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const MainApp = (props: ComponentProps) => {
@@ -40,6 +44,7 @@ export const MainApp = (props: ComponentProps) => {
   const cardDetails = useCardDetailsStore();
   const me = useMeStore();
   const router = useRouterStore();
+  const search = useSearchResultStore();
 
   if (boards === undefined) {
     getBoards().then((newBoards: Board[]) => {
@@ -215,6 +220,35 @@ export const MainApp = (props: ComponentProps) => {
             closeCallback={closeTagsModalDialog}
           >
             <TagSettings key="real_tag_settings" />
+          </ModalDialog>
+        )}
+        {search !== undefined && (
+          <ModalDialog
+            key="search_results"
+            title="Результаты поиска"
+            isOpened={true}
+            closeCallback={() => {
+              setSearchResultStore(undefined);
+            }}
+          >
+            <div>{search.length === 0 && <div>Ничего не найдено!</div>}</div>
+            <div>
+              {search.length > 0 &&
+                search.map((r) => {
+                  return (
+                    <div
+                      class="assigned-user"
+                      style="cursor: pointer"
+                      ON_click={() => {
+                        setSearchResultStore(undefined);
+                        goToUrl(`${window.location.origin}/card/${r.cardUuid}`);
+                      }}
+                    >
+                      {r.text}
+                    </div>
+                  );
+                })}
+            </div>
           </ModalDialog>
         )}
         {activeBoard === undefined && preview === undefined && (
